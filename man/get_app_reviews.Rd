@@ -17,6 +17,8 @@ get_app_reviews(
   purchase_type = "steam",
   playtime = c(0, 0),
   filter_offtopic_activity = TRUE,
+  summary_num_positive_reviews = NULL,
+  summary_num_reviews = NULL,
   num_per_page = 20,
   cursor = NULL
 )

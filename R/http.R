@@ -21,6 +21,8 @@ request_webapi <- function(api,
     x <- params[[k]]
     if (is.logical(x)) {
       params[[k]] <- as.numeric(x)
+    } else if (is.numeric(x)) {
+      params[[k]] <- format(x, scientific = FALSE)
     } else if (is.list(x) && !is.null(names(x))) {
       params[[k]] <- jsonlite::toJSON(x, auto_unbox = TRUE, force = TRUE)
     } else if (is.list(x)) {
@@ -40,6 +42,19 @@ request_webapi <- function(api,
     httr2::req_url_query,
     c(list(req), params)
   )
+  req <- httr2::req_error(req, is_error = function(resp) {
+    if (startsWith(resp$headers$`Content-Type`, "text/html")) {
+      code <- resp$status_code
+      desc <- httr2::resp_status_desc(resp)
+      msg <- trim_html_error(httr2::resp_body_html(resp), desc)
+      stop(sprintf("HTTP error %s %s: %s", code, desc, msg))
+    } else {
+      resp <- httr2::resp_body_json(resp)$response
+      code <- resp$result
+      msg <- resp$error
+      stop(sprintf("Error code %s: %s", code, msg))
+    }
+  })
 
   if (getOption("steamr_echo", FALSE)) {
     cat("Querying:\n", utils::URLdecode(req$url), "\n")
@@ -51,7 +66,7 @@ request_webapi <- function(api,
     res <- httr2::req_perform(req)
 
     ecode <- res$headers[["X-eresult"]]
-    if (!identical(ecode, "1")) {
+    if (!is.null(ecode) && !identical(ecode, "1")) {
       msg <- eresult[eresult$code %in% ecode, ]$msg
       stop(sprintf("Steam API returned error code %s: %s", ecode, msg), call. = FALSE)
     }
@@ -87,7 +102,11 @@ request_internal <- function(api,
   req <- httr2::request(url)
   req <- httr2::req_method(req, "GET")
 
-  if (!is.null(rate)) {
+  if (is_store_api) {
+    rate <- 300 / 300
+  }
+
+  if (!is.null(rate) && getOption("steamr_throttle", TRUE)) {
     req <- httr2::req_throttle(req, rate = rate)
   }
 
@@ -104,7 +123,11 @@ request_internal <- function(api,
 
   res <- httr2::req_perform(req)
   res <- httr2::resp_body_json(res, simplifyVector = TRUE, flatten = TRUE)
-  if (is.data.frame(res)) res <- fix_steam_bool(res)
+
+  if (is.data.frame(res)) {
+    res <- fix_steam_bool(res)
+  }
+
   res
 }
 

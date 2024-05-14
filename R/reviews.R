@@ -84,8 +84,11 @@ get_app_reviews <- function(appid,
                             purchase_type = "steam",
                             playtime = c(0, 0),
                             filter_offtopic_activity = TRUE,
+                            summary_num_positive_reviews = NULL,
+                            summary_num_reviews = NULL,
                             num_per_page = 20,
                             cursor = NULL) {
+  check_length(playtime, ge = 2, le = 2)
   params <- list(
     day_range = day_range,
     start_date = start_date,
@@ -99,6 +102,8 @@ get_app_reviews <- function(appid,
     playtime_filter_max = playtime[2],
     filter_offtopic_activity = filter_offtopic_activity,
     num_per_page = num_per_page,
+    summary_num_positive_reviews = summary_num_positive_reviews,
+    summary_num_reviews = summary_num_reviews,
     json = TRUE,
     cursor = cursor
   )
@@ -165,4 +170,33 @@ get_all_app_reviews <- function(appid,
   }
   res <- do.call(rbind.data.frame, res)
   res[!duplicated(res), ]
+}
+
+
+
+get_review_histogram <- function(appid,
+                                 language = "english",
+                                 review_score_preference = 2) {
+  check_string(language, null = TRUE)
+  check_integerish(review_score_preference)
+
+  params <- list(
+    l = language,
+    review_score_preference = review_score_preference
+  )
+  res <- request_internal(
+    api = store_api(),
+    interface = "appreviewhistogram",
+    method = appid,
+    params = params
+  )
+
+  count_all <- res$count_all_reviews
+  expand <- res$expand_graph
+  type <- res$results$rollup_type
+
+  res <- list(rollups = res$results$rollups, recent = res$results$recent)
+  res$rollups$date <- as.POSIXct(res$rollups$date)
+  res$recent$date <- as.POSIXct(res$recent$date)
+  res
 }

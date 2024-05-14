@@ -15,4 +15,7 @@ Imports:
     jsonlite,
     utils
 Suggests: 
+    knitr,
+    rmarkdown,
     tibble
+VignetteBuilder: knitr

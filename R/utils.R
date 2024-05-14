@@ -18,6 +18,11 @@ lvapply <- function(x, fun, ..., use_names = TRUE) {
 }
 
 
+nvapply <- function(x, fun, ..., use_names = TRUE) {
+  vapply(x, fun, FUN.VALUE = numeric(1), USE.NAMES = use_names, ...)
+}
+
+
 drop_null <- function(x) {
   x[!vapply(x, is.null, FUN.VALUE = logical(1))]
 }
@@ -28,13 +33,13 @@ drop_empty <- function(x) {
 }
 
 
-obj_name <- function(x) {
-  deparse(substitute(x))
+obj_name <- function(x, env = parent.frame()) {
+  deparse(substitute(x, env))
 }
 
 
 box <- function(x) {
-  if (length(x) > 1) list(x) else x
+  if (length(x) == 1) list(x) else x
 }
 
 
@@ -52,10 +57,55 @@ as_data_frame <- function(x) {
 }
 
 
+bind_rows <- function(..., .id = NULL) {
+  dots <- list(...)
+  out <- rbind_list(dots)
+  if (!is.null(.id)) {
+    dots <- list(...)
+    names <- names(dots)
+    names <- rep(names, each = )
+    nrows <- nvapply(dots, nrow)
+    out[[.id]] <- rep(names, times = nrows)
+  }
+
+  as_data_frame(out)
+}
+
+
+rbind_list <- function(args) {
+  nam <- lapply(args, names)
+  unam <- unique(unlist(nam))
+  len <- vapply(args, length, numeric(1))
+  out <- vector("list", length(len))
+  for (i in seq_along(len)) {
+    if (nrow(args[[i]])) {
+      nam_diff <- setdiff(unam, nam[[i]])
+      if (length(nam_diff)) {
+        args[[i]][nam_diff] <- NA
+      }
+    } else {
+      next # nocov
+    }
+  }
+  out <- do.call(rbind, args)
+  rownames(out) <- NULL
+  out
+}
+
+
 is_url <- function(url) {
   grepl(
     "^(https?:\\/\\/)?[[:alnum:]\\.]+(\\.[[:lower:]]+)|(:[[:digit:]])\\/?",
     url,
     perl = TRUE
   )
+}
+
+
+trim_html_error <- function(html, desc) {
+  html <- gsub("<head>(.+)</head>", "", html)
+  html <- gsub("<.*?>", " ", html)
+  html <- gsub("\\s+", " ", html)
+  html <- gsub(desc, "", html)
+  trimws(html)
 }

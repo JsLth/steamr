@@ -1,3 +1,20 @@
+check_length <- function(x, ge = -Inf, le = Inf) {
+  len <- length(x)
+  check <- len >= ge && len <= le
+  if (!check) {
+    msg <- c(
+      if (!missing(ge)) sprintf("greater than %s", ge),
+      if (!missing(le)) sprintf("less than %s", le)
+    )
+    stop(sprintf(
+      "length(%s) must be %s, got length %s instead",
+      obj_name(x),
+      paste(msg, collapse = " and "),
+      length(x)
+    ))
+  }
+}
+
 check_scalar <- function(x) {
   check <- length(x) == 1
   if (!check) {

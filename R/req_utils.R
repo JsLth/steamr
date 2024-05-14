@@ -23,3 +23,11 @@
   obj <- drop_empty(drop_null(obj))
   jsonlite::toJSON(obj, auto_unbox = TRUE, force = TRUE)
 }
+
+
+pivot_longer_list <- function(lst) {
+  lst <- lapply(names(lst), function(k) {
+    list(name = k, value = unlist(lst[[k]]))
+  })
+  do.call(rbind.data.frame, lst)
+}
