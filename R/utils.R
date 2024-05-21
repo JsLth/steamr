@@ -1,5 +1,6 @@
 "%||%" <- function(x, y) if (is.null(x)) y else x
 "%empty%" <- function(x, y) if (!length(x)) y else x
+"%NA%" <- function(x, y) if (is.null(x) || all(is.na(x))) y else x
 
 nlapply <- function(x, FUN, ...) {
   res <- lapply(x, FUN, ...)
@@ -20,6 +21,11 @@ lvapply <- function(x, fun, ..., use_names = TRUE) {
 
 nvapply <- function(x, fun, ..., use_names = TRUE) {
   vapply(x, fun, FUN.VALUE = numeric(1), USE.NAMES = use_names, ...)
+}
+
+
+vswitch <- function(expr, fun_value = character(1), ...) {
+  vapply(expr, FUN.VALUE = fun_value, switch, ...)
 }
 
 
@@ -99,6 +105,11 @@ is_url <- function(url) {
     url,
     perl = TRUE
   )
+}
+
+
+match_regex <- function(pattern, text, ...) {
+  regmatches(text, regexec(pattern, text, ...))
 }
 
 

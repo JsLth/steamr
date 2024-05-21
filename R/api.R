@@ -12,6 +12,24 @@ api_key <- function() {
 }
 
 
+#' Login
+#' @description
+#' Opens the Steam login page in the default browser. A Steam login is required
+#' for many of the unofficial API methods.
+#'
+#' @returns Error code returned by \code{\link{system}}.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' login()
+#' }
+login <- function() {
+  utils::browseURL("https://steamcommunity.com/login/home/")
+}
+
+
 get_supported_api_list <- function() {
   params <- .make_params()
   request_webapi(

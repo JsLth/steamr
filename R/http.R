@@ -52,8 +52,11 @@ request_webapi <- function(api,
       resp <- httr2::resp_body_json(resp)$response
       code <- resp$result
       msg <- resp$error
-      stop(sprintf("Error code %s: %s", code, msg))
+      if (!is.null(resp$error)) {
+        stop(sprintf("Error code %s: %s", code, msg))
+      }
     }
+    FALSE
   })
 
   if (getOption("steamr_echo", FALSE)) {
@@ -90,12 +93,7 @@ request_internal <- function(api,
     if (is.logical(x)) {
       params[[k]] <- as.numeric(x)
     } else if (is.list(x)) {
-      idx <- match(k, names(params))
-      for (i in seq_along(x)) {
-        names(x)[i] <- sprintf("%s[%s]", k, i - 1)
-      }
-      params <- append(params, x, after = idx)
-      params[[k]] <- NULL
+      paste(x, collapse = ",")
     }
   }
 

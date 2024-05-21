@@ -2,9 +2,12 @@
 % Please edit documentation in R/countries.R
 \name{query_locations}
 \alias{query_locations}
+\alias{get_country_list}
 \title{Country info}
 \usage{
 query_locations(country = NULL, region = NULL)
+
+get_country_list(language = "english")
 }
 \arguments{
 \item{country}{ISO-2 country code. If specified, returns information
@@ -13,10 +16,14 @@ on regions, otherwise countries.}
 \item{region}{Region code within a country specified in \code{country}.
 Country must not be \code{NULL} if \code{region} is specified. If specified,
 returns information on cities, otherwise on regions.}
+
+\item{language}{Language string of the returned information.}
 }
 \value{
 A dataframe with information on country code, region code, city
 code and geographical name.
+
+A dataframe containing country codes and names
 }
 \description{
 Retrieves information on Steam's country, region, and city codes.
@@ -31,5 +38,11 @@ query_locations(country = "DE")
 
 # get city codes of Baden-Wurttemberg, Germany
 query_locations(country = "DE", region = "01")
+
+# get localized country names
+get_country_list(language = "german")
+}
+\dontrun{
+
 }
 }
