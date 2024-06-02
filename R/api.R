@@ -1,3 +1,6 @@
+globst <- new.env(parent = emptyenv())
+
+
 is_steam_key <- function(x) {
   isTRUE(grepl("^[A-Z0-9]+$", x))
 }
@@ -9,24 +12,6 @@ api_key <- function() {
     stop("No valid Steam key stored in STEAM_API_KEY environment variable.")
   }
   key
-}
-
-
-#' Login
-#' @description
-#' Opens the Steam login page in the default browser. A Steam login is required
-#' for many of the unofficial API methods.
-#'
-#' @returns Error code returned by \code{\link{system}}.
-#'
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' login()
-#' }
-login <- function() {
-  utils::browseURL("https://steamcommunity.com/login/home/")
 }
 
 

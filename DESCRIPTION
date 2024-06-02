@@ -1,12 +1,14 @@
 Package: steamr
 Type: Package
-Title: R Interface to Steam APIs
+Title: R Interface to Steam's APIs
 Version: 0.1.0
 Authors@R: 
     person("Jonas", "Lieth", , "jonas.lieth@gesis.org", role = c("aut", "cre"))
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: R interface to the Steam Web API and internal API. Performs
+    standardized API calls, session authentication, key management, Steam ID
+    conversion and response formatting. Provides tools for data scraping of
+    game details, user reviews, store economy data, news, and many more.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -16,9 +18,12 @@ Imports:
     jsonlite,
     gmp,
     bigBits,
+    openssl,
+    PKI,
     utils
 Suggests: 
     knitr,
     rmarkdown,
-    tibble
+    tibble,
+    qrcode
 VignetteBuilder: knitr

@@ -9,8 +9,10 @@ request_webapi <- function(api,
                            method,
                            version,
                            params = list(),
+                           http_method = "GET",
                            simplify = TRUE,
-                           format = "json",
+                           serror = TRUE,
+                           access_token = NULL,
                            dry = FALSE) {
   url <- paste(api, interface, method, version, sep = "/")
 
@@ -34,26 +36,35 @@ request_webapi <- function(api,
       params[[k]] <- NULL
     }
   }
-  #params$format <- format
 
   req <- httr2::request(url)
-  req <- httr2::req_method(req, "GET")
-  req <- do.call(
-    httr2::req_url_query,
-    c(list(req), params)
-  )
+
+  req <- httr2::req_method(req, http_method)
+  if (identical(http_method, "GET")) {
+    req <- do.call(
+      httr2::req_url_query,
+      c(list(req), params)
+    )
+  } else {
+    req <- do.call(httr2::req_body_form, c(list(req), params))
+  }
+
+  if (is.character(access_token)) {
+    req <- httr2::req_url_query(req, access_token = access_token)
+  }
+
   req <- httr2::req_error(req, is_error = function(resp) {
     if (startsWith(resp$headers$`Content-Type`, "text/html")) {
       code <- resp$status_code
       desc <- httr2::resp_status_desc(resp)
       msg <- trim_html_error(httr2::resp_body_html(resp), desc)
-      stop(sprintf("HTTP error %s %s: %s", code, desc, msg))
+      stop(sprintf("HTTP error %s %s: %s", code, desc, msg), call. = FALSE)
     } else {
       resp <- httr2::resp_body_json(resp)$response
       code <- resp$result
       msg <- resp$error
       if (!is.null(resp$error)) {
-        stop(sprintf("Error code %s: %s", code, msg))
+        stop(sprintf("Error code %s: %s", code, msg), call. = FALSE)
       }
     }
     FALSE
@@ -69,9 +80,12 @@ request_webapi <- function(api,
     res <- httr2::req_perform(req)
 
     ecode <- res$headers[["X-eresult"]]
-    if (!is.null(ecode) && !identical(ecode, "1")) {
-      msg <- eresult[eresult$code %in% ecode, ]$msg
-      stop(sprintf("Steam API returned error code %s: %s", ecode, msg), call. = FALSE)
+    if (serror) {
+
+      if (!is.null(ecode) && !identical(ecode, "1")) {
+        msg <- eresult[eresult$code %in% ecode, ]$msg
+        stop(sprintf("Steam API returned error code %s: %s", ecode, msg), call. = FALSE)
+      }
     }
 
     httr2::resp_body_json(res, simplifyVector = simplify, flatten = TRUE)
@@ -80,11 +94,12 @@ request_webapi <- function(api,
 
 
 request_internal <- function(api,
-                          interface,
-                          method,
-                          params = list(),
-                          simplify = TRUE,
-                          rate = NULL) {
+                             interface,
+                             method,
+                             params = list(),
+                             simplify = TRUE,
+                             rate = NULL,
+                             params_as_query = TRUE) {
   is_store_api <- identical(api, store_api())
   url <- paste(api, interface, method, sep = "/")
 
@@ -108,7 +123,7 @@ request_internal <- function(api,
     req <- httr2::req_throttle(req, rate = rate)
   }
 
-  if (is_store_api) {
+  if (params_as_query) {
     req <- do.call(httr2::req_url_query, c(list(req), params))
   } else {
     req <- httr2::req_url_path_append(req, params)

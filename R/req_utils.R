@@ -27,7 +27,9 @@
 
 pivot_longer_list <- function(lst) {
   lst <- lapply(names(lst), function(k) {
-    list(name = k, value = unlist(lst[[k]]))
+    val <- unlist(lst[[k]])
+    name <- rep(k, length(val))
+    list(name = name, value = val)
   })
   do.call(rbind.data.frame, lst)
 }
