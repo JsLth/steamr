@@ -15,6 +15,46 @@ api_key <- function() {
 }
 
 
+#' Meta info
+#' @description
+#' Fetch metadata about the Steam server.
+#'
+#' \code{get_supported_api_list()} returns information about all supported
+#' API endpoints of the web API. A complete list including undocumented
+#' endpoints can be found on \url{https://steamapi.xpaw.me/}.
+#'
+#' \code{get_servertime()} returns the current Steam server time.
+#'
+#' \code{steam_stats()} returns the current users online and ingame.
+#'
+#' @returns \code{get_supported_api_list()} returns an unnamed list where each
+#' index contains a named list with information on the respective API endpoint.
+#' \code{get_servertime()} returns a \code{POSIXct} value. \code{steam_stats()}
+#' contains a named list of length 2.
+#' @rdname steam_stats
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_supported_api_list()
+#'
+#' get_servertime()
+#'
+#' steam_stats()
+#' }
+steam_stats <- function() {
+  res <- request_internal(
+    api = valve_api(),
+    interface = "about",
+    method = "stats"
+  )
+
+  lapply(res, function(x) as.numeric(gsub(",", "", x, fixed = TRUE)))
+}
+
+
+#' @rdname steam_stats
+#' @export
 get_supported_api_list <- function() {
   params <- .make_params()
   request_webapi(
@@ -24,13 +64,15 @@ get_supported_api_list <- function() {
     version = "v1",
     params = params,
     simplify = FALSE
-  )
+  )$apilist$interfaces
 }
 
 
-get_server_info <- function() {
+#' @rdname steam_stats
+#' @export
+get_servertime <- function() {
   params <- .make_params()
-  request_webapi(
+  res <- request_webapi(
     api = public_api(),
     interface = "ISteamWebAPIUtil",
     method = "GetServerInfo",
@@ -38,17 +80,8 @@ get_server_info <- function() {
     params = params,
     simplify = FALSE
   )
-}
 
-
-steam_stats <- function() {
-  res <- request_internal(
-    api = valve_api(),
-    interface = "about",
-    method = "stats"
-  )
-
-  lapply(res, function(x) as.numeric(gsub(",", "", x, fixed = TRUE)))
+  as.POSIXct(res$servertime)
 }
 
 

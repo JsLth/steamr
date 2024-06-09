@@ -72,7 +72,6 @@ get_items(ids, include = "all")
 \seealso{
 Other store: 
 \code{\link{get_hardware_items}()},
-\code{\link{get_most_popular_tags}()},
 \code{\link{get_store_categories}()},
 \code{\link{store_item}()}
 }

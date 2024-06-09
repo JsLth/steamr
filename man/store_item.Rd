@@ -63,7 +63,6 @@ get_items(ids)
 Other store: 
 \code{\link{get_hardware_items}()},
 \code{\link{get_items}()},
-\code{\link{get_most_popular_tags}()},
 \code{\link{get_store_categories}()}
 }
 \concept{store}

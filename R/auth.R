@@ -28,32 +28,44 @@
 #' login requests in the mobile app, or the scanning of QR codes. All of these
 #' actions are not suitable for batch processing.
 #'
+#' @rdname auth
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' user <- "gabelogannewell"
-#' steam_login(user)
+#' auth_credentials(user)
+#'
+#' # use a different password method
+#' auth_credentials(user, password = rstudioapi::askForPassword)
 #'
 #' # set a friendly name to identify this session
-#' steam_login(user, friendly_name = "R session")
+#' auth_credentials(user, friendly_name = "R session")
 #'
 #' # sign in using a QR code
-#' show_steam_qr()
+#' auth_qr()
 #' }
-steam_login <- function(username,
-                        password = openssl::askpass,
-                        shared_secret = NULL,
-                        persistent = FALSE,
-                        friendly_name = NULL,
-                        details = NULL) {
+auth_credentials <- function(username,
+                             password = openssl::askpass,
+                             shared_secret = NULL,
+                             persistent = FALSE,
+                             friendly_name = NULL,
+                             details = NULL) {
+  stopifnot(is.character(username))
+  stopifnot(is.function(password))
   if (!interactive()) {
     stop("Session authentication is only possible in interactive mode.")
   }
 
   password <- password()
+
+  # request public key from web api
   params <- get_password_rsa_public_key(username)
+
+  # encrypt password using public key
   epass <- encrypt_password(password, params$publickey_mod, params$publickey_exp)
+
+  # request an authenticated session
   login <- begin_auth_session(
     device_friendly_name = friendly_name,
     account_name = username,
@@ -61,28 +73,49 @@ steam_login <- function(username,
     encryption_timestamp = params$timestamp,
     device_details = details
   )
+
+  # abort if captcha is needed
   check_captcha(login)
-  login <- handle_steam_guard(login)
-  session <- list(
+
+  # confirm authenticated session using 2FA
+  poll <- handle_steam_guard(login, code = shared_secret)
+
+  # get redirection urls
+  transfer <- finalize_login(poll$refresh_token)
+
+  # tell various steam pages they are now authenticated
+  set_tokens(transfer)
+
+  # store cookies to identify authenticated session
+  #cookies <- set_cookies()
+
+  auth <- list(
+    vanity = poll$account_name,
     steamid = login$steamid,
     client_id = login$client_id,
     request_id = login$request_id,
-    token = login$weak_token
+    token = poll$access_token#,
+    #cookies = cookies
   )
-  class(session) <- "steam_auth_session"
-  assign("session", session, envir = globst)
-  session
+  class(auth) <- "steam_auth_session"
+  assign("auth", auth, envir = globst)
+
+  if (!is_authenticated()) {
+    stop("Authentication was unsuccessful. Session is not authenticated.")
+  }
+
+  auth
 }
 
 
-#' @rdname steam_login
+#' @rdname auth
 #' @description
 #' \code{show_steam_qr} authenticates by showing a QR code that can be
 #' scanned using the Steam mobile app. The QR code is shown as an R plot
 #' and refreshes every 5 seconds.
 #'
 #' @export
-show_steam_qr <- function(friendly_name = NULL, device_details = NULL) {
+auth_qr <- function(friendly_name = NULL, device_details = NULL) {
   if (!loadable("qrcode")) {
     stop("The qrcode package must be installed to generate QR codes.")
   }
@@ -109,19 +142,49 @@ show_steam_qr <- function(friendly_name = NULL, device_details = NULL) {
     status <- !is.null(poll$access_token)
 
     diff <- difftime(Sys.time(), base_time, units = "secs")
-    refresh <- diff >= (qr$interval - 0.5)
-    cat(countdown(ceiling(diff), max = 6), "\r")
+    refresh <- diff >= 20
+    cat(countdown(ceiling(diff), max = 30, step = 5), "\r")
     Sys.sleep(1)
   }
 
-  get_auth_session_info(qr$client_id, poll$access_token)
+  transfer <- finalize_login(poll$refresh_token)
+  set_tokens(transfer)
+
+  auth <- list(
+    vanity = poll$account_name,
+    steamid = transfer$steamID,
+    client_id = qr$client_id,
+    request_id = qr$request_id
+  )
+  class(auth) <- "steam_auth_session"
+  assign("auth", auth, envir = globst)
+
+  if (!is_authenticated()) {
+    stop("Authentication was unsuccessful. Session is not authenticated.")
+  }
+
+  auth
 }
 
 
-countdown <- function(n, max = 5) {
-  count <- seq(1, n)
-  count <- paste0(count, "...")
-  empty <- rep(strrep(" ", 4), max - n)
+logout <- function() {
+  session <- globst$session
+
+  if (is.null(session)) {
+    stop("Cannot log out. Session is not authenticated.")
+  }
+
+  unlink(session)
+  rm("session", envir = globst)
+}
+
+
+countdown <- function(n, max = 5, step = 1) {
+  n <- as.numeric(n)
+  count <- seq(0, n, by = step)
+  empty <- rep(strrep(" ", 4), (max - count[length(count)]) / step)
+  count <- count[count != 0]
+  count <- if (length(count)) paste0(count, "...")
   paste(c(count, empty), collapse = " ")
 }
 
@@ -219,7 +282,7 @@ update_with_mobile_confirmation <- function(version,
                                             client_id,
                                             steamid,
                                             signature,
-                                            confirm = FALSE,
+                                            confirm = TRUE,
                                             persistence = TRUE) {
   params <- .make_params()
   request_webapi(
@@ -251,6 +314,66 @@ update_with_steam_guard_code <- function(client_id,
 }
 
 
+finalize_login <- function(refresh_token, sessionid = NULL) {
+  url <- "https://login.steampowered.com/jwt/finalizelogin"
+  params <- list(
+    nonce = refresh_token,
+    sessionid = sessionid,
+    redir = "https://steamcommunity.com/login/home/?goto="
+  )
+  request_generic(url, params, method = "POST")
+}
+
+
+set_tokens <- function(transfer) {
+  params <- transfer$transfer_info
+
+  if (is.null(params)) {
+    stop("Redirects after authentication failed, no parameters fetched.")
+  }
+
+  for (redir in params) {
+    redir$params$steamID <- transfer$steamID
+    request_generic(redir$url, redir$params, method = "POST")
+  }
+}
+
+
+set_cookies <- function() {
+  comm_domain <- get_hostname(comm_api())
+  store_domain <- get_hostname(store_api())
+
+  cookies <- read_cookies(globst$session)
+  comm_df <- cookies[cookies$domain %in% comm_domain, ]
+  store_df <- cookies[cookies$domain %in% store_domain, ]
+  store_cookie <- list()
+  comm_cookie <- list()
+
+  cnames <- c("steamLoginSecure", "sessionid", "steamRefresh_steam", "steamCountry")
+  for (name in cnames) {
+    cookie <- cookies[cookies$name %in% name, ]
+    cookie <- cookie$value[1]
+    store_cookie[[name]] <- comm_cookie[[name]] <- cookie[1]
+
+    if (name %in% "steamLoginSecure") {
+      store_cookie[[name]] <- store_df[store_df$name %in% name, ]$value
+      comm_cookie[[name]] <- comm_df[comm_df$name %in% name, ]$value
+    }
+  }
+
+  list(store = store_cookie, community = comm_cookie)
+}
+
+
+get_access_token <- function() {
+  request_internal(
+    api = store_api(),
+    interface = "pointssummary",
+    method = "ajaxgetasyncconfig"
+  )$data$webapi_token
+}
+
+
 check_captcha <- function(login) {
   if (isTRUE(login$captcha_needed)) {
     stop("Captcha test needed to authenticate.")
@@ -264,14 +387,14 @@ handle_steam_guard <- function(login, code) {
   }
 
   is_twofactor <- is.null(code)
-  cat("Steam Guard authentication required.\n")
   if (is_twofactor) {
-    cat("Confirm the login request using your Steam Guard mobile app.\n")
+    cat("Steam Guard authentication required.\n")
+    cat("Confirm the login request using your Steam Guard mobile app.\n\n")
 
     poll <- poll_auth_session_status(login$client_id, login$request_id)
-    if (is.null(poll$access_token)) {
+    while (is.null(poll$access_token)) {
       Sys.sleep(2)
-      poll <- handle_steam_guard(login)
+      poll <- poll_auth_session_status(login$client_id, login$request_id)
     }
   } else {
     update <- update_with_steam_guard_code(
@@ -287,6 +410,58 @@ handle_steam_guard <- function(login, code) {
 }
 
 
+is_authenticated <- function() {
+  # check if session is initialized
+  auth <- get0("auth", envir = globst)
+  if (is.null(auth)) {
+    return(FALSE)
+  }
+
+  # check if session is fully authenticated
+  token <- get_access_token()
+  if (is.null(token)) {
+    return(FALSE)
+  }
+
+  TRUE
+}
+
+
+check_authenticated <- function() {
+  if (!is_authenticated()) {
+    stop(paste(
+      "Session is not authenticated.",
+      "You can login using the auth_credentials or auth_qr functions."
+    ), call. = FALSE)
+  }
+}
+
+
+#' Get authentication
+#' @description
+#' Retrieve global authentication object. When authenticating a session
+#' using \code{\link{auth_credentials}} or \code{\link{auth_qr}}, an auth
+#' object is attached to the R session. This object can be useful when
+#' manually creating requests to the Steam API. Use this function to retrieve
+#' these informations. Only for advanced usage.
+#'
+#' @returns An auth object as returned by \code{auth_credentials} and
+#' \code{auth_qr}.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' auth_credentials("name")
+#'
+#' get_auth()
+#' }
+get_auth <- function() {
+  check_authenticated()
+  get("auth", envir = globst)
+}
+
+
 hex_to_raw <- function(x) {
   digits <- strtoi(strsplit(x, "")[[1]], base = 16L)
   as.raw(bitwShiftL(digits[c(TRUE, FALSE)], 4) + digits[c(FALSE, TRUE)])
@@ -297,9 +472,9 @@ hex_to_raw <- function(x) {
 print.steam_auth_session <- function(x, ...) {
   cat(
     "<steam_auth_session>\n",
-    " Steam ID   :", x$steamid, "\n",
+    " Vanity     :", x$vanity, "\n",
+    " Steam64    :", x$steamid, "\n",
     " Client ID  :", x$client_id, "\n",
-    " Request ID :", x$request_id, "\n",
-    " Token      : <redacted>\n"
+    " Request ID :", x$request_id, "\n"
   )
 }
