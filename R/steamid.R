@@ -70,12 +70,12 @@ resolve_vanity_url <- function(name, type = "profile") {
 #' @param include_vanity Whether to include vanity IDs in the output of
 #' \code{lookup_steamid}. Useful to prevent Web API lookups.
 #' @export
-lookup_steamid <- function(ids, include_vanity = TRUE) {
+lookup_steamid <- function(ids, include_vanity = TRUE, vanity_type = "profile") {
   ids <- lapply(ids, function(x) {
     as_data_frame(drop_null(list(
-      steam64 = convert_steamid(x, to = "steam64"),
-      steam2 = convert_steamid(x, to = "steam2"),
-      steam3 = convert_steamid(x, to = "steam3"),
+      steam64 = convert_steamid(x, to = "steam64", vanity_type),
+      steam2 = convert_steamid(x, to = "steam2", vanity_type),
+      steam3 = convert_steamid(x, to = "steam3", vanity_type),
       vanity = if (include_vanity) convert_steamid(x, to = "vanity")
     )))
   })
@@ -98,6 +98,9 @@ lookup_steamid <- function(ids, include_vanity = TRUE) {
 #' @param to Steam ID format to convert to. Must be one of \code{steam64},
 #' \code{steam2}, \code{steam3}, or \code{vanity}. Conversions from or to
 #' vanity require a Steam API key to be set.
+#' @param vanity_type Type of profile identified by the vanity ID. Passed to
+#' \code{\link{resolve_vanity_url}}. Ignored if \code{ids} does not contain
+#' vanity IDs.
 #'
 #' @details
 #' Steam knows four types of IDs (excluding invite codes):
@@ -147,8 +150,8 @@ lookup_steamid <- function(ids, include_vanity = TRUE) {
 #'
 #' lookup_steamid("vgenkin")
 #' }
-convert_steamid <- function(ids, to) {
-  vapply(ids, FUN.VALUE = character(1), function(x) {
+convert_steamid <- function(ids, to, vanity_type = "profile") {
+  vapply(unname(ids), FUN.VALUE = character(1), function(x) {
     if (is_steam64(x)) {
       switch(
         to,
@@ -176,7 +179,7 @@ convert_steamid <- function(ids, to) {
         x
       )
     } else {
-      steam64 <- resolve_vanity_url(x)
+      steam64 <- resolve_vanity_url(x, type = vanity_type)
       switch(
         to,
         steam64 = steam64,
@@ -215,10 +218,20 @@ convert_steamid <- function(ids, to) {
 #' is_vanity("12345", "76561197984981409") # TRUE, FALSE
 #' }
 is_steam64 <- function(x) {
+  if (!isTRUE(grepl("^[0-9]+$", x))) return(FALSE)
   binlen <- vapply(x, FUN.VALUE = numeric(1), function(s) {
     length(bigBits::buildBinaries(s, inBase = 10)$xbin)
   }, USE.NAMES = FALSE)
-  grepl("^[0-9]+$", x) & binlen >= 60 & binlen <= 64
+  is_64 <- binlen >= 60 & binlen <= 64
+
+  if (is_64 && is.numeric(x)) {
+    stop(paste(
+      "Steam ID identified as Steam64 but value is numeric.\n",
+      "To preserve numeric precision, pass Steam ID as a character string."
+    ))
+  }
+
+  is_64
 }
 
 
@@ -379,21 +392,18 @@ bin_to_dec <- function(x) {
 
 steam64_to_steam2 <- function(id) {
   type <- get_account_type(id)
-  switch(
-    as.character(type),
-    "0" = NULL,
-    "1" = {
-      universe <- get_account_universe(id)
-      acc_id <- get_account_id(id)
-      sprintf(
-        "STEAM_%s:%s:%s",
-        universe,
-        bitwAnd(acc_id, 1),
-        bitwShiftR(acc_id, 1)
-      )
-    },
-    as.character(id)
-  )
+  if (identical(as.character(type), "1")) {
+    universe <- get_account_universe(id)
+    acc_id <- get_account_id(id)
+    sprintf(
+      "STEAM_%s:%s:%s",
+      universe,
+      bitwAnd(acc_id, 1),
+      bitwShiftR(acc_id, 1)
+    )
+  } else {
+    NA_character_
+  }
 }
 
 
@@ -452,14 +462,14 @@ steam3_to_steam64 <- function(id) {
   parsed <- gmp::as.bigq(0)
   num <- bitwOr(bitwShiftL(strtoi(comp$number), 1), 1)
 
-  if (comp$inst > 4) {
+  if (comp$instance > 4) {
     parsed <- set_account_type(parsed, 8)
   } else {
     parsed <- set_account_type(parsed, comp$type)
   }
 
-  parsed <- set_account_universe(parsed, comp$univ)
-  parsed <- set_account_instance(parsed, comp$inst)
+  parsed <- set_account_universe(parsed, comp$universe)
+  parsed <- set_account_instance(parsed, comp$instance)
   parsed <- set_account_id(parsed, num)
   as.character(parsed)
 }

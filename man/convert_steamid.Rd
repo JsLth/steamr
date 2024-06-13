@@ -8,9 +8,9 @@
 \alias{parse_steam3}
 \title{Convert Steam ID}
 \usage{
-lookup_steamid(ids, include_vanity = TRUE)
+lookup_steamid(ids, include_vanity = TRUE, vanity_type = "profile")
 
-convert_steamid(ids, to)
+convert_steamid(ids, to, vanity_type = "profile")
 
 parse_steam64(ids)
 
@@ -25,6 +25,9 @@ assumes vanity.}
 
 \item{include_vanity}{Whether to include vanity IDs in the output of
 \code{lookup_steamid}. Useful to prevent Web API lookups.}
+
+\item{vanity_type}{Type of profile identified by the vanity ID. Passed to
+\code{\link{resolve_vanity_url}}.}
 
 \item{to}{Steam ID format to convert to. Must be one of \code{steam64},
 \code{steam2}, \code{steam3}, or \code{vanity}. Conversions from or to
