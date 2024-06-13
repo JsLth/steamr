@@ -1,0 +1,129 @@
+---
+title: "Converting Steam IDs"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Converting Steam IDs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(steamr)
+```
+
+The Steam API uses a variety of IDs. From user IDs, clan IDs and game
+group IDs to more special cases like curator IDs or recommendation IDs,
+identifying things in Steam works using strings of numerical mumbo-jumbo. 
+This can become quite inconvenient if there are multiple types of the same
+ID. This is the case for Steam IDs which can identify users, groups, and
+game groups. Steam IDs can take four forms: 
+
+- **Vanity IDs**: Human-readable account name given by the user
+- **Steam64 IDs**: 64-bit representations of account information
+- **Steam2 IDs**: Text representations of account information
+- **Steam3 IDs**: Slightly more useful text representations of account information
+
+It is important to be able to convert between these IDs. Usually, vanity IDs
+are used wherever accounts are handled and shared by users. Steam64 is
+machine-readable and often used in API methods. Steam2 and Steam3 contain the
+most important information in relatively easy to access ways. Each ID type
+(except vanity) consists of five components: Authentication server (or simply
+Y), account number (or Z), instance, type, and universe (or X).
+
+The authentication server can be 0 or 1. If the account number is even,
+it is 0, otherwise it is 1. The account number is a unique number of a
+user account. The instance is a number between 0 and 4 that tells us if the
+account is a desktop instance (1), console instance (2), web distance (4), or
+all at once (0). The account type identifies whether we are dealing with a
+user or individual (1), group (7), or something else (e.g., a cypercafe
+account or game server). Finally, the universe can be a number between 0 and 5
+but is mostly set to 1 (public). 0 (unspecified), 2 (beta), and 3 (internal)
+are also possible. 4 and 5 are legacy universes and do not really exist.
+
+`steamr` supports conversions and parsing of Steam IDs. It is built on the
+popular [SteamID php library](https://github.com/xPaw/SteamID.php/) and powered
+by the [`gmp`](https://cran.r-project.org/web/packages/gmp/) and
+[`bigBits`](https://cran.r-project.org/web/packages/bigBits/index.html)
+packages for high-precision arithmetics and logical operations. More information
+on Steam IDs can be found on the
+[official wiki](https://developer.valvesoftware.com/wiki/SteamID).
+
+## Conversions
+
+To convert between different types of IDs, we can use the
+`convert_steamid` function. To convert from or to vanity IDs, an API key is
+required to be set.
+
+```{r}
+vanities <- c("BeFoRE-CS", "vgenkin")
+steam64 <- convert_steamid(vanities, to = "steam64")
+steam64
+```
+
+```{r}
+steam2 <- convert_steamid(steam64, to = "steam2")
+steam2
+```
+
+```{r}
+steam3 <- convert_steamid(steam2, to = "steam3")
+steam3
+```
+
+```{r}
+convert_steamid(steam3, to = "vanity")
+```
+
+While conversions between Steam64, Steam2 and Steam3 can be done by applying
+some high-precision logical operations, resolving vanity IDs requires
+communicating with the Steam Web API. Vanity conversions are powered by
+the `ResolveVanityURL` endpoint in the `resolve_vanity_url` function. Here,
+we can also specify the type of profile, i.e. profile, group, or game group.
+For example, we can look up the name of the
+[official Valve group](https://steamcommunity.com/groups/Valve):
+
+```{r}
+resolve_vanity_url("Valve", type = "group")
+```
+```{r}
+lookup_steamid("Valve", vanity_type = "group")
+```
+
+
+
+One way to get these converted IDs in a tidy dataframe is to use the
+`lookup_steamid` function.
+
+```{r}
+lookup_steamid(vanities)
+```
+
+## Parsing
+
+If we are interested in the internals of the Steam IDs, `steamr` provides
+parsing functions for Steam64, Steam3, and Steam2 IDs. All parsing functions
+return dataframes and work on vectors.
+
+```{r}
+steam64 <- c(steam64, "103582791429521412")
+parse_steam64(steam64)
+```
+
+```{r}
+parse_steam2(steam2)
+```
+
+```{r}
+steam3 <- c(steam3, "[g:1:4]")
+parse_steam3(steam3)
+```
+
+
+
