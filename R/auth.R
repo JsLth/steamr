@@ -20,7 +20,26 @@
 #' in Steam Guard.
 #' @param details Arbitrary details about the device attempting to
 #' authenticate. Will be shown in Steam Guard.
-#' @returns Information about the authenticated session.
+#' @returns An object of class \code{steam_auth_session} holding information
+#' about vanity ID, Steam64 ID, client ID, request ID, and access token. The
+#' object is also attached to the session.
+#'
+#' @details
+#' Internally, \code{auth_credentials} requests a public RSA key using the
+#' \code{GetPasswordRSAPublicKey} method from the \code{IAuthenticationService}
+#' interface. The public key is used to encrypt the entered password to safely
+#' transfer it to Steam. An authenticated session is requested by querying
+#' \code{BeginAuthSessionViaCredentials}. If a captcha is required, the
+#' function aborts. If no Steam Guard code is provided, the function will
+#' attempt to authenticate using 2 factor authentication. After confirming
+#' the authentication, \code{auth_credentials} will redirect to all Steam
+#' websites requiring authentication to set the necessary cookies.
+#'
+#' \code{auth_qr} follows a very similar process, but requests an authenticated
+#' session using \code{BeginAuthSessionViaQR}. The resulting challenge URL
+#' is converted to a QR code using \code{\link[qrcode]{qrcode}}. Scanning the
+#' QR code with the Steam Guard mobile app automatically authenticates the
+#' session.
 #'
 #' @note
 #' Session authentication is only possible in interactive mode because it
@@ -41,6 +60,9 @@
 #'
 #' # set a friendly name to identify this session
 #' auth_credentials(user, friendly_name = "R session")
+#'
+#' # skip two-factor authentication by providing a Steam Guard code
+#' auth_credentials(user, shared_secret = "XXXXX")
 #'
 #' # sign in using a QR code
 #' auth_qr()
@@ -86,16 +108,12 @@ auth_credentials <- function(username,
   # tell various steam pages they are now authenticated
   set_tokens(transfer)
 
-  # store cookies to identify authenticated session
-  #cookies <- set_cookies()
-
   auth <- list(
     vanity = poll$account_name,
     steamid = login$steamid,
     client_id = login$client_id,
     request_id = login$request_id,
-    token = poll$access_token#,
-    #cookies = cookies
+    token = get_access_token()
   )
   class(auth) <- "steam_auth_session"
   assign("auth", auth, envir = globst)
@@ -116,6 +134,8 @@ auth_credentials <- function(username,
 #'
 #' @export
 auth_qr <- function(friendly_name = NULL, device_details = NULL) {
+  check_interactive()
+
   if (!loadable("qrcode")) {
     stop("The qrcode package must be installed to generate QR codes.")
   }
@@ -172,6 +192,14 @@ logout <- function() {
 
   if (is.null(session)) {
     stop("Cannot log out. Session is not authenticated.")
+  }
+
+  url <- file.path(store_api(), "login/logout")
+  params <- list(sessionid = get_sessionid())
+  request_generic(url, params = params, method = "POST")
+
+  if (is_authenticated()) {
+    stop("Logout was unsuccessful. Session is still authenticated.")
   }
 
   unlink(session)
@@ -339,38 +367,20 @@ set_tokens <- function(transfer) {
 }
 
 
-set_cookies <- function() {
-  comm_domain <- get_hostname(comm_api())
-  store_domain <- get_hostname(store_api())
-
-  cookies <- read_cookies(globst$session)
-  comm_df <- cookies[cookies$domain %in% comm_domain, ]
-  store_df <- cookies[cookies$domain %in% store_domain, ]
-  store_cookie <- list()
-  comm_cookie <- list()
-
-  cnames <- c("steamLoginSecure", "sessionid", "steamRefresh_steam", "steamCountry")
-  for (name in cnames) {
-    cookie <- cookies[cookies$name %in% name, ]
-    cookie <- cookie$value[1]
-    store_cookie[[name]] <- comm_cookie[[name]] <- cookie[1]
-
-    if (name %in% "steamLoginSecure") {
-      store_cookie[[name]] <- store_df[store_df$name %in% name, ]$value
-      comm_cookie[[name]] <- comm_df[comm_df$name %in% name, ]$value
-    }
-  }
-
-  list(store = store_cookie, community = comm_cookie)
-}
-
-
 get_access_token <- function() {
   request_internal(
     api = store_api(),
     interface = "pointssummary",
     method = "ajaxgetasyncconfig"
   )$data$webapi_token
+}
+
+
+get_sessionid <- function() {
+  cookiejar <- get("session", envir = globst)
+  cookies <- read_cookies(cookiejar)
+  sessionid <- cookies[cookies$name %in% "sessionid", ]
+  sessionid$value[1]
 }
 
 
@@ -427,16 +437,6 @@ is_authenticated <- function() {
 }
 
 
-check_authenticated <- function() {
-  if (!is_authenticated()) {
-    stop(paste(
-      "Session is not authenticated.",
-      "You can login using the auth_credentials or auth_qr functions."
-    ), call. = FALSE)
-  }
-}
-
-
 #' Get authentication
 #' @description
 #' Retrieve global authentication object. When authenticating a session
@@ -459,6 +459,12 @@ check_authenticated <- function() {
 get_auth <- function() {
   check_authenticated()
   get("auth", envir = globst)
+}
+
+
+set_auth <- function(auth, session) {
+  assign("auth", auth, envir = globst)
+  assign("session", session, envir = globst)
 }
 
 

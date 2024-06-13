@@ -82,3 +82,20 @@ check_specified <- function(exact = FALSE) {
 
   }
 }
+
+
+check_interactive <- function() {
+  if (!interactive()) {
+    stop("Session authentication is only possible in interactive mode.")
+  }
+}
+
+
+check_authenticated <- function() {
+  if (!is_authenticated()) {
+    stop(paste(
+      "Session is not authenticated.",
+      "You can login using the auth_credentials or auth_qr functions."
+    ), call. = FALSE)
+  }
+}

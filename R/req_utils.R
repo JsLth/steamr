@@ -25,11 +25,23 @@
 }
 
 
-pivot_longer_list <- function(lst) {
+pivot_longer_list <- function(lst, names_to = "name", values_to = "value") {
   lst <- lapply(names(lst), function(k) {
-    val <- unlist(lst[[k]])
-    name <- rep(k, length(val))
-    list(name = name, value = val)
+    val <- lst[[k]]
+
+    if (!is.data.frame(val)) {
+      # normal list
+      val <- unlist(val, use.names = FALSE)
+      name <- rep(k, length(val))
+      df <- data.frame(name = name, value = val)
+      names(df) <- c(names_to, values_to)
+    } else {
+      # list of dataframes
+      name <- rep(k, nrow(val))
+      df <- cbind(name, val)
+      names(df) <- c(names_to, names(val))
+    }
+    df
   })
-  do.call(rbind.data.frame, lst)
+  rbind_list(lst)
 }

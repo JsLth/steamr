@@ -39,7 +39,9 @@ in Steam Guard.}
 authenticate. Will be shown in Steam Guard.}
 }
 \value{
-Information about the authenticated session.
+An object of class \code{steam_auth_session} holding information
+about vanity ID, Steam64 ID, client ID, request ID, and access token. The
+object is also attached to the session.
 }
 \description{
 Initializes an authorized Steam session. Some functions in both the
@@ -50,6 +52,23 @@ concerns all API methods that access personal account information.
 \code{show_steam_qr} authenticates by showing a QR code that can be
 scanned using the Steam mobile app. The QR code is shown as an R plot
 and refreshes every 5 seconds.
+}
+\details{
+Internally, \code{auth_credentials} requests a public RSA key using the
+\code{GetPasswordRSAPublicKey} method from the \code{IAuthenticationService}
+interface. The public key is used to encrypt the entered password to safely
+transfer it to Steam. An authenticated session is requested by querying
+\code{BeginAuthSessionViaCredentials}. If a captcha is required, the
+function aborts. If no Steam Guard code is provided, the function will
+attempt to authenticate using 2 factor authentication. After confirming
+the authentication, \code{auth_credentials} will redirect to all Steam
+websites requiring authentication to set the necessary cookies.
+
+\code{auth_qr} follows a very similar process, but requests an authenticated
+session using \code{BeginAuthSessionViaQR}. The resulting challenge URL
+is converted to a QR code using \code{\link[qrcode]{qrcode}}. Scanning the
+QR code with the Steam Guard mobile app automatically authenticates the
+session.
 }
 \note{
 Session authentication is only possible in interactive mode because it
@@ -67,6 +86,9 @@ auth_credentials(user, password = rstudioapi::askForPassword)
 
 # set a friendly name to identify this session
 auth_credentials(user, friendly_name = "R session")
+
+# skip two-factor authentication by providing a Steam Guard code
+auth_credentials(user, shared_secret = "XXXXX")
 
 # sign in using a QR code
 auth_qr()

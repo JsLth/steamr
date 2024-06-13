@@ -63,6 +63,16 @@ as_data_frame <- function(x) {
 }
 
 
+fields_as_data_frame <- function(x) {
+  for (i in seq_along(x)) {
+    if (is.data.frame(x[[i]])) {
+      x[[i]] <- as_data_frame(x[[i]])
+    }
+  }
+  x
+}
+
+
 bind_rows <- function(..., .id = NULL) {
   dots <- list(...)
   out <- rbind_list(dots)

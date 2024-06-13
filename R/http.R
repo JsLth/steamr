@@ -4,10 +4,11 @@ store_api <- function() "https://store.steampowered.com"
 comm_api <- function() "https://steamcommunity.com"
 valve_api <- function() "https://valvesoftware.com"
 
+
 request_webapi <- function(api,
                            interface,
                            method,
-                           version,
+                           version = "v1",
                            params = list(),
                            http_method = "GET",
                            simplify = TRUE,
