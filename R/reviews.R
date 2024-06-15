@@ -173,6 +173,23 @@ get_all_app_reviews <- function(appid,
 }
 
 
+get_app_review <- function(steamid, appid) {
+  check_string(steamid)
+  check_number(appid)
+
+  requests <- list(steamid = steamid, appid = appid)
+  input_json <- .make_input_json(requests = list(requests))
+  params <- .make_params(input_json = input_json)
+  res <- request_webapi(
+    api = public_api(),
+    interface = "IUserReviewsService",
+    method = "GetIndividualRecommendations",
+    version = "v1",
+    params = params
+  )$response$recommendations
+  as_data_frame(res)
+}
+
 
 get_review_histogram <- function(appid,
                                  language = "english",

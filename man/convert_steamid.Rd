@@ -27,7 +27,8 @@ assumes vanity.}
 \code{lookup_steamid}. Useful to prevent Web API lookups.}
 
 \item{vanity_type}{Type of profile identified by the vanity ID. Passed to
-\code{\link{resolve_vanity_url}}.}
+\code{\link{resolve_vanity_url}}. Ignored if \code{ids} does not contain
+vanity IDs.}
 
 \item{to}{Steam ID format to convert to. Must be one of \code{steam64},
 \code{steam2}, \code{steam3}, or \code{vanity}. Conversions from or to
@@ -44,27 +45,27 @@ IDs.
 \details{
 Steam knows four types of IDs (excluding invite codes):
 \itemize{
- \item{ID64 is largely used by the Steam Web API and internal API.
- It is a 64-bit representation of a profile that can also be used
- in steamcommunity URLs.}
- \item{Steam2 is a textual representation of a profile that consists
- of descriptive components: the universe, authentication server, and
- account number.}
- \item{Steam3 is a newer textual format that is used by many games.
- It consists of account type, universe, account number, and account
- instance.}
- \item{Vanity IDs are the self-chosen account names of an individual
- or group. They can be found in steamcommunity URLs. To resolve or
- convert them, access to Steam's Web API is required.}
+\item{ID64 is largely used by the Steam Web API and internal API.
+It is a 64-bit representation of a profile that can also be used
+in steamcommunity URLs.}
+\item{Steam2 is a textual representation of a profile that consists
+of descriptive components: the universe, authentication server, and
+account number.}
+\item{Steam3 is a newer textual format that is used by many games.
+It consists of account type, universe, account number, and account
+instance.}
+\item{Vanity IDs are the self-chosen account names of an individual
+or group. They can be found in steamcommunity URLs. To resolve or
+convert them, access to Steam's Web API is required.}
 }
 
 Each Steam ID explicitly or implicitly consists of several components:
 \itemize{
- \item{The authentication server (0 or 1)}
- \item{The account number}
- \item{The account instance (number between 0 and 4)}
- \item{The account type (number between 0 and 10)}
- \item{The universe (number between 0 and 5)}
+\item{The authentication server (0 or 1)}
+\item{The account number}
+\item{The account instance (number between 0 and 4)}
+\item{The account type (number between 0 and 10)}
+\item{The universe (number between 0 and 5)}
 }
 
 The \code{parse_*} functions are able to parse the individual components of
@@ -77,6 +78,51 @@ This function is not perfect, but should suffice for most use cases.
 Special cases and older profiles sometimes return the wrong account number
 or universe.
 }
+\section{Steam ID components}{
+
+A Steam ID consists of five components. The auth server (\code{auth}) can be
+either 0 or 1. The account number (\code{number}) is a unique identifier for the
+account.
+
+Instance values correspond to the following meanings:
+
+\tabular{cl}{
+\strong{Instance} \tab \strong{Description} \cr
+0 \tab All instances   \cr
+1 \tab Desktop instance\cr
+2 \tab Console instance\cr
+4 \tab Web instance
+}
+
+Types values correspond to the following meanings:
+
+\tabular{cl}{
+\strong{Type} \tab \strong{Description} \cr
+0 \tab Invalid              \cr
+1 \tab Individual           \cr
+2 \tab Multiseat            \cr
+3 \tab Game server          \cr
+4 \tab Anonymous game server\cr
+5 \tab Pending              \cr
+6 \tab Content server       \cr
+7 \tab Clan                 \cr
+8 \tab Chat                 \cr
+9 \tab P2P super seeder     \cr
+10 \tab Anonymous user
+}
+
+Universe values correspond to the following meanings:
+
+\tabular{cl}{
+\strong{Universe} \tab \strong{Description} \cr
+0 \tab Invalid \cr
+1 \tab Public  \cr
+2 \tab Beta    \cr
+3 \tab Internal\cr
+4 \tab Dev
+}
+}
+
 \examples{
 \dontrun{
 convert_steamid("vgenkin", "steam64") |>

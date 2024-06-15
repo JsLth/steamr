@@ -1,12 +1,24 @@
-.make_params <- function(..., key = TRUE, env = parent.frame()) {
+.make_params <- function(...,
+                         key = TRUE,
+                         access_token = TRUE,
+                         env = parent.frame()) {
   if (!...length()) {
     params <- as.list(env)
   } else {
     params <- list(...)
   }
 
+  auth <- get0("auth", envir = globst)
+  if (!key) {
+    key <- NULL
+  } else if (!is.null(auth) && access_token) {
+    key <- list(access_token = auth$token)
+  } else {
+    key <- list(key = api_key())
+  }
+
   params <- drop_empty(drop_null(params))
-  c(key = if (key) api_key(), params)
+  c(key, params)
 }
 
 

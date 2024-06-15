@@ -12,6 +12,7 @@ request_webapi <- function(api,
                            params = list(),
                            http_method = "GET",
                            simplify = TRUE,
+                           cursor = FALSE,
                            serror = TRUE,
                            access_token = NULL,
                            dry = FALSE) {
@@ -25,10 +26,12 @@ request_webapi <- function(api,
     if (is.logical(x)) {
       params[[k]] <- as.numeric(x)
     } else if (is.numeric(x)) {
-      params[[k]] <- format(x, scientific = FALSE)
-    } else if (is.list(x) && !is.null(names(x))) {
+      params[[k]] <- format(x, scientific = FALSE, trim = TRUE)
+    }
+
+    if (length(x) > 1 && !is.null(names(x))) {
       params[[k]] <- jsonlite::toJSON(x, auto_unbox = TRUE, force = TRUE)
-    } else if (is.list(x)) {
+    } else if (length(x) > 1) {
       idx <- match(k, names(params))
       for (i in seq_along(x)) {
         names(x)[i] <- sprintf("%s[%s]", k, i - 1)
@@ -80,9 +83,31 @@ request_webapi <- function(api,
 
   if (dry) {
     return(httr2::req_dry_run(req))
+  }
+
+  if (cursor) {
+    limit <- getOption("steamr_max_reqs_cursor", Inf)
+    reses <- httr2::req_perform_iterative(
+      req,
+      next_req = httr2::iterate_with_cursor(
+        param_name = "cursor",
+        resp_param_value = extract_cursor
+      ),
+      max_reqs = limit
+    )
+
+    reses <- lapply(
+      reses,
+      function(resp, ...) {
+        resp <- httr2::resp_body_json(resp, ...)
+        if (!identical(resp$response$count, 0L)) resp
+      },
+      simplifyVector = simplify,
+      flatten = TRUE
+    )
+    reses[!lvapply(reses, is.null)]
   } else {
     res <- httr2::req_perform(req)
-
     ecode <- res$headers[["X-eresult"]]
     if (serror) {
 
@@ -189,6 +214,7 @@ request_generic <- function(url,
                             method = "GET",
                             format = "json",
                             format_args = NULL,
+                            headers = NULL,
                             dry = FALSE) {
   req <- httr2::request(url)
 
@@ -203,6 +229,10 @@ request_generic <- function(url,
   req <- use_session(req)
   req <- use_auth(req, url)
   req <- httr2::req_method(req, method)
+
+  if (!is.null(headers)) {
+    req <- do.call(httr2::req_headers, c(list(req), headers))
+  }
 
   if (dry) {
     return(httr2::req_dry_run(req))
@@ -271,6 +301,13 @@ fix_steam_bool <- function(res) {
   res
 }
 
+
+extract_cursor <- function(resp) {
+  content <- httr2::resp_body_json(resp)$response
+  if (!identical(content$count, 0L)) {
+    content$next_cursor
+  }
+}
 
 get_hostname <- function(url) {
   httr2::url_parse(url)$hostname

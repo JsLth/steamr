@@ -133,6 +133,48 @@ lookup_steamid <- function(ids, include_vanity = TRUE, vanity_type = "profile") 
 #' documented in the source code of the
 #' \href{SteamID PHP library}{https://github.com/xPaw/SteamID.php/blob/master/SteamID.php}
 #'
+#' @section Steam ID components:
+#' A Steam ID consists of five components. The auth server (`auth`) can be
+#' either 0 or 1. The account number (`number`) is a unique identifier for the
+#' account.
+#'
+#' Instance values correspond to the following meanings:
+#'
+#' \tabular{cl}{
+#'   \strong{Instance} \tab \strong{Description} \cr
+#'   0 \tab All instances   \cr
+#'   1 \tab Desktop instance\cr
+#'   2 \tab Console instance\cr
+#'   4 \tab Web instance
+#' }
+#'
+#' Types values correspond to the following meanings:
+#'
+#' \tabular{cl}{
+#'   \strong{Type} \tab \strong{Description} \cr
+#'    0 \tab Invalid              \cr
+#'    1 \tab Individual           \cr
+#'    2 \tab Multiseat            \cr
+#'    3 \tab Game server          \cr
+#'    4 \tab Anonymous game server\cr
+#'    5 \tab Pending              \cr
+#'    6 \tab Content server       \cr
+#'    7 \tab Clan                 \cr
+#'    8 \tab Chat                 \cr
+#'    9 \tab P2P super seeder     \cr
+#'   10 \tab Anonymous user
+#' }
+#'
+#' Universe values correspond to the following meanings:
+#'
+#' \tabular{cl}{
+#'   \strong{Universe} \tab \strong{Description} \cr
+#'   0 \tab Invalid \cr
+#'   1 \tab Public  \cr
+#'   2 \tab Beta    \cr
+#'   3 \tab Internal\cr
+#'   4 \tab Dev
+#' }
 #'
 #' @note
 #' This function is not perfect, but should suffice for most use cases.
@@ -140,6 +182,7 @@ lookup_steamid <- function(ids, include_vanity = TRUE, vanity_type = "profile") 
 #' or universe.
 #'
 #' @export
+#' @md
 #'
 #' @examples
 #' \dontrun{

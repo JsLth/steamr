@@ -12,16 +12,16 @@ get_app_list <- function() {
 }
 
 
-up_to_date_check <- function(appid, version) {
-  check_integerish(appid)
-  check_integerish(version)
+get_games_by_players <- function() {
 
-  params <- .make_params()
-  request_webapi(
-    api = public_api(),
-    interface = "ISteamApps",
-    method = "UpToDateCheck",
-    version = "v1",
-    params = params
-  )$response
+}
+
+
+get_most_played_games <- function(steam_deck = FALSE) {
+
+}
+
+
+get_top_releases <- function() {
+
 }

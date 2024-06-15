@@ -174,7 +174,8 @@ auth_qr <- function(friendly_name = NULL, device_details = NULL) {
     vanity = poll$account_name,
     steamid = transfer$steamID,
     client_id = qr$client_id,
-    request_id = qr$request_id
+    request_id = qr$request_id,
+    token = get_access_token()
   )
   class(auth) <- "steam_auth_session"
   assign("auth", auth, envir = globst)
@@ -196,7 +197,12 @@ logout <- function() {
 
   url <- file.path(store_api(), "login/logout")
   params <- list(sessionid = get_sessionid())
-  request_generic(url, params = params, method = "POST")
+  request_generic(
+    url,
+    params = params,
+    method = "POST",
+    headers = list(`Content-Length` = 573)
+  )
 
   if (is_authenticated()) {
     stop("Logout was unsuccessful. Session is still authenticated.")
@@ -456,9 +462,13 @@ is_authenticated <- function() {
 #'
 #' get_auth()
 #' }
-get_auth <- function() {
+get_auth <- function(field = NULL) {
   check_authenticated()
-  get("auth", envir = globst)
+  auth <- get("auth", envir = globst)
+  if (!is.null(field)) {
+    auth <- auth[[field]]
+  }
+  auth
 }
 
 

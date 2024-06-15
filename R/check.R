@@ -15,6 +15,7 @@ check_length <- function(x, ge = -Inf, le = Inf) {
   }
 }
 
+
 check_scalar <- function(x) {
   check <- length(x) == 1
   if (!check) {
@@ -62,6 +63,17 @@ check_date <- function(x, null = FALSE) {
       "%s must be a date-time object, not %s",
       obj_name(x),
       class(x)
+    ))
+  }
+}
+
+
+check_number <- function(x, null = FALSE) {
+  if (null && is.null(x)) return()
+  check <- is.numeric(x) || all(grepl("^[0-9]+$", x))
+  if (!check) {
+    stop(sprintf(
+      "%s must be a number, either as a string or numeric.", obj_name(x)
     ))
   }
 }

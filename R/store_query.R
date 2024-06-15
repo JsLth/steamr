@@ -23,9 +23,7 @@ query <- function(query,
     country_code = country_code,
     steam_realm = steam_realm
   )
-  input_json <- .make_input_json(
-    context = context
-  )
+  input_json <- .make_input_json(context = context)
 
   params <- .make_params(query_name = query, input_json = input_json)
   res <- request_webapi(

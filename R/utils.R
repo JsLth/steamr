@@ -49,6 +49,12 @@ box <- function(x) {
 }
 
 
+to_title <- function(x) {
+  s <- strsplit(x, " ")[[1]]
+  paste0(toupper(substring(s, 1, 1)), substring(s, 2), collapse = " ")
+}
+
+
 loadable <- function(x) {
   suppressPackageStartupMessages(suppressWarnings(requireNamespace(x)))
 }
