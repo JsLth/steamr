@@ -30,12 +30,17 @@ vswitch <- function(expr, fun_value = character(1), ...) {
 
 
 drop_null <- function(x) {
-  x[!vapply(x, is.null, FUN.VALUE = logical(1))]
+  x[!lvapply(x, is.null)]
 }
 
 
 drop_empty <- function(x) {
   x[lengths(x) > 0]
+}
+
+
+drop_false <- function(x) {
+  x[!lvapply(x, isFALSE)]
 }
 
 
@@ -100,8 +105,11 @@ rbind_list <- function(args) {
   len <- vapply(args, length, numeric(1))
   out <- vector("list", length(len))
   for (i in seq_along(len)) {
+    if (!is.data.frame(args[[i]])) {
+      args[[i]] <- as.data.frame(drop_null(args[[i]]))
+    }
     if (nrow(args[[i]])) {
-      nam_diff <- setdiff(unam, nam[[i]])
+      nam_diff <- setdiff(unam, names(args[[i]]))
       if (length(nam_diff)) {
         args[[i]][nam_diff] <- NA
       }

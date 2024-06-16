@@ -107,7 +107,7 @@ get_app_reviews <- function(appid,
     json = TRUE,
     cursor = cursor
   )
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "appreviews",
     method = appid,
@@ -201,7 +201,7 @@ get_review_histogram <- function(appid,
     l = language,
     review_score_preference = review_score_preference
   )
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "appreviewhistogram",
     method = appid,

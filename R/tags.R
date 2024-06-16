@@ -39,7 +39,7 @@ get_most_popular_tags <- function(language = "english") {
 #' @export
 get_frequent_tags <- function() {
   check_authenticated()
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "tagdata",
     method = "myfrequenttags"
@@ -52,7 +52,7 @@ get_frequent_tags <- function() {
 #' @export
 get_recommended_tags <- function() {
   check_authenticated()
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "tagdata",
     method = "recommendedtags"

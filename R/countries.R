@@ -2,14 +2,20 @@
 #' @description
 #' Retrieves information on Steam's country, region, and city codes.
 #'
+#' \code{query_locations} queries the storefront API and can drill down all
+#' Steam location levels, while \code{get_country_list} can only provide
+#' information on the country level.
+#'
 #' @param country ISO-2 country code. If specified, returns information
 #' on regions, otherwise countries.
 #' @param region Region code within a country specified in \code{country}.
 #' Country must not be \code{NULL} if \code{region} is specified. If specified,
 #' returns information on cities, otherwise on regions.
 #'
-#' @returns A dataframe with information on country code, region code, city
-#' code and geographical name.
+#' @returns \code{query_locations} returns a dataframe with country code,
+#' name, and whether the location can be further subdivided.
+#'
+#' \code{get_country_list} only returns country code and name.
 #'
 #' @export
 #'
@@ -31,7 +37,7 @@ query_locations <- function(country = NULL, region = NULL) {
   check_string(country, null = TRUE)
   check_string(region, null = TRUE)
   params <- .make_params(key = FALSE)
-  request_internal(
+  request_storefront(
     comm_api(),
     interface = "actions",
     method = "QueryLocations",
@@ -43,7 +49,6 @@ query_locations <- function(country = NULL, region = NULL) {
 
 #' @rdname query_locations
 #' @inheritParams get_items
-#' @returns A dataframe containing country codes and names
 #'
 #' @export
 #'

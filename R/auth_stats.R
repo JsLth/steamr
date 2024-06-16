@@ -1,6 +1,6 @@
 get_userdata <- function() {
   check_authenticated()
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "dynamicstore",
     method = "userdata"
@@ -47,7 +47,7 @@ get_app_user_details <- function(appids) {
   check_authenticated()
   appids <- paste(appids, collapse = ",")
   params <- .make_params(key = FALSE)
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "api",
     method = "appuserdetails",
@@ -77,7 +77,7 @@ get_app_user_details <- function(appids) {
 
 get_library_stats <- function() {
   check_authenticated()
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "contenthub",
     method = "ajaxgetdlcstatsforuser"
@@ -90,7 +90,7 @@ get_owned_apps <- function() {
   check_authenticated()
   sessionid <- get_sessionid()
   params <- .make_params()
-  res <- request_internal(
+  res <- request_storefront(
     api = comm_api(),
     interface = "actions",
     method = "GetOwnedApps",
@@ -102,7 +102,7 @@ get_owned_apps <- function() {
 
 get_friends <- function() {
   check_authenticated()
-  res <- request_internal(
+  res <- request_storefront(
     api = comm_api(),
     interface = "actions",
     method = "ajaxlistfriends"
@@ -115,7 +115,7 @@ get_friends <- function() {
 get_friend_data <- function(steamid) {
   check_authenticated()
   params <- .make_params(u = steamid, key = FALSE)
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "friends",
     method = "frienddata",
@@ -129,7 +129,7 @@ get_friend_data <- function(steamid) {
 get_badge <- function(appid, badgeid) {
   check_authenticated()
   params <- .make_params(key = FALSE)
-  res <- request_internal(
+  res <- request_storefront(
     api = comm_api(),
     interface = "actions",
     method = "ajaxgetbadgeinfo",
@@ -145,7 +145,7 @@ get_badge <- function(appid, badgeid) {
 get_badge_info <- function(appid) {
   check_authenticated()
   params <- .make_params(key = FALSE)
-  res <- request_internal(
+  res <- request_storefront(
     api = comm_api(),
     interface = "my",
     method = "ajaxgetbadgeinfo",
@@ -160,7 +160,7 @@ get_badge_info <- function(appid) {
 recommend_apps <- function(appid) {
   check_authenticated()
   params <- .make_params(key = FALSE)
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "explore",
     method = "ajaxgetstorerelevancedata",
@@ -184,7 +184,7 @@ recommend_apps <- function(appid) {
 get_price_history <- function(appid, hash_name) {
   check_authenticated()
   params <- .make_params(key = FALSE)
-  res <- request_internal(
+  res <- request_storefront(
     api = comm_api(),
     interface = "market",
     method = "pricehistory",

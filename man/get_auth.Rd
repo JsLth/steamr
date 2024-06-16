@@ -4,7 +4,7 @@
 \alias{get_auth}
 \title{Get authentication}
 \usage{
-get_auth()
+get_auth(field = NULL)
 }
 \value{
 An auth object as returned by \code{auth_credentials} and

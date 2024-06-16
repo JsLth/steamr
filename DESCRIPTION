@@ -5,7 +5,7 @@ Version: 0.1.0
 Authors@R: 
     person("Jonas", "Lieth", , "jonas.lieth@gesis.org", role = c("aut", "cre"))
 Maintainer: The package maintainer <yourself@somewhere.net>
-Description: R interface to the Steam Web API and internal API. Performs
+Description: R interface to the Steam Web API and storefront API. Performs
     standardized API calls, session authentication, key management, Steam ID
     conversion and response formatting. Provides tools for data scraping of
     game details, user reviews, store economy data, news, and many more.

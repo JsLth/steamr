@@ -72,7 +72,7 @@ query_events <- function(min_time = NULL,
     saleID = sale_id,
     key = FALSE
   )
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "events",
     method = "ajaxgetusereventcalendarrange",
@@ -108,7 +108,7 @@ get_best_events <- function(language = "english",
     include_only_game_updates = only_game_updates,
     key = FALSE
   )
-  request_internal(
+  request_storefront(
     api = store_api(),
     interface = "events",
     method = "ajaxgetbesteventsforuser",
@@ -129,7 +129,7 @@ get_event_details <- function(gid, clanid) {
     clanid_list = clanid,
     key = FALSE
   )
-  request_internal(
+  request_storefront(
     api = store_api(),
     interface = "events",
     method = "ajaxgeteventdetails",

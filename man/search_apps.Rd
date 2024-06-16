@@ -34,7 +34,8 @@ country it is accessed from.}
 
 \item{language}{Language string of the returned information.}
 
-\item{steam_realm}{Number describing the Steam realm.}
+\item{steam_realm}{Number describing the Steam realm. A value of 1
+indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.}
 
 \item{require_type}{Which application types should be returned? Can be
 one of \code{bundle}, \code{game}, \code{demo}, \code{mod} \code{dlc},
@@ -87,4 +88,10 @@ suggest("team", language = "german", country_code = "DE")
 # provides detailed data
 store_search("team")
 }
+}
+\seealso{
+\code{\link{get_app_list}} and \code{\link{steamspy}} for ways
+to retrieve all applications
+
+\code{\link{query}} to query all apps using arbitrary filters.
 }

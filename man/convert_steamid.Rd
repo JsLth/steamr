@@ -45,7 +45,7 @@ IDs.
 \details{
 Steam knows four types of IDs (excluding invite codes):
 \itemize{
-\item{ID64 is largely used by the Steam Web API and internal API.
+\item{ID64 is largely used by the Steam Web API and storefront API.
 It is a 64-bit representation of a profile that can also be used
 in steamcommunity URLs.}
 \item{Steam2 is a textual representation of a profile that consists

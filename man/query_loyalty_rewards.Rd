@@ -45,7 +45,7 @@ meaning of these numbers is not entirely clear. See details for details.}
 \item{count}{Count of items per page. Defaults to 100. By default, all
 pages are iterated. The `count` argument is only relevant to either control
 the number of total requests sent or when setting
-`options(steamr_max_reqs_cursor = ...)`.}
+`options(steamr_max_reqs = ...)`.}
 
 \item{sort}{Unknown.}
 
@@ -69,7 +69,7 @@ Based on some rudimentary observations,
 query_loyalty_rewards()
 
 # query the entire database but request only the first 2000 items
-options(steamr_max_reqs_cursor = 20)
+options(steamr_max_reqs = 20)
 query_loyalty_rewards()
 
 # it is better to reduce the query volume, for example by search term

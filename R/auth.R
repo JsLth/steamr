@@ -1,7 +1,7 @@
 #' Session authentication
 #' @description
 #' Initializes an authorized Steam session. Some functions in both the
-#' Web API and internal API require the session to be authenticated. This
+#' Web API and storefront API require the session to be authenticated. This
 #' concerns all API methods that access personal account information.
 #' \code{steam_login} essentially signs in a user programmatically.
 #'
@@ -374,7 +374,7 @@ set_tokens <- function(transfer) {
 
 
 get_access_token <- function() {
-  request_internal(
+  request_storefront(
     api = store_api(),
     interface = "pointssummary",
     method = "ajaxgetasyncconfig"

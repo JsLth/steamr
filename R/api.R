@@ -43,7 +43,7 @@ api_key <- function() {
 #' steam_stats()
 #' }
 steam_stats <- function() {
-  res <- request_internal(
+  res <- request_storefront(
     api = valve_api(),
     interface = "about",
     method = "stats"

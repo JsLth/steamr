@@ -11,7 +11,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 `steamr` is an R interface to the official [Web
 API](https://steamcommunity.com/dev) of the Steam game store. The
-package also provides access to Steam’s [internal and undocumented
+package also provides access to Steam’s [undocumented storefront
 API](https://github.com/Revadike/InternalSteamWebAPI). The package aims
 to provide a way to easily perform data collection based on Steam data.
 It thus only implements API methods are can be used to retrieve data
@@ -28,7 +28,7 @@ pak::install("jslth/steamr")
 ## Example
 
 `steamr` implements most important data collection functions from both
-the official Web API and the internal API of Steam. Many functions
+the official Web API and the storefront API of Steam. Many functions
 operate around a so-called application ID or `appid`. One way to find
 the app ID for a game is to search for it programmatically:
 

@@ -6,7 +6,7 @@
 \alias{steamr-package}
 \title{steamr: R Interface to Steam's APIs}
 \description{
-R interface to the Steam Web API and internal API. Performs standardized API calls, session authentication, key management, Steam ID conversion and response formatting. Provides tools for data scraping of game details, user reviews, store economy data, news, and many more.
+R interface to the Steam Web API and storefront API. Performs standardized API calls, session authentication, key management, Steam ID conversion and response formatting. Provides tools for data scraping of game details, user reviews, store economy data, news, and many more.
 }
 \author{
 \strong{Maintainer}: Jonas Lieth \email{jonas.lieth@gesis.org}

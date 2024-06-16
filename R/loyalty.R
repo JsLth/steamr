@@ -16,7 +16,7 @@
 #' @param count Count of items per page. Defaults to 100. By default, all
 #' pages are iterated. The `count` argument is only relevant to either control
 #' the number of total requests sent or when setting
-#' `options(steamr_max_reqs_cursor = ...)`.
+#' `options(steamr_max_reqs = ...)`.
 #' @param sort Unknown.
 #' @param sort_descending Whether to sort descending by app ID.
 #'
@@ -37,7 +37,7 @@
 #' query_loyalty_rewards()
 #'
 #' # query the entire database but request only the first 2000 items
-#' options(steamr_max_reqs_cursor = 20)
+#' options(steamr_max_reqs = 20)
 #' query_loyalty_rewards()
 #'
 #' # it is better to reduce the query volume, for example by search term
@@ -74,7 +74,7 @@ query_loyalty_rewards <- function(search_term = NULL,
     method = "QueryRewardItems",
     version = "v1",
     params = params,
-    cursor = TRUE
+    paginate = "cursor"
   )
   res <- lapply(res, function(x) x$response$definitions)
   as_data_frame(rbind_list(res))

@@ -2,7 +2,8 @@
 % Please edit documentation in R/details.R
 \name{appdetails}
 \alias{appdetails}
-\alias{appdetails_all}
+\alias{appdetails_steamcmd}
+\alias{appdetails_steamspy}
 \title{Get app details}
 \usage{
 appdetails(
@@ -13,19 +14,14 @@ appdetails(
   language = "english"
 )
 
-appdetails_all(
-  appids,
-  client = NULL,
-  filters = NULL,
-  country_code = "US",
-  language = "english",
-  progress = TRUE
-)
+appdetails_steamcmd(appid)
+
+appdetails_steamspy(appid)
 }
 \arguments{
-\item{appids}{One or up to 100 application IDs. If more than one app IDs is
-passed, the \code{filters} argument must only contain the \code{price_overview}
-filter.}
+\item{appids, appid}{One or up to 100 application IDs. If more than one app
+IDs is passed, the \code{filters} argument must only contain the
+\code{price_overview} filter.}
 
 \item{client}{Unknown parameter.}
 
@@ -43,20 +39,29 @@ country it is accessed from.}
 A nested list containing detailed information on a single app.
 If multiple app IDs are passed and \code{filters = "price_overview"},
 contains price information on up to 100 applications.
-
-\code{appdetails_all} returns a list where each index corresponds to the
-app details of an app ID in \code{appids}.
 }
 \description{
-Retrieve detailed information on an application in the steam store. Uses
-Steam's unofficial API.
+Retrieve detailed information on an application in the steam store.
 
-\code{appdetails} returns details on a single app or price information
-on up to 100 apps. \code{appdetails} is a simple wrapper that iterates
-through \code{appids} and returns a list of details on all apps.
+\code{appdetails} uses Steam's unofficial API.
+
+\code{appdetails_steamcmd}
+uses the unofficial \href{https://www.steamcmd.net/}{steamcmd API}, which
+provides data from the Steam client network (powered by the
+\href{https://steam.readthedocs.io/en/stable/api/steam.client.html}{\code{steam}}
+Python library).
+
+\code{appdetails_steamspy} uses the unofficial
+\href{https://steamspy.com/}{SteamSpy API}, which provides
+custom estimates on owners, tags, genres and price dynamics. To get a full
+app list from SteamSpy, see \code{\link{steamspy}}.
 }
 \note{
-This endpoint is rate-limited at 200 requests per 5 minutes.
+\code{appdetails} is rate-limited at 200 requests per 5 minutes.
+
+\code{appdetails_steamcmd} is not rate-limited.
+
+\code{appdetails_steamspy} is rate-limited at 1 request per second.
 }
 \examples{
 \dontrun{

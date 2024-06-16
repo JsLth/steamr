@@ -23,6 +23,12 @@
 #'
 #' @export
 #'
+#' @seealso
+#' \code{\link{get_app_list}} and \code{\link{steamspy}} for ways
+#' to retrieve all applications
+#'
+#' \code{\link{query}} to query all apps using arbitrary filters.
+#'
 #' @examples
 #' \dontrun{
 #' # returns a single result
@@ -44,7 +50,7 @@
 #' store_search("team")
 #' }
 search_apps <- function(term, links = FALSE) {
-  res <- request_internal(
+  res <- request_storefront(
     api = comm_api(),
     interface = "actions",
     method = "SearchApps",
@@ -91,7 +97,7 @@ suggest <- function(term,
     search_creators_and_tags = search_creators_and_tags,
     f = "jsonfull"
   )
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "search",
     method = "suggest",
@@ -111,7 +117,7 @@ suggest <- function(term,
 #' @export
 store_search <- function(term, country_code = "US", language = "english") {
   params <- list(term = term, cc = country_code, l = language)
-  res <- request_internal(
+  res <- request_storefront(
     api = store_api(),
     interface = "api",
     method = "storesearch",

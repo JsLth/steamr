@@ -12,7 +12,7 @@ request_webapi <- function(api,
                            params = list(),
                            http_method = "GET",
                            simplify = TRUE,
-                           cursor = FALSE,
+                           paginate = NULL,
                            serror = TRUE,
                            access_token = NULL,
                            dry = FALSE) {
@@ -85,14 +85,26 @@ request_webapi <- function(api,
     return(httr2::req_dry_run(req))
   }
 
-  if (cursor) {
-    limit <- getOption("steamr_max_reqs_cursor", Inf)
-    reses <- httr2::req_perform_iterative(
-      req,
-      next_req = httr2::iterate_with_cursor(
+  if (!is.null(paginate)) {
+    limit <- getOption("steamr_max_reqs", Inf)
+
+    paginator <- switch(
+      paginate,
+      cursor = httr2::iterate_with_cursor(
         param_name = "cursor",
         resp_param_value = extract_cursor
       ),
+      offset = httr2::iterate_with_offset(
+        param_name = "page",
+        start = 0,
+        offset = 1,
+        resp_complete =
+      ),
+      input_json = iterate_with_input_json(resp, params$input_json)
+    )
+    reses <- httr2::req_perform_iterative(
+      req,
+      next_req = paginator,
       max_reqs = limit
     )
 
@@ -125,7 +137,7 @@ request_webapi <- function(api,
 }
 
 
-request_internal <- function(api,
+request_storefront <- function(api,
                              interface,
                              method,
                              params = list(),
@@ -188,7 +200,7 @@ request_internal <- function(api,
   res <- httr2::resp_body_json(res, simplifyVector = TRUE, flatten = TRUE)
 
   if (!length(res)) {
-    stop("Steam internal API returned an empty response. Check your input!")
+    stop("Steam storefront API returned an empty response. Check your input!")
   }
 
   code <- res$success %||% res$eresult %||% 1L
@@ -196,7 +208,7 @@ request_internal <- function(api,
     msg <- res$err_msg %||% res$msg %||% "Something has gone wrong."
 
     stop(
-      sprintf("Steam internal API returned error code %s:\n%s", code, msg),
+      sprintf("Steam storefront API returned error code %s:\n%s", code, msg),
       call. = FALSE
     )
   }
@@ -209,11 +221,50 @@ request_internal <- function(api,
 }
 
 
+request_steamspy <- function(params) {
+  req <- httr2::request("https://steamspy.com/api.php")
+  req <- do.call(httr2::req_url_query, c(list(req), params))
+
+  if (identical(params$request, "all")) {
+    is_http_code <- function(resp, code = 500) resp$status_code %in% code
+    req <- httr2::req_error(
+      req,
+      is_error = function(resp) !is_http_code(resp, c(200, 500))
+    )
+    req <- httr2::req_throttle(req, rate = 1 / 60)
+    res <- httr2::req_perform_iterative(
+      req,
+      next_req = httr2::iterate_with_offset(
+        param_name = "page",
+        start = 0,
+        offset = 1,
+        resp_complete = is_http_code
+      ),
+      max_reqs = getOption("steamr_max_reqs", Inf)
+    )
+    res <- lapply(res, function(x) {
+      res <- httr2::resp_body_json(x, simplifyVector = TRUE, flatten = TRUE)
+      res <- try(rbind_list(res))
+      if (inherits(res, "try-error")) browser()
+      if (!is_http_code(x, 500)) res
+
+    })
+    res <- res[lvapply(res, is.null, use_names = FALSE)]
+    rbind_list(res)
+  } else {
+    req <- httr2::req_throttle(req, rate = 1 / 1)
+    res <- httr2::req_perform(req)
+    httr2::resp_body_json(res, simplifyVector = TRUE, flatten = TRUE)
+  }
+}
+
+
 request_generic <- function(url,
                             params = NULL,
                             method = "GET",
                             format = "json",
                             format_args = NULL,
+                            cursor = NULL,
                             headers = NULL,
                             dry = FALSE) {
   req <- httr2::request(url)
@@ -302,12 +353,29 @@ fix_steam_bool <- function(res) {
 }
 
 
+iterate_with_input_json <- function(resp, input_json) {
+  resp_complete <- function(resp) {
+    content <- httr2::resp_body_json(resp)$response
+    !content$metadata$count > 0
+  }
+
+  i <- 0
+  function(resp, req) {
+    if (!isTRUE(resp_complete(resp))) {
+      i <<- i + 1
+      httr2::req_url_query(req, input_json = sprintf(input_json, i))
+    }
+  }
+}
+
+
 extract_cursor <- function(resp) {
   content <- httr2::resp_body_json(resp)$response
   if (!identical(content$count, 0L)) {
     content$next_cursor
   }
 }
+
 
 get_hostname <- function(url) {
   httr2::url_parse(url)$hostname

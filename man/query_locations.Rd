@@ -20,13 +20,17 @@ returns information on cities, otherwise on regions.}
 \item{language}{Language string of the returned information.}
 }
 \value{
-A dataframe with information on country code, region code, city
-code and geographical name.
+\code{query_locations} returns a dataframe with country code,
+name, and whether the location can be further subdivided.
 
-A dataframe containing country codes and names
+\code{get_country_list} only returns country code and name.
 }
 \description{
 Retrieves information on Steam's country, region, and city codes.
+
+\code{query_locations} queries the storefront API and can drill down all
+Steam location levels, while \code{get_country_list} can only provide
+information on the country level.
 }
 \examples{
 \dontrun{

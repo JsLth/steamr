@@ -9,14 +9,15 @@
 #' @param country_code ISO-2 country code as returned by
 #' \code{\link{get_countries}}. The Steam store differs depending on the
 #' country it is accessed from.
-#' @param steam_realm Number describing the Steam realm.
+#' @param steam_realm Number describing the Steam realm. A value of 1
+#' indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.
 #' @param include List of extra information to include. Can be one or several
 #' of the following: \code{release}, \code{platforms},
 #' \code{all_purchase_options}, \code{screenshots}, \code{trailers},
 #' \code{ratings}, \code{tag_count}, \code{reviews}, \code{basic_info},
 #' \code{supported_languages}, \code{full_description}, \code{included_items}
 #' and \code{assets_without_overrides}. If \code{all}, returns all information.
-#' @param apply_user_filters t
+#' @param apply_user_filters Unknown.
 #'
 #' @returns A dataframe containing the requested information on the input
 #' IDs.
@@ -250,7 +251,9 @@ print.StoreItemID <- function(x, ...) {
 }
 
 
-store_browse_item_data_request <- function(include, apply_user_filters = FALSE) {
+store_browse_item_data_request <- function(include,
+                                           apply_user_filters = FALSE,
+                                           ...) {
   info <- c(
     "assets", "release", "platforms", "all_purchase_options",
     "screenshots", "trailers", "ratings", "tag_count", "reviews",
@@ -266,16 +269,16 @@ store_browse_item_data_request <- function(include, apply_user_filters = FALSE) 
   names(obj) <- paste0("include_", info)
 
   obj <- c(obj, apply_user_filters = apply_user_filters)
-  obj <- obj[obj != FALSE]
   class(obj) <- "StoreBrowseItemDataRequest"
-  drop_null(obj) %empty% NULL
+  drop_false(drop_null(obj)) %empty% NULL
 }
 
 
 store_browse_context <- function(language = NULL,
                                  elanguage = NULL,
                                  country_code = NULL,
-                                 steam_realm = NULL) {
+                                 steam_realm = NULL,
+                                 ...) {
   check_string(language)
   check_integerish(elanguage, null = TRUE)
   check_string(country_code)

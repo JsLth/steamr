@@ -45,7 +45,7 @@ object is also attached to the session.
 }
 \description{
 Initializes an authorized Steam session. Some functions in both the
-Web API and internal API require the session to be authenticated. This
+Web API and storefront API require the session to be authenticated. This
 concerns all API methods that access personal account information.
 \code{steam_login} essentially signs in a user programmatically.
 
