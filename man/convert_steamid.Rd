@@ -12,11 +12,11 @@ lookup_steamid(ids, include_vanity = TRUE, vanity_type = "profile")
 
 convert_steamid(ids, to, vanity_type = "profile")
 
-parse_steam64(ids)
+parse_steam64(ids, resolve = FALSE)
 
-parse_steam2(ids)
+parse_steam2(ids, resolve = FALSE)
 
-parse_steam3(ids)
+parse_steam3(ids, resolve = FALSE)
 }
 \arguments{
 \item{ids}{String of a Steam ID. Can be ID64, Steam2, Steam3, or a vanity ID.
@@ -33,6 +33,9 @@ vanity IDs.}
 \item{to}{Steam ID format to convert to. Must be one of \code{steam64},
 \code{steam2}, \code{steam3}, or \code{vanity}. Conversions from or to
 vanity require a Steam API key to be set.}
+
+\item{resolve}{If \code{TRUE}, resolves the codes parsed by the
+\code{parse_*} functions to descriptive factors.}
 }
 \description{
 Converts between Steam ID64, Steam2, Steam3 and vanity IDs. Based on

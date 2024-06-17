@@ -3,13 +3,13 @@
 content_descriptors <- function() {
   as_data_frame(data.frame(
     code = 1:5,
-    description = c(
+    description = factor(c(
       "Some Nudity or Sexual Content",
       "Frequent Violence or Gore",
       "Adult Only Sexual Content",
       "Frequent Nudity or Sexual Content",
       "General Mature Content"
-    )
+    ))
   ))
 }
 
@@ -19,7 +19,7 @@ content_descriptors <- function() {
 universes <- function() {
   as_data_frame(data.frame(
     code = 0:5,
-    desc = c("Invalid", "Public", "Beta", "Internal", "Dev", "RC")
+    desc = factor(c("Invalid", "Public", "Beta", "Internal", "Dev", "RC"))
   ))
 }
 
@@ -30,10 +30,10 @@ account_types <- function() {
   as_data_frame(data.frame(
     code = 0:10,
     letter = c("I / i", "U", "M", "G", "A", "P", "C", "g", "T / L /c", NA, "a"),
-    desc = c(
+    desc = factor(c(
       "Invalid", "Individual", "Multiseat", "GameServer", "AnonGameServer",
       "Pending", "ContentServer", "Clan", "Chat", "ConsoleUser", "AnonUser"
-    ),
+    )),
     usable = c(FALSE, TRUE, TRUE, TRUE, TRUE, FALSE, NA, TRUE, TRUE, FALSE, TRUE),
     path = c(NA, "profiles / id", NA, NA, NA, NA, NA, "groups / gid", NA, NA, NA),
     info = c(
@@ -53,15 +53,26 @@ account_types <- function() {
 }
 
 
+account_instances <- function() {
+  as_data_frame(data.frame(
+    code = c(0, 1, 2, 4),
+    desc = factor(c(
+      "AllInstances", "DesktopInstance",
+      "ConsoleInstance", "WebInstance"
+    ))
+  ))
+}
+
+
 #' @rdname parse_steamkit_enum
 #' @export
 friend_relationships <- function() {
   as_data_frame(data.frame(
     code = c(0:7),
-    desc = c(
+    desc = factor(c(
       "None", "Blocked", "RequestRecipient", "Friend", "RequestInitiator",
       "Ignored", "IgnoredFriend", "SuggestedFriend"
-    )
+    ))
   ))
 }
 
@@ -71,12 +82,12 @@ friend_relationships <- function() {
 steam_currencies <- function() {
   as_data_frame(data.frame(
     code = 0:41,
-    desc = c(
+    desc = factor(c(
       "Invalid", "USD", "GBP", "EUR", "CHF", "RUB", "PLN", "BRL", "JPY", "NOK",
       "IDR", "MYR", "PHP", "SGD", "THB", "VND", "KRW", "TRY", "UAH", "MXN", "CAD",
       "AUD", "NZD", "CNY", "INR", "CLP", "PEN", "COP", "ZAR", "HKD", "TWD", "SAR",
       "AED", "SEK", "ARS", "ILS", "BYN", "KZT", "KWD", "QAR", "CRC", "UYU"
-    )
+    ))
   ))
 }
 
@@ -86,7 +97,7 @@ steam_currencies <- function() {
 published_file_query_types <- function() {
   as_data_frame(data.frame(
     code = 0:19,
-    desc = c(
+    desc = factor(c(
       "RankedByVote", "RankedByPublicationDate",
       "AcceptedForGameRankedByAcceptanceDate", "RankedByTrend",
       "FavoritedByFriendsRankedByPublicationDate",
@@ -97,7 +108,7 @@ published_file_query_types <- function() {
       "RankedByTotalPlaytime", "RankedByAveragePlaytimeTrend",
       "RankedByLifetimeAveragePlaytime", "RankedByPlaytimeSessionsTrend",
       "RankedByLifetimePlaytimeSessions", "RankedByInappropriateContentRating"
-    )
+    ))
   ))
 }
 
@@ -107,7 +118,7 @@ published_file_query_types <- function() {
 user_badges <- function() {
   as_data_frame(data.frame(
     code = 0:44,
-    desc = c(
+    desc = factor(c(
       "Invalid", "YearsOfService", "Community", "Portal2PotatoARG", "TreasureHunt",
       "SummerSale2011", "WinterSale2011", "SummerSale2012", "WinterSale2012",
       "CommunityTranslator", "CommunityModerator", "ValveEmployee", "GameDeveloper",
@@ -123,7 +134,7 @@ user_badges <- function() {
       "SummerSale2019_TeamTortoise", "SummerSale2019_TeamCorgi",
       "SummerSale2019_TeamCockatiel", "SummerSale2019_TeamPig",
       "SteamAwards2019Nominations", "WinterSaleEvent2019"
-    )
+    ))
   ))
 }
 
@@ -239,8 +250,9 @@ extract_enum <- function(lines) {
     df <- do.call(rbind.data.frame, x)
     df <- df[c(2, 1)]
     names(df) <- c("code", "desc")
+    df$desc <- factor(df$desc)
     df <- df[!df$code %in% "[Obsolete]", ]
-    df
+    as_data_frame(df)
   })
 
   names(lines) <- enums

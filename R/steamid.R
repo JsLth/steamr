@@ -308,8 +308,10 @@ is_vanity <- function(x) {
 
 #' @rdname convert_steamid
 #' @export
-parse_steam64 <- function(ids) {
-  rbind_list(lapply(ids, function(id) {
+#' @param resolve If \code{TRUE}, resolves the codes parsed by the
+#' \code{parse_*} functions to descriptive factors.
+parse_steam64 <- function(ids, resolve = FALSE) {
+  parsed <- rbind_list(lapply(ids, function(id) {
     if (!is_steam64(id)) {
       stop(sprintf("Value %s is not a valid Steam64 ID.", id))
     }
@@ -334,13 +336,19 @@ parse_steam64 <- function(ids) {
       universe = bin_to_dec(univ)
     ))
   }))
+
+  if (resolve) {
+    parsed <- resolve_steamid_components(parsed)
+  }
+
+  parsed
 }
 
 
 #' @rdname convert_steamid
 #' @export
-parse_steam2 <- function(ids) {
-  rbind_list(lapply(ids, function(id) {
+parse_steam2 <- function(ids, resolve = FALSE) {
+  parsed <- rbind_list(lapply(ids, function(id) {
     if (!is_steam2(id)) {
       stop(sprintf("Value %s is not a valid Steam2 ID.", id))
     }
@@ -363,13 +371,19 @@ parse_steam2 <- function(ids) {
       universe = match$univ
     ))
   }))
+
+  if (resolve) {
+    parsed <- resolve_steamid_components(parsed)
+  }
+
+  parsed
 }
 
 
 #' @rdname convert_steamid
 #' @export
-parse_steam3 <- function(ids) {
-  rbind_list(lapply(ids, function(id) {
+parse_steam3 <- function(ids, resolve = FALSE) {
+  parsed <- rbind_list(lapply(ids, function(id) {
     if (!is_steam3(id)) {
       stop(sprintf("Value %s is not a valid Steam3 ID.", id))
     }
@@ -425,6 +439,25 @@ parse_steam3 <- function(ids) {
       universe = univ
     ))
   }))
+
+  if (resolve) {
+    parsed <- resolve_steamid_components(parsed)
+  }
+
+  parsed
+}
+
+
+resolve_steamid_components <- function(x) {
+  inst <- account_instances()
+  univ <- universes()
+  type <- account_types()
+
+  n <- nrow(x)
+  x$instance <- inst[rep(which(inst$code == x$instance), n), ]$desc
+  x$type <- type[rep(which(type$code == x$type), n), ]$desc
+  x$universe <- univ[rep(which(univ$code == x$universe), n), ]$desc
+  x
 }
 
 
