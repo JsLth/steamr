@@ -1,3 +1,8 @@
+#' User data
+#' @description
+#' Authenticated functions to fetch information about the authenticated user.
+#'
+#' @export
 get_userdata <- function() {
   check_authenticated()
   res <- request_storefront(
@@ -43,6 +48,8 @@ get_userdata <- function() {
 }
 
 
+#' @rdname get_userdata
+#' @export
 get_app_user_details <- function(appids) {
   check_authenticated()
   appids <- paste(appids, collapse = ",")
@@ -75,6 +82,8 @@ get_app_user_details <- function(appids) {
 }
 
 
+#' @rdname get_userdata
+#' @export
 get_library_stats <- function() {
   check_authenticated()
   res <- request_storefront(
@@ -86,6 +95,8 @@ get_library_stats <- function() {
 }
 
 
+#' @rdname get_userdata
+#' @export
 get_owned_apps <- function() {
   check_authenticated()
   sessionid <- get_sessionid()
@@ -100,6 +111,8 @@ get_owned_apps <- function() {
 }
 
 
+#' @rdname get_userdata
+#' @export
 get_friends <- function() {
   check_authenticated()
   res <- request_storefront(
@@ -112,6 +125,8 @@ get_friends <- function() {
 }
 
 
+#' @rdname get_userdata
+#' @export
 get_friend_data <- function(steamid) {
   check_authenticated()
   params <- .make_params(u = steamid, key = FALSE)
@@ -126,6 +141,8 @@ get_friend_data <- function(steamid) {
 }
 
 
+#' @rdname get_userdata
+#' @export
 get_badge <- function(appid, badgeid) {
   check_authenticated()
   params <- .make_params(key = FALSE)
@@ -142,6 +159,8 @@ get_badge <- function(appid, badgeid) {
 }
 
 
+#' @rdname get_userdata
+#' @export
 get_badge_info <- function(appid) {
   check_authenticated()
   params <- .make_params(key = FALSE)
@@ -157,6 +176,8 @@ get_badge_info <- function(appid) {
 }
 
 
+#' @rdname get_userdata
+#' @export
 recommend_apps <- function(appid) {
   check_authenticated()
   params <- .make_params(key = FALSE)

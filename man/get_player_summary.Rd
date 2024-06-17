@@ -2,9 +2,24 @@
 % Please edit documentation in R/user.R
 \name{get_player_summary}
 \alias{get_player_summary}
+\alias{get_player_bans}
+\alias{get_owned_games}
 \title{Get user info}
 \usage{
 get_player_summary(steamids)
+
+get_player_bans(steamids)
+
+get_owned_games(
+  steamid,
+  include_appinfo = FALSE,
+  include_played_free_games = FALSE,
+  appids_filter = NULL,
+  include_free_sub = FALSE,
+  skip_unvetted_games = FALSE,
+  language = "english",
+  include_extended_appinfo = FALSE
+)
 }
 \arguments{
 \item{steamid}{Steam user ID as returned by \code{\link{get_steam_id}}.}
@@ -40,5 +55,4 @@ get_friend_list(steamid)
 # user stats for team fortress
 get_user_stats_for_game
 }
-
 }

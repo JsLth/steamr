@@ -46,6 +46,7 @@ pivot_longer_list <- function(lst, names_to = "name", values_to = "value") {
       val <- unlist(val, use.names = FALSE)
       name <- rep(k, length(val))
       df <- data.frame(name = name, value = val)
+      if (!nrow(df)) return()
       names(df) <- c(names_to, values_to)
     } else {
       # list of dataframes

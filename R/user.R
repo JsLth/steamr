@@ -32,10 +32,10 @@
 #' # user stats for team fortress
 #' get_user_stats_for_game
 #' }
-#'
 get_player_summary <- function(steamids) {
   check_string(steamids)
   check_length(steamids, ge = 1, le = 100)
+  steamids <- convert_steamid(steamids, to = "steam64")
 
   steamids <- paste(steamids, collapse = ",")
   params <- .make_params()
@@ -51,41 +51,6 @@ get_player_summary <- function(steamids) {
 }
 
 
-get_user_stats_for_game <- function(steamid, appid, language = "english") {
-  check_string(steamid)
-  check_string(language)
-
-  params <- .make_params(steamid = steamid, appid = appid, l = language)
-  res <- request_webapi(
-    api = public_api(),
-    interface = "ISteamUserStats",
-    method = "GetUserStatsForGame",
-    version = "v1",
-    params = params
-  )$playerstats
-
-  stats <- pivot_longer_list(res$stats)
-  achievements <- pivot_longer_list(res$achievements)
-  res <- bind_rows(stats = stats, achievements = achievements, .id = "type")
-  res
-}
-
-
-get_game_achievements <- function(appid, language = "english") {
-  check_string(steamid)
-  check_string(language)
-
-  params <- .make_params(steamid = steamid, appid = appid, l = language)
-  res <- request_webapi(
-    api = public_api(),
-    interface = "IPlayerService",
-    method = "GetGameAchievements",
-    version = "v1",
-    params = params
-  )$response
-}
-
-
 #' Get user groups
 #' @description
 #' Get a list of user group IDs (gid).
@@ -94,6 +59,7 @@ get_game_achievements <- function(appid, language = "english") {
 #'
 get_user_group_list <- function(steamid) {
   check_string(steamid)
+  steamid <- convert_steamid(steamid, to = "steam64")
 
   params <- .make_params()
   res <- request_webapi(
@@ -107,9 +73,12 @@ get_user_group_list <- function(steamid) {
 }
 
 
+#' @rdname get_player_summary
+#' @export
 get_player_bans <- function(steamids) {
   check_string(steamids)
   check_length(steamids, ge = 1, le = 100)
+  steamids <- convert_steamid(steamids, to = "steam64")
 
   steamids <- paste(steamids, collapse = ",")
   params <- .make_params()
@@ -124,6 +93,8 @@ get_player_bans <- function(steamids) {
 }
 
 
+#' @rdname get_player_summary
+#' @export
 get_owned_games <- function(steamid,
                             include_appinfo = FALSE,
                             include_played_free_games = FALSE,
@@ -139,33 +110,41 @@ get_owned_games <- function(steamid,
   check_bool(include_extended_appinfo)
   check_bool(skip_unvetted_games)
   check_string(language)
+  steamid <- convert_steamid(steamid, to = "steam64")
 
   params <- .make_params()
-  request_webapi(
+  res <- request_webapi(
     api = public_api(),
     interface = "IPlayerService",
     method = "GetOwnedGames",
     version = "v1",
     params = params
-  )$response
+  )$response$games
+  as_data_frame(res)
 }
 
 
 get_recently_played_games <- function(steamid) {
   check_string(steamid)
+  steamid <- convert_steamid(steamid, to = "steam64")
+
   params <- .make_params()
-  request_webapi(
+  res <- request_webapi(
     api = public_api(),
     interface = "IPlayerService",
     method = "GetRecentlyPlayedgames",
     version = "v1",
     params = params
-  )$response
+  )$response$games
+  as_data_frame(res)
 }
 
 
 get_game_playtime <- function(steamid, appid) {
+  check_authenticated()
   check_string(steamid)
+  steamid <- convert_steamid(steamid, to = "steam64")
+
   params <- .make_params()
   request_webapi(
     api = public_api(),
@@ -187,52 +166,4 @@ get_last_playtimes <- function(min_last_played = NULL) {
     version = "v1",
     params = params
   )$response
-}
-
-
-get_steam_level <- function(steamid) {
-  check_string(steamid)
-  params <- .make_params()
-  request_webapi(
-    api = public_api(),
-    interface = "IPlayerService",
-    method = "GetSteamLevel",
-    version = "v1",
-    params = params
-  )$response
-}
-
-
-get_top_achievements <- function(steamid,
-                                 appids,
-                                 max_achievements = 8L,
-                                 language = "english") {
-  check_string(steamid)
-  check_integerish(max_achievements)
-  check_string(language, null = TRUE)
-  params <- .make_params()
-  request_webapi(
-    api = public_api(),
-    interface = "IPlayerService",
-    method = "GetTopAchievementsForGames",
-    version = "v1",
-    params = params
-  )$response
-}
-
-
-steam_level_distribution <- function(levels = 1:100) {
-  nvapply(levels, get_level_percentile, use_names = FALSE)
-}
-
-
-get_level_percentile <- function(level) {
-  params <- .make_params(player_level = level)
-  request_webapi(
-    api = public_api(),
-    interface = "IPlayerService",
-    method = "GetSteamLevelDistribution",
-    version = "v1",
-    params = params
-  )$response$player_level_percentile
 }

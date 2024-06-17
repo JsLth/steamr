@@ -31,7 +31,7 @@ request_webapi <- function(api,
 
     if (length(x) > 1 && !is.null(names(x))) {
       params[[k]] <- jsonlite::toJSON(x, auto_unbox = TRUE, force = TRUE)
-    } else if (length(x) > 1) {
+    } else if (is.list(x) || length(x) > 1) {
       idx <- match(k, names(params))
       for (i in seq_along(x)) {
         names(x)[i] <- sprintf("%s[%s]", k, i - 1)
