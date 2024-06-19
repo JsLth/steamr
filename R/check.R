@@ -70,7 +70,7 @@ check_date <- function(x, null = FALSE) {
 
 check_number <- function(x, null = FALSE) {
   if (null && is.null(x)) return()
-  check <- is.numeric(x) || all(grepl("^[0-9]+$", x))
+  check <- is_number(x)
   if (!check) {
     stop(sprintf(
       "%s must be a number, either as a string or numeric.", obj_name(x)

@@ -18,7 +18,10 @@ get_items(
 \item{items}{Store item or list of store items as returned by
 \code{\link{store_item}}.}
 
-\item{language}{Language string of the returned information.}
+\item{language}{ISO639-1 language code all tokenized strings should be
+returned in. Formally, a tokenized string is a string that is prefixed
+with a \code{#} in the VDF file. Not all tokenized strings have a translation
+for all languages. If no translation is available, defaults to English.}
 
 \item{elanguage}{Language identifier of the returned information.}
 
@@ -68,7 +71,6 @@ get_items(ids, include = "platforms")
 # request all info
 get_items(ids, include = "all")
 }
-
 }
 \seealso{
 Other store: 

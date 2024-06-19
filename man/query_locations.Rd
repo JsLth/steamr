@@ -17,7 +17,10 @@ on regions, otherwise countries.}
 Country must not be \code{NULL} if \code{region} is specified. If specified,
 returns information on cities, otherwise on regions.}
 
-\item{language}{Language string of the returned information.}
+\item{language}{ISO639-1 language code all tokenized strings should be
+returned in. Formally, a tokenized string is a string that is prefixed
+with a \code{#} in the VDF file. Not all tokenized strings have a translation
+for all languages. If no translation is available, defaults to English.}
 }
 \value{
 \code{query_locations} returns a dataframe with country code,

@@ -11,11 +11,14 @@ get_profile_items(
 )
 }
 \arguments{
-\item{steamid}{Steam ID of a user for which profile information is to be
-fetched. The Steam ID must be in a format that can be converted by
-\code{\link{convert_steamid}}.}
+\item{steamid}{SteamID of a user. The SteamID must be in a format that can
+be converted by \code{\link{convert_steamid}}. This includes vanity,
+Steam64, Steam2, and Steam3 IDs.}
 
-\item{language}{If text data is returned, specify the text language.}
+\item{language}{ISO 639-1 language code all tokenized strings should be
+returned in. Formally, a tokenized string is a string that is prefixed
+with a \code{#} in the VDF file. Not all tokenized strings have a translation
+for all languages. If no translation is available, defaults to English.}
 }
 \description{
 Fetch cosmetic information from a user profile.

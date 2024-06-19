@@ -7,7 +7,10 @@
 get_store_categories(language = "english", elanguage = NULL)
 }
 \arguments{
-\item{language}{Language string of the returned information.}
+\item{language}{ISO639-1 language code all tokenized strings should be
+returned in. Formally, a tokenized string is a string that is prefixed
+with a \code{#} in the VDF file. Not all tokenized strings have a translation
+for all languages. If no translation is available, defaults to English.}
 
 \item{elanguage}{Language identifier of the returned information.}
 }

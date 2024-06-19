@@ -4,7 +4,10 @@
 #'
 #' @param items Store item or list of store items as returned by
 #' \code{\link{store_item}}.
-#' @param language Language string of the returned information.
+#' @param language ISO639-1 language code all tokenized strings should be
+#' returned in. Formally, a tokenized string is a string that is prefixed
+#' with a \code{#} in the VDF file. Not all tokenized strings have a translation
+#' for all languages. If no translation is available, defaults to English.
 #' @param elanguage Language identifier of the returned information.
 #' @param country_code ISO-2 country code as returned by
 #' \code{\link{get_countries}}. The Steam store differs depending on the
@@ -48,7 +51,6 @@
 #' # request all info
 #' get_items(ids, include = "all")
 #' }
-#'
 get_items <- function(items,
                       language = "english",
                       elanguage = NULL,
@@ -56,6 +58,14 @@ get_items <- function(items,
                       steam_realm = 1L,
                       include = NULL,
                       apply_user_filters = FALSE) {
+  check_string(items)
+  check_string(language)
+  check_number(language, null = TRUE)
+  check_string(country_code)
+  check_number(steam_realm, null = TRUE)
+  check_string(include, null = TRUE)
+  check_bool(apply_user_filters)
+
   items <- lapply(items, store_item)
   context <- store_browse_context(
     language = language,

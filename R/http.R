@@ -13,9 +13,11 @@ request_webapi <- function(api,
                            http_method = "GET",
                            simplify = TRUE,
                            paginate = NULL,
+                           format = c("json", "xml", "vdf"),
                            serror = TRUE,
                            access_token = NULL,
                            dry = FALSE) {
+  format <- match.arg(format)
   url <- paste(api, interface, method, version, sep = "/")
 
   params <- params[lengths(params) > 0]
@@ -40,6 +42,7 @@ request_webapi <- function(api,
       params[[k]] <- NULL
     }
   }
+  params$format <- format
 
   req <- httr2::request(url)
 
@@ -61,12 +64,13 @@ request_webapi <- function(api,
   req <- use_auth(req, api)
 
   req <- httr2::req_error(req, is_error = function(resp) {
-    if (startsWith(resp$headers$`Content-Type`, "text/html")) {
+    content_type <- resp$headers$`Content-Type`
+    if (startsWith(content_type, "text/html")) {
       code <- resp$status_code
       desc <- httr2::resp_status_desc(resp)
       msg <- trim_html_error(httr2::resp_body_html(resp), desc)
       stop(sprintf("HTTP error %s %s: %s", code, desc, msg), call. = FALSE)
-    } else {
+    } else if (startsWith(content_type, "application/json")) {
       resp <- httr2::resp_body_json(resp)$response
       code <- resp$result
       msg <- resp$error
@@ -132,7 +136,12 @@ request_webapi <- function(api,
       }
     }
 
-    httr2::resp_body_json(res, simplifyVector = simplify, flatten = TRUE)
+    switch(
+      format,
+      json = httr2::resp_body_json(res, simplifyVector = simplify, flatten = TRUE),
+      xml = httr2::resp_body_xml(res),
+      vdf = httr2::resp_body_string(res, encoding = "UTF-8")
+    )
   }
 }
 

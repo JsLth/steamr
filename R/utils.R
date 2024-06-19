@@ -123,6 +123,11 @@ rbind_list <- function(args) {
 }
 
 
+is_number <- function(x) {
+  is.numeric(x) || all(grepl("^[0-9]+$", x))
+}
+
+
 is_url <- function(url) {
   grepl(
     "^(https?:\\/\\/)?[[:alnum:]\\.]+(\\.[[:lower:]]+)|(:[[:digit:]])\\/?",

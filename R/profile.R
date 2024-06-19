@@ -2,10 +2,7 @@
 #' @description
 #' Fetch cosmetic information from a user profile.
 #'
-#' @param steamid Steam ID of a user for which profile information is to be
-#' fetched. The Steam ID must be in a format that can be converted by
-#' \code{\link{convert_steamid}}.
-#' @param language If text data is returned, specify the text language.
+#' @inheritParams common
 #'
 #' @export
 #'

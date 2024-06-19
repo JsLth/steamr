@@ -33,7 +33,10 @@ fields.}
 \code{\link{get_countries}}. The Steam store differs depending on the
 country it is accessed from.}
 
-\item{language}{Language string of the returned information.}
+\item{language}{ISO639-1 language code all tokenized strings should be
+returned in. Formally, a tokenized string is a string that is prefixed
+with a \code{#} in the VDF file. Not all tokenized strings have a translation
+for all languages. If no translation is available, defaults to English.}
 }
 \value{
 A nested list containing detailed information on a single app.
