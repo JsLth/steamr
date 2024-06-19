@@ -1,10 +1,50 @@
-public_api <- function() "https://api.steampowered.com"
-partner_api <- function() "https://partner.steam-api.com"
-store_api <- function() "https://store.steampowered.com"
-comm_api <- function() "https://steamcommunity.com"
-valve_api <- function() "https://valvesoftware.com"
-
-
+#' API requests
+#' @description
+#' Send HTTP requests to any of the available Steam APIs. As of yet,
+#' \code{steamr} supports the Web API, storefront API, SteamSpy and
+#' steamcmd.net. Generic requests to any other URL can also be made.
+#'
+#' @param api URL to a supported Steam API. Can be \code{public_api()}
+#' (public Web API), \code{partner_api()} (private Web API),
+#' \code{store_api()} (store.steampowered), \code{comm_api()} (steamcommunity),
+#' or \code{valve_api()} (valvesoftware). Can also be any other host.
+#' @param interface Interface containing the API method.
+#' @param method Method that is to be requested.
+#' @param version Version string of the API method. Usually, this is \code{v1},
+#' sometimes it is \code{v2}, and in rare occasions it can go as high as
+#' \code{v3}.
+#' @param params A list of parameters to send with the request. Note that
+#' \code{input_json} blobs need to be pre-formatted. Most (but not all)
+#' methods require an API key in the \code{key} parameter. Authenticated
+#' methods require an access_token in \code{access_token}.
+#' @param http_method HTTP method to be used. The Steam Web API and storefront
+#' API only take \code{GET} and \code{POST}.
+#' @param simplify Whether to simplify the output or leave it as a nested
+#' list.
+#' @param paginate If specified, tries to paginate through response pages.
+#' Can be one of \code{cursor}, \code{offset}, and \code{input_json}.
+#' \code{cursor} takes the \code{next_cursor} value of the response and
+#' re-inserts it in the \code{cursor} parameter of the next request.
+#' \code{offset} takes increments the \code{page} parameter by 1 with
+#' each request. \code{input_json} re-creates the \code{input_json} blob
+#' with an incremented \code{page} parameter with each request.
+#' @param format Format of the response. One of \code{json}, \code{xml}, or
+#' \code{vdf}. \code{vdf} is Steam's
+#' \href{https://developer.valvesoftware.com/wiki/KeyValues}{KeyValues} format,
+#' which can be parsed using \code{\link{parse_vdf}}.
+#' @param serror Whether to throw a formatted error when the response has the
+#' \code{X-eresult} header signifying an API error.
+#' @param dry If \code{TRUE} does not run the request, but returns the
+#' result of a dry run to a local server. See \code{\link[httr2]{req_dry_run}}.
+#'
+#' @returns The formatted response of the request. If \code{format = "json"},
+#' formats the response as a list or dataframe (depending on the
+#' \code{simplify} argument). If \code{format = "xml"}, returns an \code{xml}
+#' object of the \code{\link[xml2]{xml2}} library. If \code{format = "vdf"},
+#' returns the unformatted string of a VDF document that can be parsed with
+#' \code{\link{parse_vdf}}.
+#'
+#' @export
 request_webapi <- function(api,
                            interface,
                            method,
@@ -15,7 +55,6 @@ request_webapi <- function(api,
                            paginate = NULL,
                            format = c("json", "xml", "vdf"),
                            serror = TRUE,
-                           access_token = NULL,
                            dry = FALSE) {
   format <- match.arg(format)
   url <- paste(api, interface, method, version, sep = "/")
@@ -54,10 +93,6 @@ request_webapi <- function(api,
     )
   } else {
     req <- do.call(httr2::req_body_form, c(list(req), params))
-  }
-
-  if (is.character(access_token)) {
-    req <- httr2::req_url_query(req, access_token = access_token)
   }
 
   req <- use_session(req)
@@ -102,7 +137,7 @@ request_webapi <- function(api,
         param_name = "page",
         start = 0,
         offset = 1,
-        resp_complete =
+        resp_complete = function(resp, code = 500) resp$status_code %in% code
       ),
       input_json = iterate_with_input_json(resp, params$input_json)
     )
@@ -389,3 +424,20 @@ extract_cursor <- function(resp) {
 get_hostname <- function(url) {
   httr2::url_parse(url)$hostname
 }
+
+
+#' @rdname request_webapi
+#' @export
+public_api <- function() "https://api.steampowered.com"
+#' @rdname request_webapi
+#' @export
+partner_api <- function() "https://partner.steam-api.com"
+#' @rdname request_webapi
+#' @export
+store_api <- function() "https://store.steampowered.com"
+#' @rdname request_webapi
+#' @export
+comm_api <- function() "https://steamcommunity.com"
+#' @rdname request_webapi
+#' @export
+valve_api <- function() "https://valvesoftware.com"
