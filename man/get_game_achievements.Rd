@@ -2,21 +2,75 @@
 % Please edit documentation in R/achievements.R
 \name{get_game_achievements}
 \alias{get_game_achievements}
+\alias{get_top_achievements}
+\alias{get_player_achievements}
 \title{Achievements}
 \usage{
 get_game_achievements(appid, language = "english")
+
+get_top_achievements(
+  steamid,
+  appids,
+  max_achievements = 5L,
+  language = "english"
+)
+
+get_player_achievements(steamid, appid, language = "english")
 }
 \arguments{
 \item{appid}{appID of an application in the Steam store.}
 
-\item{language}{ISO639-1 language code all tokenized strings should be
+\item{language}{ISO 639-1 language code all tokenized strings should be
 returned in. Formally, a tokenized string is a string that is prefixed
 with a \code{#} in the VDF file. Not all tokenized strings have a translation
 for all languages. If no translation is available, defaults to English.}
+
+\item{steamid}{SteamID of a user. The SteamID must be in a format that can
+be converted by \code{\link{convert_steamid}}. This includes vanity,
+Steam64, Steam2, and Steam3 IDs.}
+
+\item{appids}{A vector of multiple appIDs of applications in the Steam store.}
+
+\item{max_achievements}{Maximum number of achievements to return for each
+game. Defaults to the top 5 achievements.}
 }
 \value{
-A dataframe containing information about a game's achievements.
+\describe{
+ \item{\code{get_game_achievements}}{A dataframe containing information
+ about the achievements unlockable in a game. \code{internal_name}
+ provides a machine-readable name for each achievement.
+ \code{localized_name} and \code{localized_desc} provide human-readable
+ and localized variants of achievement name and description. Both
+ \code{icon} and \code{icon_gray} are files that can be accessed by
+ appending it to the following URL:
+
+ \code{https://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/{appid}/}
+
+ \code{hidden} reports on whether an achievement is hidden to the player.
+ \code{player_percentage_unlocked} is a global statistic on how many
+ total players have unlocked the achievement.
+ }
+
+ \item{\code{get_top_achievements}}{A dataframe in long format containing
+ the top \code{max_achievements} game achievements for a player and for
+ each game in \code{appids}. The output columns largely correspond to the
+ output of \code{get_game_achievements}.}
+
+ \item{\code{get_player_achievements}}{A dataframe containing all
+ achievements of a user in a game. \code{apiname}, \code{name}, and
+ \code{description} correspond to machine-readable and human-readable
+ achievement names. \code{achieved} reports whether an achievement has
+ been unlocked by the user. \code{unlocktime} reports on the time of doing
+ so. If access to the user achievements is denied, an empty dataframe is
+ returned.}
+}
 }
 \description{
 Retrieve achievements for a game.
+}
+\details{
+\code{get_top_achievements} and \code{get_player_achievements} require
+access to the user's game achievements. \code{get_top_achievements} returns
+an error code 15: \code{AccessDenied}, while \code{get_player_achievements}
+simply returns an empty dataframe.
 }

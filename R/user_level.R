@@ -10,7 +10,7 @@
 #' \code{steam_level_distribution} retrieves the user level percentile for
 #' a number of levels and shows their distribution.
 #'
-#' @inheritParams get_player_summary
+#' @inheritParams common
 #' @param level User level to retrieve.
 #' @param levels A vector of user levels to show the distribution of.
 #' @returns \code{get_steam_level} and \code{get_level_percentile} return

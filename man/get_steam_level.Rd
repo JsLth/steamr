@@ -13,7 +13,9 @@ steam_level_distribution(levels = 1:100)
 get_level_percentile(level)
 }
 \arguments{
-\item{steamid}{Steam user ID as returned by \code{\link{get_steam_id}}.}
+\item{steamid}{SteamID of a user. The SteamID must be in a format that can
+be converted by \code{\link{convert_steamid}}. This includes vanity,
+Steam64, Steam2, and Steam3 IDs.}
 
 \item{levels}{A vector of user levels to show the distribution of.}
 

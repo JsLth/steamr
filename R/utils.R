@@ -54,6 +54,14 @@ box <- function(x) {
 }
 
 
+unbox <- function(x) {
+  if (is.list(x) && length(x) == 1) {
+    x <- x[[1]]
+  }
+  x
+}
+
+
 to_title <- function(x) {
   s <- strsplit(x, " ")[[1]]
   paste0(toupper(substring(s, 1, 1)), substring(s, 2), collapse = " ")
@@ -85,14 +93,15 @@ fields_as_data_frame <- function(x) {
 
 
 bind_rows <- function(..., .id = NULL) {
-  dots <- list(...)
+  dots <- unbox(list(...))
   out <- rbind_list(dots)
   if (!is.null(.id)) {
-    dots <- list(...)
     names <- names(dots)
-    names <- rep(names, each = )
     nrows <- nvapply(dots, nrow)
-    out[[.id]] <- rep(names, times = nrows)
+    ids <- rep(names, times = nrows)
+    ids <- data.frame(ids)
+    names(ids) <- .id
+    out <- cbind(ids, out)
   }
 
   as_data_frame(out)

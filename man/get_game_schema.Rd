@@ -24,7 +24,9 @@ be aggregated in order to allow for making global stats.}
 
 \item{enddate}{End date for daily totals.}
 
-\item{steamid}{Steam user ID as returned by \code{\link{get_steam_id}}.}
+\item{steamid}{SteamID of a user. The SteamID must be in a format that can
+be converted by \code{\link{convert_steamid}}. This includes vanity,
+Steam64, Steam2, and Steam3 IDs.}
 }
 \value{
 \describe{
