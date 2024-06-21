@@ -2,6 +2,9 @@
 % Please edit documentation in R/http.R
 \name{request_webapi}
 \alias{request_webapi}
+\alias{request_storefront}
+\alias{request_steamspy}
+\alias{request_generic}
 \alias{public_api}
 \alias{partner_api}
 \alias{store_api}
@@ -20,6 +23,29 @@ request_webapi(
   paginate = NULL,
   format = c("json", "xml", "vdf"),
   serror = TRUE,
+  dry = FALSE
+)
+
+request_storefront(
+  api,
+  interface,
+  method,
+  params = list(),
+  params_as_query = TRUE,
+  simplify = TRUE,
+  rate = NULL,
+  dry = FALSE
+)
+
+request_steamspy(params)
+
+request_generic(
+  url,
+  params = NULL,
+  method = "GET",
+  format = "json",
+  ...,
+  headers = NULL,
   dry = FALSE
 )
 
@@ -61,9 +87,11 @@ list.}
 \item{paginate}{If specified, tries to paginate through response pages.
 Can be one of \code{cursor}, \code{offset}, and \code{input_json}.
 \code{cursor} takes the \code{next_cursor} value of the response and
-re-inserts it in the \code{cursor} parameter of the next request.
-\code{offset} takes increments the \code{page} parameter by 1 with
-each request. \code{input_json} re-creates the \code{input_json} blob
+re-inserts it in the \code{cursor} parameter of the next request
+(see \code{\link[httr2]{iterate_with_cursor}}). \code{offset} takes
+increments the \code{page} parameter by 1 with
+each request (see \code{\link[httr2]{iterate_with_offset}}).
+\code{input_json} re-creates the \code{input_json} blob
 with an incremented \code{page} parameter with each request.}
 
 \item{format}{Format of the response. One of \code{json}, \code{xml}, or
@@ -76,6 +104,20 @@ which can be parsed using \code{\link{parse_vdf}}.}
 
 \item{dry}{If \code{TRUE} does not run the request, but returns the
 result of a dry run to a local server. See \code{\link[httr2]{req_dry_run}}.}
+
+\item{params_as_query}{In most storefront endpoints, parameters are
+passed as a URL query (i.e. \code{domain.org/path?name=param}). However, some endpoints expect them to be passed
+as a URL path (i.e. \code{domain.org/path/param1/param2}). If \code{FALSE}, constructs parameters as a URL path,
+otherwise as a query.}
+
+\item{url}{URL to send a request to.}
+
+\item{...}{Further arguments passed to the parsing function defined
+by \code{format}, i.e. \code{\link[httr2]{resp_body_json}},
+\code{\link[httr2]{resp_body_xml}} or \code{\link[httr2]{resp_body_string}}.}
+
+\item{headers}{Key-value pairs of additional headers to append to the
+request.}
 }
 \value{
 The formatted response of the request. If \code{format = "json"},
@@ -89,4 +131,50 @@ returns the unformatted string of a VDF document that can be parsed with
 Send HTTP requests to any of the available Steam APIs. As of yet,
 \code{steamr} supports the Web API, storefront API, SteamSpy and
 steamcmd.net. Generic requests to any other URL can also be made.
+}
+\examples{
+\dontrun{
+# simple Web API request
+request_webapi(
+  api = public_api(),
+  interface = "ISteamApps",
+  method = "GetAppList",
+  version = "v2"
+)
+
+# paginate through query results
+# QueryRewardItems uses cursors but other methods
+# also use page parameters
+request_webapi(
+  api = public_api(),
+  interface = "ILoyaltyRewardsService",
+  method = "QueryRewardItems",
+  params = list(appids = 440),
+  paginate = "cursor"
+)
+
+# send a storefront request
+request_storefront(
+  api = store_api(),
+  interface = "search",
+  method = "suggest",
+  params = list(term = "team fortress")
+)
+
+# request_steamspy is a low-level alternative to the
+# steamspy function
+request_steamspy(list(request = "tag", tag = "Early Access"))
+
+# request_generic exists to enable non-standard API queries
+# the following example is used internally in auth_* functions
+request_generic(
+  "https://login.steampowered.com/jwt/finalizelogin",
+  method = "POST",
+  params = list(
+    nonce = "<refresh token>",
+    sessionid = "<sessionid>",
+    redir = "https://steamcommunity.com/login/home/?goto="
+  )
+)
+}
 }
