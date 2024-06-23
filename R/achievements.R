@@ -69,6 +69,7 @@ get_top_achievements <- function(steamid,
   check_string(steamid)
   check_integerish(max_achievements)
   check_string(language)
+  check_number(appids)
   steamid <- convert_steamid(steamid, to = "steam64")
   appids <- box(appids)
 

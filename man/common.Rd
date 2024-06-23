@@ -14,6 +14,10 @@ returned in. Formally, a tokenized string is a string that is prefixed
 with a \code{#} in the VDF file. Not all tokenized strings have a translation
 for all languages. If no translation is available, defaults to English.}
 
+\item{elanguage}{Numeric code representing the store language. A list
+of language codes and their corresponding languages is defined in
+\code{\link{ELanguage}}.}
+
 \item{country_code}{ISO 3166 country code representing the country from
 which to view the Steam store.}
 

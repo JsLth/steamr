@@ -5,6 +5,8 @@
 \alias{get_games_by_ccu}
 \alias{get_most_played_games}
 \alias{get_top_releases}
+\alias{get_apps_in_genre}
+\alias{get_apps_in_category}
 \title{App list}
 \usage{
 get_app_list()
@@ -21,45 +23,49 @@ get_games_by_ccu(
 get_most_played_games()
 
 get_top_releases()
+
+get_apps_in_genre(genre, language = "english", country_code = "US")
+
+get_apps_in_category(category, language = "english", country_code = "US")
 }
 \arguments{
-\item{language}{ISO639-1 language code all tokenized strings should be
+\item{language}{ISO 639-1 language code all tokenized strings should be
 returned in. Formally, a tokenized string is a string that is prefixed
 with a \code{#} in the VDF file. Not all tokenized strings have a translation
 for all languages. If no translation is available, defaults to English.}
 
-\item{elanguage}{Language identifier of the returned information.}
+\item{elanguage}{Numeric code representing the store language. A list
+of language codes and their corresponding languages is defined in
+\code{\link{ELanguage}}.}
 
-\item{country_code}{ISO-2 country code as returned by
-\code{\link{get_countries}}. The Steam store differs depending on the
-country it is accessed from.}
+\item{country_code}{ISO 3166 country code representing the country from
+which to view the Steam store.}
 
 \item{steam_realm}{Number describing the Steam realm. A value of 1
 indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.}
+}
+\value{
+\describe{
+ \item{\code{get_app_list}}{A dataframe containing the appID and name.}
 
-\item{include}{List of extra information to include. Can be one or several
-of the following: \code{release}, \code{platforms},
-\code{all_purchase_options}, \code{screenshots}, \code{trailers},
-\code{ratings}, \code{tag_count}, \code{reviews}, \code{basic_info},
-\code{supported_languages}, \code{full_description}, \code{included_items}
-and \code{assets_without_overrides}. If \code{all}, returns all information.}
+ \item{\code{get_games_by_ccu}}{A dataframe containing the appID, the
+ rank by CCU and the total number and all-time record of concurrent players.}
 
-\item{apply_user_filters}{Unknown.}
+ \item{\code{get_most_played_game}}{A dataframe containing the appID, the
+ rank by total all-time players and players last week as well as the
+ all-time record of concurrent players.}
+
+ \item{get_top_releases}{A dataframe with three rows containing the top
+ releases of the last three months. Each row contains the start of the
+ month, the url path for the top releases and a vector top release appIDs.
+ The URL path can be appended to the following URL:
+
+ \code{https://store.steampowered.com/charts/topnewreleases/}}
+}
 }
 \description{
-Get a list of (all) applications in the Steam store.
-
-\code{get_app_list} fetches all appIDs in the Steam store along with
-their names.
-
-\code{get_games_by_ccu} fetches a list of the most played games by
-concurrent users (CCU).
-
-\code{get_most_played_games} fetches a list of the most played games of
-all time.
-
-\code{get_top_releases} fetches a list of the most played new releases
-in the Steam store.
+Get a list of applications in the Steam store, either a complete list
+or the top games by concurrent players, all-time players, or top releases.
 }
 \examples{
 \dontrun{

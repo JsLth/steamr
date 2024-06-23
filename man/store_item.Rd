@@ -62,7 +62,6 @@ get_items(ids)
 \seealso{
 Other store: 
 \code{\link{get_hardware_items}()},
-\code{\link{get_items}()},
-\code{\link{get_store_categories}()}
+\code{\link{get_items}()}
 }
 \concept{store}

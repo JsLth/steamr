@@ -117,13 +117,17 @@ get_best_events <- function(language = "english",
 }
 
 
-#' @param gid List of event IDs for which to provide details.
+#' @param gid Vector of event IDs for which to provide details.
 #' @param clanid List of group IDs for which the events in \code{gid} were
 #' created.
 #'
 #' @rdname events
 #' @export
 get_event_details <- function(gid, clanid) {
+  check_string(gid)
+  check_number(clanid)
+  gid <- convert_steamid(gid, to = "steam64", vanity_type = "group")
+
   params <- .make_params(
     uniqueid_list = gid,
     clanid_list = clanid,

@@ -66,7 +66,7 @@ game. Defaults to the top 5 achievements.}
 }
 }
 \description{
-Retrieve achievements for a game.
+Retrieve game achievements, either globally or for a specific user.
 }
 \details{
 \code{get_top_achievements} and \code{get_player_achievements} require

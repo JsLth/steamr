@@ -113,36 +113,6 @@ get_owned_apps <- function() {
 
 #' @rdname get_userdata
 #' @export
-get_friends <- function() {
-  check_authenticated()
-  res <- request_storefront(
-    api = comm_api(),
-    interface = "actions",
-    method = "ajaxlistfriends"
-  )$friends
-
-  as_data_frame(res)
-}
-
-
-#' @rdname get_userdata
-#' @export
-get_friend_data <- function(steamid) {
-  check_authenticated()
-  params <- .make_params(u = steamid, key = FALSE)
-  res <- request_storefront(
-    api = store_api(),
-    interface = "friends",
-    method = "frienddata",
-    params = params
-  )
-  res <- pivot_longer_list(res, names_to = "appid")
-  as_data_frame(res)
-}
-
-
-#' @rdname get_userdata
-#' @export
 get_badge <- function(appid, badgeid) {
   check_authenticated()
   params <- .make_params(key = FALSE)

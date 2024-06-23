@@ -47,7 +47,7 @@ resolve_vanity_url <- function(name, type = "profile") {
   check_string(type)
 
   type <- switch(type, profile = 1, group = 2, game_group = 3)
-  params <- .make_params(vanityurl = name, url_type = type)
+  params <- .make_params(vanityurl = name, url_type = type, access_token = FALSE)
   res <- request_webapi(
     api = public_api(),
     interface = "ISteamUser",

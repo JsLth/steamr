@@ -62,7 +62,7 @@ played to be included in the query.}
 \item{only_game_updates}{Whether to filter out all events that are not
 game updates.}
 
-\item{gid}{List of event IDs for which to provide details.}
+\item{gid}{Vector of event IDs for which to provide details.}
 
 \item{clanid}{List of group IDs for which the events in \code{gid} were
 created.}

@@ -46,7 +46,6 @@ Get information about items that require physical shipping.
 \seealso{
 Other store: 
 \code{\link{get_items}()},
-\code{\link{get_store_categories}()},
 \code{\link{store_item}()}
 }
 \concept{store}

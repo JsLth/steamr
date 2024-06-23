@@ -99,37 +99,6 @@ get_items <- function(items,
 }
 
 
-#' Get store categories
-#' @description
-#' Get a list of Steam store categories.
-#'
-#' @inheritParams get_items
-#' @returns A dataframe containing names and information on all
-#' store categories.
-#'
-#' @export
-#' @family store
-#'
-#' @examples
-#' \dontrun{
-#' get_store_categories(language = "swedish")
-#' }
-get_store_categories <- function(language = "english", elanguage = NULL) {
-  check_string(language, null = TRUE)
-  check_integerish(elanguage, null = TRUE)
-
-  params <- .make_params()
-  res <- request_webapi(
-    api = public_api(),
-    interface = "IStoreBrowseService",
-    method = "GetStoreCategories",
-    version = "v1",
-    params = params
-  )
-  as_data_frame(res$response$categories)
-}
-
-
 #' Get hardware items
 #' @description
 #' Get information about items that require physical shipping.

@@ -65,8 +65,8 @@ get_asset_prices(440)
 get_asset_prices(440, currency = "EUR")
 
 # a list of valid currency codes can be retrieved using
-# parse_steamkit_enum
-parse_steamkit_enum("CurrencyCode", type = "SteamLanguage")
+# steamkit_enum
+steamkit_enum("CurrencyCode", type = "SteamLanguage")
 
 # get_asset_prices returns classIDs for each asset. These classIDs can
 # be used to retrieve detailed information on an asset.
@@ -79,7 +79,7 @@ get_asset_class(730, c("5710093913", "5189384166"))
 \url{https://wiki.teamfortress.com/wiki/WebAPI/GetAssetClassInfo}
 }
 \seealso{
-\code{\link{parse_steamkit_enum}} to retrieve all currency codes
+\code{\link{steamkit_enum}} to retrieve all currency codes
 
 \code{\link{query_loyalty_rewards}} for loyalty assets
 }

@@ -34,6 +34,11 @@ drop_null <- function(x) {
 }
 
 
+drop_na <- function(x) {
+  x[!is.na(x)]
+}
+
+
 drop_empty <- function(x) {
   x[lengths(x) > 0]
 }

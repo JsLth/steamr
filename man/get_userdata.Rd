@@ -5,8 +5,6 @@
 \alias{get_app_user_details}
 \alias{get_library_stats}
 \alias{get_owned_apps}
-\alias{get_friends}
-\alias{get_friend_data}
 \alias{get_badge}
 \alias{get_badge_info}
 \alias{recommend_apps}
@@ -19,10 +17,6 @@ get_app_user_details(appids)
 get_library_stats()
 
 get_owned_apps()
-
-get_friends()
-
-get_friend_data(steamid)
 
 get_badge(appid, badgeid)
 

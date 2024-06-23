@@ -37,7 +37,7 @@
 #' \url{https://wiki.teamfortress.com/wiki/WebAPI/GetAssetClassInfo}
 #'
 #' @seealso
-#' \code{\link{parse_steamkit_enum}} to retrieve all currency codes
+#' \code{\link{steamkit_enum}} to retrieve all currency codes
 #'
 #' \code{\link{query_loyalty_rewards}} for loyalty assets
 #'
@@ -50,8 +50,8 @@
 #' get_asset_prices(440, currency = "EUR")
 #'
 #' # a list of valid currency codes can be retrieved using
-#' # parse_steamkit_enum
-#' parse_steamkit_enum("CurrencyCode", type = "SteamLanguage")
+#' # steamkit_enum
+#' steamkit_enum("CurrencyCode", type = "SteamLanguage")
 #'
 #' # get_asset_prices returns classIDs for each asset. These classIDs can
 #' # be used to retrieve detailed information on an asset.
@@ -119,8 +119,28 @@ get_asset_info <- function(appid,
 }
 
 
-get_trade_history <- function() {
+get_item_histogram <- function(listingid, currency = 3L, language = "english", country_code = "US") {
+  check_number(listingid)
+  check_integerish(currency)
+  check_string(language)
+  check_string(country_code)
 
+  params <- .make_params(
+    item_nameid = listingid,
+    currency = currency,
+    language = language,
+    country_code = country_code,
+    norender = 1
+  )
+
+  res <- request_storefront(
+    api = comm_api(),
+    interface = "market",
+    method = "itemordershistogram",
+    params = params
+  )
+  res <- drop_empty(drop_null(res))
+  as_data_frame(do.call(cbind.data.frame, res))
 }
 
 
