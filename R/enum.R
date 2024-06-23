@@ -1,4 +1,69 @@
-#' @rdname parse_steamkit_enum
+#' Enums
+#' @description
+#' The Steam API defines a number of enums for use with the API. These enums
+#' can help resolve some common identifiers such as types and categories.
+#' The enums are scraped from the C# library
+#' \href{https://github.com/SteamRE/SteamKit}{SteamKit}, which
+#' auto-generates enums from protobufs.
+#'
+#' Some enums are pre-defined, either internally or as exported functions.
+#' Non-defined enums can be retrieved using \code{steamkit_enum}.
+#'
+#' @param enum Name of the enumeration to retrieve. If \code{NULL}, returns
+#' the names of available enums.
+#' @param type Type of enums. Corresponds to a generated file from
+#' SteamKit.
+#'
+#' @returns If \code{enum} is not \code{NULL}, returns a dataframe
+#' containing code and descriptions. Otherwise, returns the names of
+#' available enums.
+#'
+#' @export
+#'
+#' @references
+#'
+#' \url{https://steam-py.github.io/docs/latest/api/#enumerations}
+#'
+#' \url{https://partner.steamgames.com/doc/api/steam_api#enums}
+#'
+#' \url{https://github.com/SteamRE/SteamKit}
+#'
+#' @examples
+#' # investigate all enums of SteamLanguage.cs
+#' steamkit_enum(type = "SteamLanguage")
+#'
+#' # retrieve all code descriptions for SteamRealm
+#' # Steam realms can be passed as arguments in various store endpoints
+#' steamkit_enum("SteamRealm", type = "SteamLanguage")
+#'
+#' # retrieve universe descriptions
+#' # can be useful to interpret output of steamid parsing
+#' steamkit_enum("Universe", type = "SteamLanguage")
+#'
+#' # retrieve communty item classes
+#' # useful to decipher the output of functions like query_loyalty_rewards
+#' steamkit_enum("CommunityItemClass", type = "Enums")
+steamkit_enum <- function(enum = NULL,
+                          type = c("SteamLanguage", "Enums", "EnumsProductInfo")) {
+  check_string(enum, null = TRUE)
+  type <- match.arg(type)
+  url <- "https://raw.githubusercontent.com/SteamRE/SteamKit/master/SteamKit2/SteamKit2/Base/Generated/%s.cs"
+  url <- sprintf(url, type)
+  lines <- readLines(url, warn = FALSE)
+  lines <- extract_enum(lines)
+
+  if (is.null(enum)) {
+    enum <- names(lines)
+    enum <- substr(enum, 2, nchar(enum))
+  } else {
+    enum <- lines[[paste0("E", enum)]]
+  }
+
+  enum
+}
+
+
+#' @rdname steamkit_enum
 #' @export
 content_descriptors <- function() {
   as_data_frame(data.frame(
@@ -14,7 +79,7 @@ content_descriptors <- function() {
 }
 
 
-#' @rdname parse_steamkit_enum
+#' @rdname steamkit_enum
 #' @export
 universes <- function() {
   as_data_frame(data.frame(
@@ -24,7 +89,7 @@ universes <- function() {
 }
 
 
-#' @rdname parse_steamkit_enum
+#' @rdname steamkit_enum
 #' @export
 account_types <- function() {
   as_data_frame(data.frame(
@@ -55,18 +120,18 @@ account_types <- function() {
 
 account_instances <- function() {
   as_data_frame(data.frame(
-    code = c(0, 1, 2, 4),
+    code = c(0, 1, 2, 4, 8, 16, 32, 64, 128, ),
     desc = factor(c(
-      "AllInstances", "DesktopInstance",
-      "ConsoleInstance", "WebInstance"
+      "AllInstances", "DesktopInstance", "ConsoleInstance", "WebInstance",
+
     ))
   ))
 }
 
 
-#' @rdname parse_steamkit_enum
+#' @rdname steamkit_enum
 #' @export
-friend_relationships <- function() {
+EFriendRelationship <- function() {
   as_data_frame(data.frame(
     code = c(0:7),
     desc = factor(c(
@@ -77,9 +142,9 @@ friend_relationships <- function() {
 }
 
 
-#' @rdname parse_steamkit_enum
+#' @rdname steamkit_enum
 #' @export
-steam_currencies <- function() {
+ECurrency <- function() {
   as_data_frame(data.frame(
     code = 0:41,
     desc = factor(c(
@@ -92,9 +157,9 @@ steam_currencies <- function() {
 }
 
 
-#' @rdname parse_steamkit_enum
+#' @rdname steamkit_enum
 #' @export
-published_file_query_types <- function() {
+EPublishedFileQueryType <- function() {
   as_data_frame(data.frame(
     code = 0:19,
     desc = factor(c(
@@ -113,7 +178,88 @@ published_file_query_types <- function() {
 }
 
 
-#' @rdname parse_steamkit_enum
+EPublishedFileRevision <- function() {
+  as_data_frame(data.frame(
+    code = 0:5,
+    desc = c(
+      "Default", "Latest", "ApprovedSnapshot",
+      "ApprovedSnapshotChina", "RejectedSnapshot",
+      "RejectedSnapshotChina"
+    )
+  ))
+}
+
+
+ELanguage <- function() {
+  as_data_frame(data.frame(
+    code = -1:28,
+    desc = c(
+      "NONE", "English", "German", "French", "Italian", "Korean", "Spanish",
+      "SimplifiedChinese", "TraditionalChinese", "Russian", "Thai",
+      "Japanese", "Portuguese", "Polish", "Danish", "Dutch", "Finnish",
+      "Norwegian", "Swedish", "Romanian", "Turkish", "Hungarian", "Czech",
+      "PortugueseBrazil", "Bulgarian", "Greek", "Arabic", "Ukrainian",
+      "SpanishLatinAmerican", "Vietnamese"
+    )
+  ))
+}
+
+
+EPublishedFileInfoMatchingFileType <- function() {
+  as_data_frame(data.frame(
+    code = 0:20,
+    desc = c(
+      "Items", "Collections", "Art", "Videos", "Screenshots",
+      "CollectionEligible", "Games", "Software", "Concepts",
+      "GreenlightItems", "AllGuides", "WebGuides", "IntegratedGuides",
+      "UsableInGame", "Merch", "ControllerBindings", "SteamworkAccessInvites",
+      "Items_Mtx", "Items_ReadyToUse", "WorkshopShowcase", "GameManagedItems"
+    ),
+    info = c(
+      "Items", "A collection of workshop items", "Artwork", "Videos",
+      "Screenshots", "Items that can be put inside a collection",
+      "Unsued", "Unused", "Unused", "Unused", "Guides", "Steam web guide",
+      "Application integrated guide", NA,
+      "Workshop merchandise meant to be voted on for the purpose of being sold",
+      "Steam controller bindings", "Used internally",
+      "Workshop items that can be sold in-game",
+      "Workshop items that can be used right away by the user", NA,
+      "Managed completely be the game, not the user, and not shown on the web"
+    )
+  ))
+}
+
+
+EProfileTypeItem <- function() {
+  as_data_frame(data.frame(
+    code = 0:24,
+    desc = c(
+      "Invalid", "RareAchievementShowcase", "GameCollector", "ItemShowcase",
+      "TradeShowcase", "Badges", "FavouriteGame", "ScreenshotShowcase",
+      "CustomText", "FavouriteGroup", "Recommendation", "WorkshopItem",
+      "MyWorkshop", "ArtworkShowcase", "VideoShowcase", "Guides",
+      "MyGuides", "Achievements", "Greenlight", "MyGreenlight", "Salien",
+      "LoyaltyRewardReactions", "SingleArtworkShowcase",
+      "AchievementsCompletionist", "Replay"
+    )
+  ))
+}
+
+
+ECommunityItemClass <- function() {
+  as_data_frame(data.frame(
+    code = 0:16,
+    desc = c(
+        "Invalid", "Badge", "GameCard", "ProfileBackground", "Emoticon",
+        "BoosterPack", "Consumable", "GameGoo", "ProfileModifier", "Scene",
+        "SalienItem", "Sticker", "ChatEffect", "MiniProfileBackground",
+        "AvatarFrame", "AnimatedAvatar", "SteamDeckKeyboardSkin"
+    )
+  ))
+}
+
+
+#' @rdname steamkit_enum
 #' @export
 user_badges <- function() {
   as_data_frame(data.frame(
@@ -136,63 +282,6 @@ user_badges <- function() {
       "SteamAwards2019Nominations", "WinterSaleEvent2019"
     ))
   ))
-}
-
-
-#' Enums
-#' @description
-#' The Steam API defines a number of enums for use with the API. These enums
-#' can help resolve some common identifiers such as types and categories.
-#' The enums are scraped from the C# library
-#' \href{https://github.com/SteamRE/SteamKit}{SteamKit}, which
-#' auto-generates enums from protobufs.
-#'
-#' Some enums are pre-defined, either internally or as exported functions.
-#' Non-defined enums can be retrieved using \code{parse_steamkit_enum}.
-#'
-#' @param enum Name of the enumeration to retrieve. If \code{NULL}, returns
-#' the names of available enums.
-#' @param type Type of enums. Corresponds to a generated file from
-#' SteamKit.
-#'
-#' @returns If \code{enum} is not \code{NULL}, returns a dataframe
-#' containing code and descriptions. Otherwise, returns the names of
-#' available enums.
-#'
-#' @export
-#'
-#' @examples
-#' # investigate all enums of SteamLanguage.cs
-#' parse_steamkit_enum(type = "SteamLanguage")
-#'
-#' # retrieve all code descriptions for SteamRealm
-#' # Steam realms can be passed as arguments in various store endpoints
-#' parse_steamkit_enum("SteamRealm", type = "SteamLanguage")
-#'
-#' # retrieve universe descriptions
-#' # can be useful to interpret output of steamid parsing
-#' parse_steamkit_enum("Universe", type = "SteamLanguage")
-#'
-#' # retrieve communty item classes
-#' # useful to decipher the output of functions like query_loyalty_rewards
-#' parse_steamkit_enum("CommunityItemClass", type = "Enums")
-parse_steamkit_enum <- function(enum = NULL,
-                                type = c("Enums", "EnumsProductInfo", "SteamLanguage")) {
-  check_string(enum, null = TRUE)
-  type <- match.arg(type)
-  url <- "https://raw.githubusercontent.com/SteamRE/SteamKit/master/SteamKit2/SteamKit2/Base/Generated/%s.cs"
-  url <- sprintf(url, type)
-  lines <- readLines(url, warn = FALSE)
-  lines <- extract_enum(lines)
-
-  if (is.null(enum)) {
-    enum <- names(lines)
-    enum <- substr(enum, 2, nchar(enum))
-  } else {
-    enum <- lines[[paste0("E", enum)]]
-  }
-
-  enum
 }
 
 
