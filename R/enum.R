@@ -36,6 +36,8 @@
 #'
 #' \url{https://github.com/SteamRE/SteamKit}
 #'
+#' \url{https://github.com/DoctorMcKay/node-steam-user}
+#'
 #' @examples
 #' # investigate all enums of SteamLanguage.cs
 #' steamkit_enum(type = "SteamLanguage")
