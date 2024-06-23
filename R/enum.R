@@ -2,9 +2,14 @@
 #' @description
 #' The Steam API defines a number of enums for use with the API. These enums
 #' can help resolve some common identifiers such as types and categories.
-#' The enums are scraped from the C# library
-#' \href{https://github.com/SteamRE/SteamKit}{SteamKit}, which
-#' auto-generates enums from protobufs.
+#'
+#' \code{steamkit_enum} scrapes the enums from the
+#' \href{https://github.com/SteamRE/SteamKit}{SteamKit} C# library while
+#' \code{steamkit_node} scrapes them from the
+#' \href{https://github.com/DoctorMcKay/node-steam-user}{SteamUser} Node.js library.
+#' SteamKit bundles the enums in different files and SteamUser organizes
+#' each enum in a single file. Thus, \code{steamkit_enum} requires a \code{type}
+#' argument while \code{node_enum} does not.
 #'
 #' Some enums are pre-defined, either internally or as exported functions.
 #' Non-defined enums can be retrieved using \code{steamkit_enum}.
@@ -13,6 +18,9 @@
 #' the names of available enums.
 #' @param type Type of enums. Corresponds to a generated file from
 #' SteamKit.
+#' @param filter If \code{enum} is \code{NULL}, specifies a keyword to
+#' filter the list of available enums by. The keyword is fuzzy-matched
+#' using \code{\link{agrepl}}.
 #'
 #' @returns If \code{enum} is not \code{NULL}, returns a dataframe
 #' containing code and descriptions. Otherwise, returns the names of
@@ -43,8 +51,15 @@
 #' # retrieve communty item classes
 #' # useful to decipher the output of functions like query_loyalty_rewards
 #' steamkit_enum("CommunityItemClass", type = "Enums")
+#'
+#' # show all enums about published files
+#' node_enum(filter = "publishedfile")
+#'
+#' # node_enum works without specifiying a type
+#' node_enum("FriendFlags")
 steamkit_enum <- function(enum = NULL,
-                          type = c("SteamLanguage", "Enums", "EnumsProductInfo")) {
+                          type = c("SteamLanguage", "Enums", "EnumsProductInfo"),
+                          filter = NULL) {
   check_string(enum, null = TRUE)
   type <- match.arg(type)
   url <- "https://raw.githubusercontent.com/SteamRE/SteamKit/master/SteamKit2/SteamKit2/Base/Generated/%s.cs"
@@ -55,11 +70,37 @@ steamkit_enum <- function(enum = NULL,
   if (is.null(enum)) {
     enum <- names(lines)
     enum <- substr(enum, 2, nchar(enum))
+
+    if (!is.null(filter)) {
+      enum <- enum[utils::agrepl(filter, enum, ignore.case = TRUE)]
+    }
   } else {
     enum <- lines[[paste0("E", enum)]]
   }
 
   enum
+}
+
+
+#' @rdname steamkit_enum
+#' @export
+node_enum <- function(enum = NULL, filter = NULL) {
+  check_string(enum, null = TRUE)
+  check_length(enum, ge = 0, le = 1)
+  all_enums <- get_all_enums()
+
+  if (is.null(enum)) {
+    names <- all_enums$name
+    if (!is.null(filter)) {
+      names <- names[agrepl(filter, names, ignore.case = TRUE)]
+    }
+
+    return(names)
+  }
+
+  enum <- all_enums[all_enums$name %in% enum, ]
+  code <- readLines(enum$download_url)
+  parse_node_enum(code)
 }
 
 
@@ -346,4 +387,28 @@ extract_enum <- function(lines) {
 
   names(lines) <- enums
   lines
+}
+
+
+get_all_enums <- function() {
+  url <- "https://api.github.com/repos/DoctorMcKay/node-steam-user/contents/enums"
+  enum_files <- jsonlite::read_json(url, simplifyVector = TRUE)
+  enum_files$name <- gsub("\\.js$", "", enum_files$name)
+  enum_files$name <- gsub("^E", "", enum_files$name)
+  enum_files[c("name", "download_url")]
+}
+
+
+parse_node_enum <- function(code) {
+  # remove trailing whitespace and empty lines
+  code <- trimws(code)
+  code <- code[nzchar(code)]
+
+  # remove all comments and excess js code
+  code <- code[!grepl("^/|\\*|module|const|}", code)]
+
+  proto <- data.frame(desc = character(), code = character())
+  enum <- utils::strcapture("\"?([A-Za-z]+)\"?: ([0-9]+),?$", code, proto)
+  enum <- enum[c("code", "desc")]
+  as_data_frame(enum[!is.na(enum$code), ])
 }

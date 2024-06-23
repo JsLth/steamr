@@ -2,6 +2,7 @@
 % Please edit documentation in R/enum.R
 \name{steamkit_enum}
 \alias{steamkit_enum}
+\alias{node_enum}
 \alias{content_descriptors}
 \alias{universes}
 \alias{account_types}
@@ -13,8 +14,11 @@
 \usage{
 steamkit_enum(
   enum = NULL,
-  type = c("SteamLanguage", "Enums", "EnumsProductInfo")
+  type = c("SteamLanguage", "Enums", "EnumsProductInfo"),
+  filter = NULL
 )
+
+node_enum(enum = NULL, filter = NULL)
 
 content_descriptors()
 
@@ -36,6 +40,10 @@ the names of available enums.}
 
 \item{type}{Type of enums. Corresponds to a generated file from
 SteamKit.}
+
+\item{filter}{If \code{enum} is \code{NULL}, specifies a keyword to
+filter the list of available enums by. The keyword is fuzzy-matched
+using \code{\link{agrepl}}.}
 }
 \value{
 If \code{enum} is not \code{NULL}, returns a dataframe
@@ -45,9 +53,14 @@ available enums.
 \description{
 The Steam API defines a number of enums for use with the API. These enums
 can help resolve some common identifiers such as types and categories.
-The enums are scraped from the C# library
-\href{https://github.com/SteamRE/SteamKit}{SteamKit}, which
-auto-generates enums from protobufs.
+
+\code{steamkit_enum} scrapes the enums from the
+\href{https://github.com/SteamRE/SteamKit}{SteamKit} C# library while
+\code{steamkit_node} scrapes them from the
+\href{https://github.com/DoctorMcKay/node-steam-user}{SteamUser} Node.js library.
+SteamKit bundles the enums in different files and SteamUser organizes
+each enum in a single file. Thus, \code{steamkit_enum} requires a \code{type}
+argument while \code{node_enum} does not.
 
 Some enums are pre-defined, either internally or as exported functions.
 Non-defined enums can be retrieved using \code{steamkit_enum}.
@@ -67,6 +80,12 @@ steamkit_enum("Universe", type = "SteamLanguage")
 # retrieve communty item classes
 # useful to decipher the output of functions like query_loyalty_rewards
 steamkit_enum("CommunityItemClass", type = "Enums")
+
+# show all enums about published files
+node_enum(filter = "publishedfile")
+
+# node_enum works without specifiying a type
+node_enum("FriendFlags")
 }
 \references{
 \url{https://steam-py.github.io/docs/latest/api/#enumerations}

@@ -24,6 +24,15 @@ nvapply <- function(x, fun, ..., use_names = TRUE) {
 }
 
 
+recurse <- function(x, fun, ...) {
+  if (is.data.frame(x) || (!is.list(x) && length(x) == 1)) {
+    fun(x)
+  } else {
+    lapply(x, recurse, fun)
+  }
+}
+
+
 vswitch <- function(expr, fun_value = character(1), ...) {
   vapply(expr, FUN.VALUE = fun_value, switch, ...)
 }
