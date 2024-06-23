@@ -12,10 +12,13 @@
 #' Country must not be \code{NULL} if \code{region} is specified. If specified,
 #' returns information on cities, otherwise on regions.
 #'
-#' @returns \code{query_locations} returns a dataframe with country code,
-#' name, and whether the location can be further subdivided.
+#' @returns \describe{
+#'  \item{\code{query_locations}}{A dataframe with country code, name,
+#'  and whether the location can be further subdivided into states or cities.}
 #'
-#' \code{get_country_list} only returns country code and name.
+#'  \item{\code{get_country_list}}{A dataframe containing country code
+#'  and country name.}
+#' }
 #'
 #' @export
 #'
@@ -48,14 +51,7 @@ query_locations <- function(country = NULL, region = NULL) {
 
 
 #' @rdname query_locations
-#' @inheritParams get_items
-#'
 #' @export
-#'
-#' @examples
-#' \dontrun{
-#'
-#' }
 get_country_list <- function(language = "english") {
   params <- .make_params()
   res <- request_webapi(
@@ -80,12 +76,21 @@ get_country_list <- function(language = "english") {
 #' the start date and the start date plus seven days.
 #' @param page_start On which part to start looking. Defaults to page 1.
 #' @param page_count Maximum pages to return. Defaults to one page.
-#' @inheritParams get_items
+#' @inheritParams common
 #'
 #' @returns A dataframe containing information on weekly top sellers.
 #' Metadata is stored in attributes: \code{timestamp} holds the earliest
 #' time of the week, \code{next_page_start} specifies where the next page
 #' would start.
+#'
+#' @export
+#' @seealso \code{\link{get_country_list}}
+#'
+#' @note
+#' This function currently does not work as intended. The
+#' \code{GetWeekyTopSellers} method does not respond to any parameters. The
+#' only use of this function at the moment is to retrieve the top 20 world-wide
+#' bestsellers at the time.
 get_weekly_top_sellers <- function(country,
                                    language = "english",
                                    elanguage = NULL,
@@ -94,8 +99,8 @@ get_weekly_top_sellers <- function(country,
                                    include = NULL,
                                    apply_user_filters = FALSE,
                                    start_date = NULL,
-                                   page_start = NULL,
                                    page_count = NULL) {
+  check_string(country)
   check_integerish(start_date, null = TRUE)
   check_integerish(page_start, null = TRUE)
   check_integerish(page_count, null = TRUE)

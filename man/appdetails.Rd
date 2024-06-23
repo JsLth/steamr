@@ -7,7 +7,7 @@
 \title{Get app details}
 \usage{
 appdetails(
-  appids,
+  appid,
   client = NULL,
   filters = NULL,
   country_code = "US",
@@ -19,29 +19,98 @@ appdetails_steamcmd(appid)
 appdetails_steamspy(appid)
 }
 \arguments{
-\item{appids, appid}{One or up to 100 application IDs. If more than one app
-IDs is passed, the \code{filters} argument must only contain the
-\code{price_overview} filter.}
+\item{appid}{A single appID of an application in the Steam store.}
 
-\item{client}{Unknown parameter.}
+\item{client}{Unknown.}
 
-\item{filters}{Fields to include in the output. Can be any field name that
-is returned by this function. If \code{basic}, includes a number of basic
-fields.}
+\item{filters}{Keys to include in the output. Can be any key that
+is returned by this function. If \code{basic}, includes the following
+default keys: \code{type}, \code{name}, \code{steam_appid},
+\code{required_age}, \code{dlc}, \code{detailed_description},
+\code{about_the_game}, \code{short_description}, \code{supported_languages},
+\code{header_image}, \code{website}, \code{pc_requirements},
+\code{mac_requirements}, \code{linux_requirements}. \code{filters} does
+not accept any of these keys as input.}
 
-\item{country_code}{ISO-2 country code as returned by
-\code{\link{get_countries}}. The Steam store differs depending on the
-country it is accessed from.}
+\item{country_code}{ISO 3166 country code representing the country from
+which to view the Steam store.}
 
-\item{language}{ISO639-1 language code all tokenized strings should be
+\item{language}{ISO 639-1 language code all tokenized strings should be
 returned in. Formally, a tokenized string is a string that is prefixed
 with a \code{#} in the VDF file. Not all tokenized strings have a translation
 for all languages. If no translation is available, defaults to English.}
 }
 \value{
-A nested list containing detailed information on a single app.
-If multiple app IDs are passed and \code{filters = "price_overview"},
-contains price information on up to 100 applications.
+\describe{
+ \item{\code{appdetails}}{A nested list containing the following keys:
+ \itemize{
+   \item{\code{type}: Type of application (game, dlc, demo, advertising,
+   mod, or video)}
+   \item{\code{name}: Name of the application}
+   \item{\code{steam_appid}: appID of the application}
+   \item{\code{required_age}: Required age to view the application}
+   \item{\code{controller_support}: Whether the app has controller support
+   (partial or full). May be omitted.}
+   \item{\code{is_free}: Whether the game is free to play}
+   \item{\code{dlc}: Array of appIDs of DLCs associated with this application.}
+   \item{\code{detailed_description}: A detailed description in HTML}
+   \item{\code{about_the_game}: "About the game" description in HTML}
+   \item{\code{short_description}: Short description in HTML, usually found
+   in the application preview}
+   \item{\code{fullgame}: Name and appID of the full game. Sometimes
+   found in demos or movies.}
+   \item{\code{supported_languages}: Languages that the application supports,
+   in HTML.}
+   \item{\code{header_image}: URL to the header image.}
+   \item{\code{capsule_image}: URL to the capsule image.}
+   \item{\code{capsule_imagev5}: URL to a different capsule image.}
+   \item{\code{website}: URL to the application website.}
+   \item{\code{pc_requirements}: Minimum and recommended requirements
+   for Windows, in HTML}
+   \item{\code{mac_requirements}: Minimum and recommended requirements
+   for Mac OS, in HTML}
+   \item{\code{linux_requirements}: Minimum and recommended requirements
+   for Linux, in HTML}
+   \item{\code{developers}: Names of the developers.}
+   \item{\code{publishers}: Names of the publishers.}
+   \item{\code{demos}: List of appIDs which are demos of this application.}
+   \item{\code{price_overview}: List containing the initial and final
+   price as well as price discounts. Omitted for free to play games.}
+   \item{\code{packages}: List of packageIDs that include this game.}
+   \item{\code{package_groups}: Dataframe specifying purchase options.}
+   \item{\code{platforms}: Specifies whether the application is compatible
+   with linux and mac.}
+   \item{\code{metacritic}: Metacritic score and URL.}
+   \item{\code{categories}: Store categories of the application. May be
+   omitted.}
+   \item{\code{genres}: Genres of the application. May be omitted.}
+   \item{\code{screenshots}: A dataframe containing the paths to all
+   showcase screenshots. Omitted if no screenshots exist.}
+   \item{\code{movies}: A dataframe containing the paths to all
+   showcase movies. Omitted if no movies exist.}
+   \item{\code{recommendations}: A list containing the total number
+   of recommendations.}
+   \item{\code{recommendations}: A list containing the total and
+   highlighted achievements.}
+   \item{\code{release_date}: A list containing the release date and
+   whether the application is coming soon.}
+   \item{\code{support_info}: A list containing support URL and email.}
+   \item{\code{background}: URL to the background image.}
+   \item{\code{background_raw}: URL to the raw background image.}
+   \item{\code{content_descriptors}: Content descriptor codes given to
+   this application. Also includes a content descriptor description.
+   A list of content descriptors is included in
+   \code{\link{content_descriptors}}.}
+   \item{\code{ratings}: A list containing maturity ratings.}
+ }
+ }
+ \item{\code{appdetails_steamspy}}{A dataframe containing information
+ about name, developer, publisher, reviews, concurrent players, genres,
+ tags and estimated owners.}
+
+ \item{\code{appdetails_steamcmd}}{A nested list containing information
+ listed \href{https://www.steamcmd.net/}{here}.}
+}
 }
 \description{
 Retrieve detailed information on an application in the steam store.
@@ -68,6 +137,16 @@ app list from SteamSpy, see \code{\link{steamspy}}.
 }
 \examples{
 \dontrun{
+# returns the detailed description about team fortress
+appdetails(440, filters = "detailed_description")
+
+# returns the metacritic score and total number of reviews of Counter-Strike
 appdetails(10, filters = c("recommendations", "metacritic"))
+
+# returns steamspy data
+appdetails_steamspy(440)
+
+# returns steamcmd data
+appdetails_steamcmd(440)
 }
 }

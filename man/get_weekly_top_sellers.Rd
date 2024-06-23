@@ -13,43 +13,34 @@ get_weekly_top_sellers(
   include = NULL,
   apply_user_filters = FALSE,
   start_date = NULL,
-  page_start = NULL,
   page_count = NULL
 )
 }
 \arguments{
 \item{country}{ISO-2 code of the country for which to return top sellers.}
 
-\item{language}{ISO639-1 language code all tokenized strings should be
+\item{language}{ISO 639-1 language code all tokenized strings should be
 returned in. Formally, a tokenized string is a string that is prefixed
 with a \code{#} in the VDF file. Not all tokenized strings have a translation
 for all languages. If no translation is available, defaults to English.}
 
-\item{elanguage}{Language identifier of the returned information.}
+\item{elanguage}{Numeric code representing the store language. A list
+of language codes and their corresponding languages is defined in
+\code{\link{ELanguage}}.}
 
-\item{country_code}{ISO-2 country code as returned by
-\code{\link{get_countries}}. The Steam store differs depending on the
-country it is accessed from.}
+\item{country_code}{ISO 3166 country code representing the country from
+which to view the Steam store.}
 
 \item{steam_realm}{Number describing the Steam realm. A value of 1
 indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.}
-
-\item{include}{List of extra information to include. Can be one or several
-of the following: \code{release}, \code{platforms},
-\code{all_purchase_options}, \code{screenshots}, \code{trailers},
-\code{ratings}, \code{tag_count}, \code{reviews}, \code{basic_info},
-\code{supported_languages}, \code{full_description}, \code{included_items}
-and \code{assets_without_overrides}. If \code{all}, returns all information.}
-
-\item{apply_user_filters}{Unknown.}
 
 \item{start_date}{Date-time object giving the earliest time for which to
 retrieve top sellers. Results will be returned for the time between
 the start date and the start date plus seven days.}
 
-\item{page_start}{On which part to start looking. Defaults to page 1.}
-
 \item{page_count}{Maximum pages to return. Defaults to one page.}
+
+\item{page_start}{On which part to start looking. Defaults to page 1.}
 }
 \value{
 A dataframe containing information on weekly top sellers.
@@ -59,4 +50,13 @@ would start.
 }
 \description{
 Get a list of weekly top sellers by country.
+}
+\note{
+This function currently does not work as intended. The
+\code{GetWeekyTopSellers} method does not respond to any parameters. The
+only use of this function at the moment is to retrieve the top 20 world-wide
+bestsellers at the time.
+}
+\seealso{
+\code{\link{get_country_list}}
 }
