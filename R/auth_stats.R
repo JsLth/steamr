@@ -172,20 +172,4 @@ recommend_apps <- function(appid) {
 }
 
 
-get_price_history <- function(appid, hash_name) {
-  check_authenticated()
-  params <- .make_params(key = FALSE)
-  res <- request_storefront(
-    api = comm_api(),
-    interface = "market",
-    method = "pricehistory",
-    params = params
-  )
 
-  prefix <- res$price_prefix
-  suffix <- res$price_suffix
-  res <- res$prices
-  attr(res, "prefix") <- prefix
-  attr(res, "suffix") <- suffix
-  as_data_frame(res)
-}

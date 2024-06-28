@@ -22,6 +22,8 @@ get_profile_items <- function(steamid, language = "english") {
 }
 
 
+#' @rdname get_profile_items
+#' @export
 get_profile_reactions <- function(steamid) {
   check_string(steamid)
   steamid <- convert_steamid(steamid, to = "steam64")
@@ -37,6 +39,8 @@ get_profile_reactions <- function(steamid) {
 }
 
 
+#' @rdname get_profile_items
+#' @export
 get_profile_avatar <- function(steamid, language = "english") {
   check_string(steamid)
   check_string(language, null = TRUE)
@@ -53,6 +57,8 @@ get_profile_avatar <- function(steamid, language = "english") {
 }
 
 
+#' @rdname get_profile_items
+#' @export
 get_profile_frame <- function(steamid, language = "english") {
   check_string(steamid)
   check_string(language, null = TRUE)
@@ -69,6 +75,8 @@ get_profile_frame <- function(steamid, language = "english") {
 }
 
 
+#' @rdname get_profile_items
+#' @export
 get_profile_background <- function(steamid, language = "english") {
   check_string(steamid)
   check_string(language, null = TRUE)
@@ -85,6 +93,8 @@ get_profile_background <- function(steamid, language = "english") {
 }
 
 
+#' @rdname get_profile_items
+#' @export
 get_profile_mini_background <- function(steamid, language = "english") {
   check_string(steamid)
   check_string(language, null = TRUE)
@@ -101,6 +111,8 @@ get_profile_mini_background <- function(steamid, language = "english") {
 }
 
 
+#' @rdname get_profile_items
+#' @export
 get_profile_badges <- function(steamid) {
   check_string(steamid)
   steamid <- convert_steamid(steamid, to = "steam64")
@@ -117,6 +129,8 @@ get_profile_badges <- function(steamid) {
 }
 
 
+#' @rdname get_profile_items
+#' @export
 get_profile_items <- function(steamid,
                               language = "english",
                               status = c("owned", "equipped")) {
@@ -139,6 +153,8 @@ get_profile_items <- function(steamid,
 }
 
 
+#' @rdname get_profile_items
+#' @export
 get_profile_themes <- function() {
   check_authenticated()
   params <- .make_params()
@@ -152,6 +168,8 @@ get_profile_themes <- function() {
 }
 
 
+#' @rdname get_profile_items
+#' @export
 get_profile_customization <- function(steamid,
                                       include_inactive = FALSE,
                                       include_purchased = FALSE) {

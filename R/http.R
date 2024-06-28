@@ -241,6 +241,7 @@ request_storefront <- function(api,
                                params = list(),
                                params_as_query = TRUE,
                                simplify = TRUE,
+                               paginate = NULL,
                                rate = NULL,
                                dry = FALSE) {
   is_store_api <- identical(api, store_api())
@@ -291,31 +292,35 @@ request_storefront <- function(api,
 
   if (dry) {
     return(httr2::req_dry_run(req))
+  }
+
+  if (!is.null(paginate)) {
+    paginate_steam(req, paginate, simplify = simplify)
   } else {
     res <- httr2::req_perform(req)
+
+    res <- httr2::resp_body_json(res, simplifyVector = TRUE, flatten = TRUE)
+
+    if (!length(res)) {
+      stop("Steam storefront API returned an empty response. Check your input!")
+    }
+
+    code <- res$success %||% res$eresult %||% 1L
+    if (!identical(code, 1L) && !isTRUE(code)) {
+      msg <- res$err_msg %||% res$msg %||% "Something has gone wrong."
+
+      stop(
+        sprintf("Steam storefront API returned error code %s:\n%s", code, msg),
+        call. = FALSE
+      )
+    }
+
+    if (is.data.frame(res)) {
+      res <- fix_steam_bool(res)
+    }
+
+    res
   }
-
-  res <- httr2::resp_body_json(res, simplifyVector = TRUE, flatten = TRUE)
-
-  if (!length(res)) {
-    stop("Steam storefront API returned an empty response. Check your input!")
-  }
-
-  code <- res$success %||% res$eresult %||% 1L
-  if (!identical(code, 1L)) {
-    msg <- res$err_msg %||% res$msg %||% "Something has gone wrong."
-
-    stop(
-      sprintf("Steam storefront API returned error code %s:\n%s", code, msg),
-      call. = FALSE
-    )
-  }
-
-  if (is.data.frame(res)) {
-    res <- fix_steam_bool(res)
-  }
-
-  res
 }
 
 
@@ -457,6 +462,58 @@ fix_steam_bool <- function(res) {
     if (is.logical(x)) res[[col]] <- replace(x, which(is.na(x)), FALSE)
   }
   res
+}
+
+
+paginate_steam <- function(req, paginate, simplify) {
+  limit <- getOption("steamr_max_reqs", Inf)
+
+  paginator <- switch(
+    paginate,
+    cursor = httr2::iterate_with_cursor(
+      param_name = "cursor",
+      resp_param_value = extract_cursor
+    ),
+    page = stop("Page paginator is currently not implemented."),
+    start = httr2::iterate_with_offset(
+      param_name = "start",
+      start = 0,
+      offset = 100,
+      resp_pages = function(resp) {
+        if (identical(resp$status_code, 200L)) {
+          body <- httr2::resp_body_json(resp)
+          n <- ceiling(body$total_count / body$pagesize)
+          if (n > 0) n
+        }
+      },
+      resp_complete = function(resp) {
+        body <- httr2::resp_body_json(resp)
+        length(body$results) == 0
+      }
+    ),
+    input_json = iterate_with_input_json(resp, params$input_json)
+  )
+  reses <- httr2::req_perform_iterative(
+    req,
+    next_req = paginator,
+    max_reqs = limit
+  )
+
+  reses <- lapply(
+    reses,
+    function(resp, ...) {
+      resp <- httr2::resp_body_json(resp, ...)
+      check <- switch(
+        paginate,
+        start = !length(resp$results) == 0,
+        !identical(resp$response$count, 0L)
+      )
+      if (check) resp
+    },
+    simplifyVector = simplify,
+    flatten = TRUE
+  )
+  reses[!lvapply(reses, is.null)]
 }
 
 

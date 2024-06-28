@@ -1,15 +1,24 @@
 #' Assets
 #' @description
-#' Retrieve information about assets and their prices. An asset is an item
+#' Query market assets and their prices. An asset is an item
 #' from the Steam economy that can be traded. For more information about
 #' assets, see the \href{https://partner.steamgames.com/doc/store/assets}{Steamworks documentation}.
 #'
 #' @inheritParams common
+#' @param search_term Term to search for in the market item name.
+#' @param sort_column Column to sort the response by.
+#' @param sort_dir Direction of sorting if \code{sort_column} is not
+#' \code{NULL}. Can be \code{asc} or \code{desc}.
+#' @param search_descriptions Unknown.
 #' @param currency ISO 4217 code to filter by currency. Defaults to all
 #' available currencies.
 #'
 #' @returns
 #' \describe{
+#'  \item{\code{query_market_assets}A dataframe with each row representing
+#'  one asset. The dataframe provides data on name, hash names, prices,
+#'  the corresponding app, asset classIDs, asset instanceIDs, }
+#'
 #'  \item{\code{get_asset_prices}}{A dataframe containg information on assert
 #'  prices. \code{name}, \code{date}, \code{class}, and \code{classid} provide
 #'  metadata about assets. Optionally, tags are provided in \code{tags} and
@@ -42,7 +51,6 @@
 #' \code{\link{query_loyalty_rewards}} for loyalty assets
 #'
 #' @examples
-#' \dontrun{
 #' # show asset prices for Team Fortress and all available currencies
 #' get_asset_prices(440)
 #'
@@ -56,7 +64,50 @@
 #' # get_asset_prices returns classIDs for each asset. These classIDs can
 #' # be used to retrieve detailed information on an asset.
 #' get_asset_class(730, c("5710093913", "5189384166"))
-#' }
+query_market_assets <- function(appid,
+                                search_term = NULL,
+                                sort_column = NULL,
+                                sort_dir = NULL,
+                                search_description = NULL,
+                                paginate = TRUE) {
+  check_number(appid)
+  check_string(search_term, null = TRUE)
+  check_string(sort_column, null = TRUE)
+  check_string(sort_dir, null = TRUE)
+  check_string(search_description, null = TRUE)
+
+  params <- .make_params(
+    appid = appid,
+    query = search_term,
+    sort_column = sort_column,
+    sort_dir = sort_dir,
+    search_description = search_description,
+    start = 0,
+    norender = 1,
+    count = 100
+  )
+
+  res <- request_storefront(
+    api = comm_api(),
+    interface = "market",
+    method = "search/render",
+    params = params,
+    paginate = if (paginate) "start"
+  )
+
+  if (paginate) {
+    res <- lapply(res, "[[", "results")
+    res <- rbind_list(res)
+  } else {
+    res <- res$results
+  }
+
+  as_data_frame(res)
+}
+
+
+#' @rdname query_market_items
+#' @export
 get_asset_prices <- function(appid, currency = NULL, language = "english") {
   check_number(appid)
   check_string(currency, null = TRUE)
@@ -116,6 +167,29 @@ get_asset_info <- function(appid,
   res$success <- NULL
   res <- rbind_list(lapply(res, bind_rows))
   res
+}
+
+
+get_price_history <- function(appid, market_hash_name) {
+  check_authenticated()
+  params <- .make_params(key = FALSE)
+  res <- request_storefront(
+    api = comm_api(),
+    interface = "market",
+    method = "pricehistory",
+    params = params
+  )
+
+  prefix <- res$price_prefix
+  suffix <- res$price_suffix
+  res <- as.data.frame(res$prices)
+  names(res) <- c("date", "price", "stock")
+  res$date <- as.Date(res$date, tryFormats = "%b %d %Y 01: +0")
+  res$price <- as.numeric(res$price)
+  res$stock <- as.numeric(res$stock)
+  attr(res, "prefix") <- prefix
+  attr(res, "suffix") <- suffix
+  as_data_frame(res)
 }
 
 

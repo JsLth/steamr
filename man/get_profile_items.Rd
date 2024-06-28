@@ -2,12 +2,46 @@
 % Please edit documentation in R/profile.R
 \name{get_profile_items}
 \alias{get_profile_items}
+\alias{get_profile_reactions}
+\alias{get_profile_avatar}
+\alias{get_profile_frame}
+\alias{get_profile_background}
+\alias{get_profile_mini_background}
+\alias{get_profile_badges}
+\alias{get_profile_themes}
+\alias{get_profile_customization}
 \title{Profiles}
 \usage{
 get_profile_items(
   steamid,
   language = "english",
   status = c("owned", "equipped")
+)
+
+get_profile_reactions(steamid)
+
+get_profile_avatar(steamid, language = "english")
+
+get_profile_frame(steamid, language = "english")
+
+get_profile_background(steamid, language = "english")
+
+get_profile_mini_background(steamid, language = "english")
+
+get_profile_badges(steamid)
+
+get_profile_items(
+  steamid,
+  language = "english",
+  status = c("owned", "equipped")
+)
+
+get_profile_themes()
+
+get_profile_customization(
+  steamid,
+  include_inactive = FALSE,
+  include_purchased = FALSE
 )
 }
 \arguments{

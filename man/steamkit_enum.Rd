@@ -93,4 +93,6 @@ node_enum("FriendFlags")
 \url{https://partner.steamgames.com/doc/api/steam_api#enums}
 
 \url{https://github.com/SteamRE/SteamKit}
+
+\url{https://github.com/DoctorMcKay/node-steam-user}
 }
