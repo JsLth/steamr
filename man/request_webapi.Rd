@@ -33,6 +33,7 @@ request_storefront(
   params = list(),
   params_as_query = TRUE,
   simplify = TRUE,
+  paginate = NULL,
   rate = NULL,
   dry = FALSE
 )

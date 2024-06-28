@@ -17,7 +17,8 @@
 #' \describe{
 #'  \item{\code{query_market_assets}A dataframe with each row representing
 #'  one asset. The dataframe provides data on name, hash names, prices,
-#'  the corresponding app, asset classIDs, asset instanceIDs, }
+#'  the corresponding app, asset classIDs, and the output of
+#'  \code{get_asset_info}.}
 #'
 #'  \item{\code{get_asset_prices}}{A dataframe containg information on assert
 #'  prices. \code{name}, \code{date}, \code{class}, and \code{classid} provide
@@ -106,7 +107,7 @@ query_market_assets <- function(appid,
 }
 
 
-#' @rdname query_market_items
+#' @rdname query_market_assets
 #' @export
 get_asset_prices <- function(appid, currency = NULL, language = "english") {
   check_number(appid)
@@ -126,7 +127,7 @@ get_asset_prices <- function(appid, currency = NULL, language = "english") {
 }
 
 
-#' @rdname get_asset_prices
+#' @rdname query_market_assets
 #' @export
 #' @param classids A vector of classIDs of the assets to retrieve.
 #' @param instanceids A vector of instanceIDs corresponding to the
@@ -170,6 +171,8 @@ get_asset_info <- function(appid,
 }
 
 
+#' @rdname query_market_assets
+#' @export
 get_price_history <- function(appid, market_hash_name) {
   check_authenticated()
   params <- .make_params(key = FALSE)
