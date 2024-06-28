@@ -23,7 +23,8 @@ Imports:
     bigBits,
     openssl,
     PKI,
-    utils
+    utils,
+    rappdirs
 Suggests: 
     knitr,
     rmarkdown,

@@ -3,6 +3,7 @@
 \name{auth_credentials}
 \alias{auth_credentials}
 \alias{auth_qr}
+\alias{logout}
 \title{Session authentication}
 \usage{
 auth_credentials(
@@ -15,6 +16,8 @@ auth_credentials(
 )
 
 auth_qr(friendly_name = NULL, device_details = NULL)
+
+logout()
 }
 \arguments{
 \item{username}{Account name of the user to be authenticated.}
@@ -30,7 +33,10 @@ authenticates using two-factor authentication. Two-factor confirmation
 requires the manual confirmation of the login request in the Steam Guard
 mobile app.}
 
-\item{persistent}{Whether to start a persistent or ephemeral session.}
+\item{persistent}{Whether to start a persistent or ephemeral session.
+If the session is ephemeral (default), then it is reset when the R session
+ends. If it is persistent, then the necessary cookies are stored in a
+persistent cache in the file system and recovered when the package is loaded.}
 
 \item{friendly_name}{Name of the session. Used to track authorized devices
 in Steam Guard.}
@@ -47,11 +53,15 @@ object is also attached to the session.
 Initializes an authorized Steam session. Some functions in both the
 Web API and storefront API require the session to be authenticated. This
 concerns all API methods that access personal account information.
-\code{steam_login} essentially signs in a user programmatically.
+\code{auth_*} functions essentially sign in a user programmatically.
 
-\code{show_steam_qr} authenticates by showing a QR code that can be
+\code{auth_qr} authenticates by showing a QR code that can be
 scanned using the Steam mobile app. The QR code is shown as an R plot
 and refreshes every 5 seconds.
+
+\code{logout} ends the active authenticated session by formally logging
+out of Steam and removing all cookies and authentication information from
+the session and the cache.
 }
 \details{
 Internally, \code{auth_credentials} requests a public RSA key using the
@@ -89,6 +99,11 @@ auth_credentials(user, friendly_name = "R session")
 
 # skip two-factor authentication by providing a Steam Guard code
 auth_credentials(user, shared_secret = "XXXXX")
+
+# authenticating a persistent session survives restarts of R
+auth_credentials(user, persistent = TRUE)
+.rs.restartR() # restart R
+is_authenticated() # returns TRUE
 
 # sign in using a QR code
 auth_qr()

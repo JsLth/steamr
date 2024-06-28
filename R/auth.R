@@ -3,7 +3,7 @@
 #' Initializes an authorized Steam session. Some functions in both the
 #' Web API and storefront API require the session to be authenticated. This
 #' concerns all API methods that access personal account information.
-#' \code{steam_login} essentially signs in a user programmatically.
+#' \code{auth_*} functions essentially sign in a user programmatically.
 #'
 #' @param username Account name of the user to be authenticated.
 #' @param password A function that safely prompts the Steam password. Defaults
@@ -16,6 +16,9 @@
 #' requires the manual confirmation of the login request in the Steam Guard
 #' mobile app.
 #' @param persistent Whether to start a persistent or ephemeral session.
+#' If the session is ephemeral (default), then it is reset when the R session
+#' ends. If it is persistent, then the necessary cookies are stored in a
+#' persistent cache in the file system and recovered when the package is loaded.
 #' @param friendly_name Name of the session. Used to track authorized devices
 #' in Steam Guard.
 #' @param details Arbitrary details about the device attempting to
@@ -63,6 +66,11 @@
 #'
 #' # skip two-factor authentication by providing a Steam Guard code
 #' auth_credentials(user, shared_secret = "XXXXX")
+#'
+#' # authenticating a persistent session survives restarts of R
+#' auth_credentials(user, persistent = TRUE)
+#' .rs.restartR() # restart R
+#' is_authenticated() # returns TRUE
 #'
 #' # sign in using a QR code
 #' auth_qr()
@@ -122,13 +130,17 @@ auth_credentials <- function(username,
     stop("Authentication was unsuccessful. Session is not authenticated.")
   }
 
+  if (persistent) {
+    memorize_session(auth)
+  }
+
   auth
 }
 
 
 #' @rdname auth
 #' @description
-#' \code{show_steam_qr} authenticates by showing a QR code that can be
+#' \code{auth_qr} authenticates by showing a QR code that can be
 #' scanned using the Steam mobile app. The QR code is shown as an R plot
 #' and refreshes every 5 seconds.
 #'
@@ -188,6 +200,13 @@ auth_qr <- function(friendly_name = NULL, device_details = NULL) {
 }
 
 
+#' @rdname auth
+#' @export
+#' @description
+#' \code{logout} ends the active authenticated session by formally logging
+#' out of Steam and removing all cookies and authentication information from
+#' the session and the cache.
+#'
 logout <- function() {
   session <- globst$session
 
@@ -195,19 +214,20 @@ logout <- function() {
     stop("Cannot log out. Session is not authenticated.")
   }
 
-  url <- file.path(store_api(), "login/logout")
+  url <- file.path(store_api(), "logout")
   params <- list(sessionid = get_sessionid())
   request_generic(
     url,
     params = params,
     method = "POST",
-    headers = list(`Content-Length` = 573)
+    headers = list(`Content-Length` = nchar(params$sessionid) + 10)
   )
 
   if (is_authenticated()) {
     stop("Logout was unsuccessful. Session is still authenticated.")
   }
 
+  unlink(cache_path(), recursive = TRUE)
   unlink(session)
   rm("session", envir = globst)
 }
@@ -475,6 +495,16 @@ get_auth <- function(field = NULL) {
 set_auth <- function(auth, session) {
   assign("auth", auth, envir = globst)
   assign("session", session, envir = globst)
+}
+
+
+memorize_session <- function(auth) {
+  session <- get("session", envir = globst)
+  session_cache <- cache_path(basename(session))
+  file.copy(session, session_cache)
+  assign("session", session_cache, envir = globst)
+  cache <- list(auth = auth, session = session_cache)
+  saveRDS(cache, cache_path("auth_cache.rds"))
 }
 
 
