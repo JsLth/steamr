@@ -5,8 +5,31 @@
 #' @inheritParams common
 #'
 #' @export
-#'
-get_profile_items <- function(steamid, language = "english") {
+get_profile_items <- function(steamid,
+                              language = "english",
+                              status = c("owned", "equipped")) {
+  check_authenticated()
+  check_string(steamid)
+  check_string(language, null = TRUE)
+  status <- match.arg(status)
+  steamid <- convert_steamid(steamid, to = "steam64")
+
+  method <- paste0("GetProfileItems", to_title(status))
+  params <- .make_params()
+  res <- request_webapi(
+    api = public_api(),
+    interface = "IPlayerService",
+    method = method,
+    version = "v1",
+    params = params
+  )$response
+  lapply(res, as_data_frame)
+}
+
+
+#' @rdname get_profile_items
+#' @export
+get_equipped_profile_items <- function(steamid, language = "english") {
   check_string(steamid)
   check_string(language, null = TRUE)
   steamid <- convert_steamid(steamid, to = "steam64")
@@ -126,30 +149,6 @@ get_profile_badges <- function(steamid) {
     params = params
   )$response$badges
   as_data_frame(res)
-}
-
-
-#' @rdname get_profile_items
-#' @export
-get_profile_items <- function(steamid,
-                              language = "english",
-                              status = c("owned", "equipped")) {
-  check_authenticated()
-  check_string(steamid)
-  check_string(language, null = TRUE)
-  status <- match.arg(status)
-  steamid <- convert_steamid(steamid, to = "steam64")
-
-  method <- paste0("GetProfileItems", to_title(status))
-  params <- .make_params()
-  res <- request_webapi(
-    api = public_api(),
-    interface = "IPlayerService",
-    method = method,
-    version = "v1",
-    params = params
-  )$response
-  lapply(res, as_data_frame)
 }
 
 

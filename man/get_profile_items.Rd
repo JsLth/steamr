@@ -2,6 +2,7 @@
 % Please edit documentation in R/profile.R
 \name{get_profile_items}
 \alias{get_profile_items}
+\alias{get_equipped_profile_items}
 \alias{get_profile_reactions}
 \alias{get_profile_avatar}
 \alias{get_profile_frame}
@@ -18,6 +19,8 @@ get_profile_items(
   status = c("owned", "equipped")
 )
 
+get_equipped_profile_items(steamid, language = "english")
+
 get_profile_reactions(steamid)
 
 get_profile_avatar(steamid, language = "english")
@@ -29,12 +32,6 @@ get_profile_background(steamid, language = "english")
 get_profile_mini_background(steamid, language = "english")
 
 get_profile_badges(steamid)
-
-get_profile_items(
-  steamid,
-  language = "english",
-  status = c("owned", "equipped")
-)
 
 get_profile_themes()
 

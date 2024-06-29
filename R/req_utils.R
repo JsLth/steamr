@@ -1,5 +1,5 @@
 .make_params <- function(...,
-                         key = TRUE,
+                         key = F,
                          access_token = TRUE,
                          env = parent.frame()) {
   if (!...length()) {

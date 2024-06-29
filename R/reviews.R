@@ -176,6 +176,7 @@ get_all_app_reviews <- function(appid,
 get_app_review <- function(steamid, appid) {
   check_string(steamid)
   check_number(appid)
+  steamid <- convert_steamid(steamid, to = "steam64")
 
   requests <- list(steamid = steamid, appid = appid)
   input_json <- .make_input_json(requests = list(requests))
@@ -191,6 +192,8 @@ get_app_review <- function(steamid, appid) {
 }
 
 
+#' @rdname get_app_reviews
+#' @export
 get_review_histogram <- function(appid,
                                  language = "english",
                                  review_score_preference = 2) {

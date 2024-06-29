@@ -35,11 +35,30 @@ You can install the development version of steamr like so:
 pak::install("jslth/steamr")
 ```
 
+
+## Overview
+
+The Steam API is highly inconsistent and uses not only different ways of authentication but entirely different APIs.
+
+The Steam Web API is Steam's "documented" API introduced on its official [developer website](https://steamcommunity.com/dev?l=german). Unfortunately, only a handful of API methods are documented on the [Valve community wiki](https://developer.valvesoftware.com/wiki/Steam_Web_API) and the [Team Fortress wiki](https://wiki.teamfortress.com/wiki/WebAPI). There is a considerable number of API methods that simply remain undocumented. SteamDB founder xPaw provides an automatically generated list of all API methods in the unofficial [Steam Web API Documentation](https://steamapi.xpaw.me/).
+
+If that's not enough, Steam also uses another API internally. This API (also known as the "storefront" API) is not documented at all, but avid Steam developers have gathered a sizable amount of information about the storefront API in the [Internal Steam web API Documentation](https://github.com/Revadike/InternalSteamWebAPI). The internal Steam API mirrors some methods from the Web API and also implements many complementary methods.
+
+In terms of authentication, Steam's APIs are also very much inconsistent. Many API methods can be used without providing any kind of authentication. Then again, some Web API methods require developers to request an [API key](https://steamcommunity.com/dev/apikey). For more sensitive information, both Web and Storefront API can even require the session to be authenticated, i.e. logged in. `steamr` provides ways for both API key handling and session authentication.
+
+The following table gives an overview of the package functions, the API they use, whether they need an API key, and whether they need authentication.
+
+```{r echo=FALSE}
+knitr::kable(read.csv("overview.csv"))
+```
+
+
+
 ## Example
 
 `steamr` implements most important data collection functions from both the
 official Web API and the internal storefront API of Steam. Many functions operate
-around a so-called application ID or `appid`. One way to find the app ID for a
+around a so-called application ID or `appid`. One way to find the appID for a
 game is to search for it programmatically:
 
 ```{r example}
