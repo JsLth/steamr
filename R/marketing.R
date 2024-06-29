@@ -3,13 +3,14 @@ get_active_marketing_messages <- function(country = NULL,
   check_string(country, null = TRUE)
   check_bool(anonymous_user)
   params <- .make_params()
-  request_webapi(
+  res <- request_webapi(
     api = public_api(),
     interface = "IMarketingMessagesService",
     method = "GetActiveMarketingMessages",
     version = "v1",
     params = params
-  )$response
+  )$response$message
+  as_data_frame(res)
 }
 
 
@@ -34,6 +35,7 @@ get_marketing_message <- function(gid,
   )
   input_json <- .make_input_json(context = context, data_request = data_request)
 
+  params <- .make_params(gid = gid, input_json = input_json)
   request_webapi(
     api = public_api(),
     interface = "IMarketingMessagesService",

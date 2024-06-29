@@ -8,6 +8,7 @@
 get_profile_items <- function(steamid,
                               language = "english",
                               status = c("owned", "equipped")) {
+  check_steam_key()
   check_authenticated()
   check_string(steamid)
   check_string(language, null = TRUE)
@@ -35,13 +36,15 @@ get_equipped_profile_items <- function(steamid, language = "english") {
   steamid <- convert_steamid(steamid, to = "steam64")
 
   params <- .make_params()
-  request_webapi(
+  res <- request_webapi(
     api = public_api(),
     interface = "ILoyaltyRewardsService",
     method = "GetEquippedProfileItems",
     version = "v1",
     params = params
   )$response
+  res <- lapply(res, function(x) if (is.data.frame(x)) as_data_frame(x) else x)
+  res
 }
 
 
@@ -52,13 +55,15 @@ get_profile_reactions <- function(steamid) {
   steamid <- convert_steamid(steamid, to = "steam64")
 
   params <- .make_params()
-  request_webapi(
+  res <- request_webapi(
     api = public_api(),
     interface = "ILoyaltyRewardsService",
     method = "GetReactionsSummaryForUser",
     version = "v1",
     params = params
   )$response
+  res <- lapply(res, function(x) if (is.data.frame(x)) as_data_frame(x) else x)
+  res
 }
 
 
@@ -155,6 +160,7 @@ get_profile_badges <- function(steamid) {
 #' @rdname get_profile_items
 #' @export
 get_profile_themes <- function() {
+  check_steam_key()
   check_authenticated()
   params <- .make_params()
   request_webapi(

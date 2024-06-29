@@ -77,6 +77,7 @@ user_in_review <- function(steamid,
 #' @export
 #' @param return_private Unknown.
 friends_in_review <- function(steamid, year = 2023, return_private = FALSE) {
+  check_steam_key()
   check_authenticated()
   check_string(steamid)
   check_number(year)
@@ -108,6 +109,7 @@ achievements_in_review <- function(steamid,
   check_number(year)
   check_bool(total_only)
   steamid <- convert_steamid(steamid, to = "steam64")
+  appids <- box(appids)
 
   params <- .make_params()
   res <- request_webapi(
@@ -134,6 +136,7 @@ screenshots_in_review <- function(steamid, appids, year = 2023) {
   check_number(appids)
   check_number(year)
   steamid <- convert_steamid(steamid, to = "steam64")
+  appids <- box(appids)
 
   params <- .make_params()
   res <- request_webapi(

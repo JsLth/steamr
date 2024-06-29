@@ -110,6 +110,7 @@ query_market_assets <- function(appid,
 #' @rdname query_market_assets
 #' @export
 get_asset_prices <- function(appid, currency = NULL, language = "english") {
+  check_steam_key()
   check_number(appid)
   check_string(currency, null = TRUE)
   check_string(language)
@@ -136,6 +137,7 @@ get_asset_info <- function(appid,
                            class_count = 1L,
                            language = "english",
                            instanceids = NULL) {
+  check_steam_key()
   check_number(appid)
   check_number(classids)
   check_string(language)

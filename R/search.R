@@ -50,18 +50,21 @@
 #' store_search("team")
 #' }
 search_apps <- function(term, links = FALSE) {
-  res <- request_storefront(
-    api = comm_api(),
-    interface = "actions",
-    method = "SearchApps",
-    params = list(term)
-  )
+  res <- lapply(term, function(x) {
+    request_storefront(
+      api = comm_api(),
+      interface = "actions",
+      method = file.path("SearchApps", x)
+    )
+  })
+  names(res) <- term
+  res <- bind_rows(res, .id = "term")
 
   if (!links) {
-    res <- res[c("appid", "name")]
+    res <- res[c("term", "appid", "name")]
   }
 
-  as_data_frame(res)
+  res
 }
 
 

@@ -33,6 +33,7 @@
 #' get_user_stats_for_game
 #' }
 get_player_summary <- function(steamids) {
+  check_steam_key()
   check_string(steamids)
   check_length(steamids, ge = 1, le = 100)
   steamids <- convert_steamid(steamids, to = "steam64")
@@ -58,6 +59,7 @@ get_player_summary <- function(steamids) {
 #' @param steamid
 #'
 get_user_group_list <- function(steamid) {
+  check_steam_key()
   check_string(steamid)
   steamid <- convert_steamid(steamid, to = "steam64")
 
@@ -76,6 +78,7 @@ get_user_group_list <- function(steamid) {
 #' @rdname get_player_summary
 #' @export
 get_player_bans <- function(steamids) {
+  check_steam_key()
   check_string(steamids)
   check_length(steamids, ge = 1, le = 100)
   steamids <- convert_steamid(steamids, to = "steam64")
@@ -103,6 +106,7 @@ get_owned_games <- function(steamid,
                             skip_unvetted_games = FALSE,
                             language = "english",
                             include_extended_appinfo = FALSE) {
+  check_steam_key()
   check_string(steamid)
   check_bool(include_appinfo)
   check_bool(include_played_free_games)
@@ -125,6 +129,7 @@ get_owned_games <- function(steamid,
 
 
 get_recently_played_games <- function(steamid) {
+  check_steam_key()
   check_string(steamid)
   steamid <- convert_steamid(steamid, to = "steam64")
 
@@ -141,6 +146,7 @@ get_recently_played_games <- function(steamid) {
 
 
 get_game_playtime <- function(steamid, appid) {
+  check_steam_key()
   check_authenticated()
   check_string(steamid)
   steamid <- convert_steamid(steamid, to = "steam64")
@@ -157,13 +163,15 @@ get_game_playtime <- function(steamid, appid) {
 
 
 get_last_playtimes <- function(min_last_played = NULL) {
+  check_steam_key()
   check_authenticated()
   params <- .make_params()
-  request_webapi(
+  res <- request_webapi(
     api = public_api(),
     interface = "IPlayerService",
     method = "ClientGetLastPlayedTimes",
     version = "v1",
     params = params
-  )$response
+  )$response$games
+  as_data_frame(res)
 }

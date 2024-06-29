@@ -61,6 +61,7 @@
 #' get_friends()
 #' }
 get_friend_list <- function(steamid, relationship = "all") {
+  check_steam_key()
   check_string(steamid)
   check_string(relationship)
   steamid <- convert_steamid(steamid, to = "steam64")
@@ -81,6 +82,7 @@ get_friend_list <- function(steamid, relationship = "all") {
 #' @rdname get_friend_list
 #' @export
 get_friends_playtimes <- function(appid) {
+  check_steam_key()
   check_authenticated()
   params <- .make_params()
   res <- request_webapi(
@@ -97,6 +99,7 @@ get_friends_playtimes <- function(appid) {
 #' @rdname get_friend_list
 #' @export
 get_friends_recommendations <- function(appid) {
+  check_steam_key()
   check_authenticated()
   params <- .make_params()
   res <- request_webapi(

@@ -56,6 +56,7 @@
 #' }
 #'
 get_game_schema <- function(appid, language = "english") {
+  check_steam_key()
   check_number(appid)
   check_string(language)
 
@@ -91,6 +92,7 @@ get_game_schema <- function(appid, language = "english") {
 #' @param startdate Start date for daily totals.
 #' @param enddate End date for daily totals.
 get_game_stats <- function(appid, name, startdate = NULL, enddate = NULL) {
+  check_steam_key()
   check_number(appid)
   check_string(name)
   check_date(startdate, null = TRUE)

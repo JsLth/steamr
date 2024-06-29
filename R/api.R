@@ -6,12 +6,16 @@ is_steam_key <- function(x) {
 }
 
 
-api_key <- function() {
-  key <- Sys.getenv("STEAM_API_KEY")
+check_steam_key <- function() {
+  key <- api_key()
   if (!is_steam_key(key)) {
     stop("No valid Steam key stored in STEAM_API_KEY environment variable.")
   }
-  key
+}
+
+
+api_key <- function() {
+  Sys.getenv("STEAM_API_KEY")
 }
 
 
@@ -27,10 +31,20 @@ api_key <- function() {
 #'
 #' \code{steam_stats()} returns the current users online and ingame.
 #'
-#' @returns \code{get_supported_api_list()} returns an unnamed list where each
-#' index contains a named list with information on the respective API endpoint.
-#' \code{get_servertime()} returns a \code{POSIXct} value. \code{steam_stats()}
-#' contains a named list of length 2.
+#' @returns \describe{
+#'  \item{\code{get_supported_api_list()}}{An unnamed list where each
+#'  index contains a named list with information on the respective API
+#'  endpoint.}
+#'
+#'  \item{\code{get_servertime()}}{A \code{POSIXct} value.}
+#'
+#'  \item{\code{steam_stats()}}{A named list of length 2}
+#'
+#'  \item{\code{get_servers()}}{A dataframe containing information about
+#'  available game servers.}
+#'
+#' }
+#'
 #' @rdname steam_stats
 #' @export
 #'
@@ -41,6 +55,8 @@ api_key <- function() {
 #' get_servertime()
 #'
 #' steam_stats()
+#'
+#' get_servers()
 #' }
 steam_stats <- function() {
   res <- request_storefront(
@@ -82,6 +98,22 @@ get_servertime <- function() {
   )
 
   as.POSIXct(res$servertime)
+}
+
+
+#' @rdname steam_stats
+#' @export
+get_servers <- function(filter = NULL, limit = NULL) {
+  check_steam_key()
+  params <- .make_params()
+  res <- request_webapi(
+    api = public_api(),
+    interface = "IGameServersService",
+    method = "GetServerList",
+    version = "v1",
+    params = params
+  )$response$servers
+  as_data_frame(res)
 }
 
 

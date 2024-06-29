@@ -1,4 +1,4 @@
-#' Country info
+#' Location
 #' @description
 #' Retrieves information on Steam's country, region, and city codes.
 #'

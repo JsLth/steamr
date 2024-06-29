@@ -58,9 +58,9 @@ get_items <- function(items,
                       steam_realm = 1L,
                       include = NULL,
                       apply_user_filters = FALSE) {
-  check_string(items)
+  check_number(items)
   check_string(language)
-  check_number(language, null = TRUE)
+  check_number(elanguage, null = TRUE)
   check_string(country_code)
   check_number(steam_realm, null = TRUE)
   check_string(include, null = TRUE)

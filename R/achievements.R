@@ -66,6 +66,7 @@ get_top_achievements <- function(steamid,
                                  appids,
                                  max_achievements = 5L,
                                  language = "english") {
+  check_steam_key()
   check_string(steamid)
   check_integerish(max_achievements)
   check_string(language)
@@ -93,6 +94,7 @@ get_top_achievements <- function(steamid,
 #' @rdname get_game_achievements
 #' @export
 get_player_achievements <- function(steamid, appid, language = "english") {
+  check_steam_key()
   check_string(steamid)
   check_number(appid)
   check_string(language)

@@ -112,6 +112,7 @@ query_files <- function(query_type = NULL,
                         strip_bbcode = FALSE,
                         desired_revision = NULL,
                         paginate = TRUE) {
+  check_steam_key()
   check_number(query_type, null = TRUE)
   check_integerish(numperpage)
   check_number(creator_appid, null = TRUE)
@@ -208,6 +209,7 @@ get_published_file <- function(publishedfileids,
                                appid = NULL,
                                strip_bbcode = FALSE,
                                desired_revision = NULL) {
+  check_steam_key()
   check_number(publishedfileids)
   check_string(return, null = TRUE)
   check_integerish(playtime_days, null = TRUE)
