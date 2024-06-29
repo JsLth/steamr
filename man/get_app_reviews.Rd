@@ -3,6 +3,7 @@
 \name{get_app_reviews}
 \alias{get_app_reviews}
 \alias{get_all_app_reviews}
+\alias{get_review_histogram}
 \title{Get reviews}
 \usage{
 get_app_reviews(
@@ -37,6 +38,8 @@ get_all_app_reviews(
   filter_offtopic_activity = TRUE,
   max_tries = 10
 )
+
+get_review_histogram(appid, language = "english", review_score_preference = 2)
 }
 \arguments{
 \item{appid}{Application ID referencing a Steam application. There are

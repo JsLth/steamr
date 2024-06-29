@@ -3,7 +3,7 @@
 \name{query_locations}
 \alias{query_locations}
 \alias{get_country_list}
-\title{Country info}
+\title{Location}
 \usage{
 query_locations(country = NULL, region = NULL)
 

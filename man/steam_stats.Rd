@@ -4,6 +4,7 @@
 \alias{steam_stats}
 \alias{get_supported_api_list}
 \alias{get_servertime}
+\alias{get_servers}
 \title{Meta info}
 \usage{
 steam_stats()
@@ -11,12 +12,23 @@ steam_stats()
 get_supported_api_list()
 
 get_servertime()
+
+get_servers(filter = NULL, limit = NULL)
 }
 \value{
-\code{get_supported_api_list()} returns an unnamed list where each
-index contains a named list with information on the respective API endpoint.
-\code{get_servertime()} returns a \code{POSIXct} value. \code{steam_stats()}
-contains a named list of length 2.
+\describe{
+ \item{\code{get_supported_api_list()}}{An unnamed list where each
+ index contains a named list with information on the respective API
+ endpoint.}
+
+ \item{\code{get_servertime()}}{A \code{POSIXct} value.}
+
+ \item{\code{steam_stats()}}{A named list of length 2}
+
+ \item{\code{get_servers()}}{A dataframe containing information about
+ available game servers.}
+
+}
 }
 \description{
 Fetch metadata about the Steam server.
@@ -36,5 +48,7 @@ get_supported_api_list()
 get_servertime()
 
 steam_stats()
+
+get_servers()
 }
 }
