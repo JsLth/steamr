@@ -305,8 +305,8 @@ request_storefront <- function(api,
       stop("Steam storefront API returned an empty response. Check your input!")
     }
 
-    code <- res$success %||% res$eresult %||% 1L
-    if (!identical(code, 1L) && !isTRUE(code)) {
+    code <- res$success %||% res$eresult %||% res$status %||% 0L
+    if (!identical(code, 1L) && isFALSE(code)) {
       msg <- res$err_msg %||% res$msg %||% "Something has gone wrong."
 
       stop(

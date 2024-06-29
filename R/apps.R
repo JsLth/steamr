@@ -150,7 +150,7 @@ get_apps_in_category <- function(category,
     params = params
   )
 
-  if (!identical(res$status, 0L)) {
+  if (!identical(res$status, 1L)) {
     stop(sprintf("Request failed with status code %s", res$status))
   }
 
