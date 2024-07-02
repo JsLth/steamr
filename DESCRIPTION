@@ -31,6 +31,10 @@ Suggests:
     tibble,
     qrcode,
     sf,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tidyr,
+    dplyr,
+    ggplot2,
+    ggtext
 VignetteBuilder: knitr
 Config/testthat/edition: 3
