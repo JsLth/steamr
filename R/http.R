@@ -49,13 +49,12 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # simple Web API request
 #' request_webapi(
 #'   api = public_api(),
-#'   interface = "ISteamApps",
-#'   method = "GetAppList",
-#'   version = "v2"
+#'   interface = "IStoreBrowseService",
+#'   method = "GetStoreCategories",
+#'   version = "v1"
 #' )
 #'
 #' # paginate through query results
@@ -81,6 +80,7 @@
 #' # steamspy function
 #' request_steamspy(list(request = "tag", tag = "Early Access"))
 #'
+#' \dontrun{
 #' # request_generic exists to enable non-standard API queries
 #' # the following example is used internally in auth_* functions
 #' request_generic(
@@ -101,39 +101,19 @@ request_webapi <- function(api,
                            http_method = "GET",
                            simplify = TRUE,
                            paginate = NULL,
+                           limit = Inf,
                            format = c("json", "xml", "vdf"),
+                           cache = TRUE,
                            serror = TRUE,
                            dry = FALSE) {
   format <- match.arg(format)
-  url <- paste(api, interface, method, version, sep = "/")
-
-  params <- params[lengths(params) > 0]
-  pnames <- names(params)
-
-  for (k in names(params)) {
-    x <- params[[k]]
-    if (is.logical(x)) {
-      params[[k]] <- as.numeric(x)
-    } else if (is.numeric(x)) {
-      params[[k]] <- format(x, scientific = FALSE, trim = TRUE)
-    }
-
-    if (length(x) > 1 && !is.null(names(x))) {
-      params[[k]] <- jsonlite::toJSON(x, auto_unbox = TRUE, force = TRUE)
-    } else if (is.list(x) || length(x) > 1) {
-      idx <- match(k, names(params))
-      for (i in seq_along(x)) {
-        names(x)[i] <- sprintf("%s[%s]", k, i - 1)
-      }
-      params <- append(params, x, after = idx)
-      params[[k]] <- NULL
-    }
-  }
+  params <- prepare_params(params)
   params$format <- format
 
-  req <- httr2::request(url)
+  req <- httr2::request(api)
+  template <- sprintf("%s /{interface}/{method}/{version}", http_method)
+  req <- httr2::req_template(req, template)
 
-  req <- httr2::req_method(req, http_method)
   if (identical(http_method, "GET")) {
     req <- do.call(
       httr2::req_url_query,
@@ -145,6 +125,14 @@ request_webapi <- function(api,
 
   req <- use_session(req)
   req <- use_auth(req, api)
+
+  verbose <- getOption("steamr_verbose", FALSE)
+
+  if (cache) {
+    req <- httr2::req_cache(req, path = tempdir(), debug = verbose)
+  }
+
+  req <- httr2::req_retry(req, max_tries = getOption("steamr_max_tries", 3))
 
   req <- httr2::req_error(req, is_error = function(resp) {
     content_type <- resp$headers$`Content-Type`
@@ -164,8 +152,8 @@ request_webapi <- function(api,
     FALSE
   })
 
-  if (getOption("steamr_echo", FALSE)) {
-    cat("Querying:\n", utils::URLdecode(req$url), "\n")
+  if (verbose) {
+    cat(http_method, utils::URLdecode(req$url), "\n")
   }
 
   if (dry) {
@@ -240,24 +228,19 @@ request_storefront <- function(api,
                                method,
                                params = list(),
                                params_as_query = TRUE,
+                               http_method = "GET",
                                simplify = TRUE,
                                paginate = NULL,
+                               limit = Inf,
                                rate = NULL,
+                               cache = TRUE,
                                dry = FALSE) {
   is_store_api <- identical(api, store_api())
-  url <- paste(api, interface, method, sep = "/")
+  params <- prepare_params(params)
 
-  for (k in names(params)) {
-    x <- params[[k]]
-    if (is.logical(x)) {
-      params[[k]] <- as.numeric(x)
-    } else if (is.list(x)) {
-      paste(x, collapse = ",")
-    }
-  }
-
-  req <- httr2::request(url)
-  req <- httr2::req_method(req, "GET")
+  req <- httr2::request(api)
+  template <- sprintf("%s /{interface}/{method}", http_method)
+  req <- httr2::req_template(req, template)
 
   if (is_store_api) {
     rate <- 300 / 300
@@ -269,6 +252,14 @@ request_storefront <- function(api,
 
   req <- use_session(req)
   req <- use_auth(req, api)
+
+  verbose <- getOption("steamr_verbose", FALSE)
+
+  if (cache) {
+    req <- httr2::req_cache(req, path = tempdir(), debug = verbose)
+  }
+
+  req <- httr2::req_retry(req, max_tries = getOption("steamr_max_tries", 3))
 
   if (params_as_query) {
     req <- do.call(httr2::req_url_query, c(list(req), params))
@@ -286,8 +277,8 @@ request_storefront <- function(api,
     }
   )
 
-  if (getOption("steamr_echo", FALSE)) {
-    cat("Querying:\n", utils::URLdecode(req$url), "\n")
+  if (verbose) {
+    cat(http_method, utils::URLdecode(req$url), "\n")
   }
 
   if (dry) {
@@ -295,7 +286,7 @@ request_storefront <- function(api,
   }
 
   if (!is.null(paginate)) {
-    paginate_steam(req, paginate, simplify = simplify)
+    paginate_steam(req, paginate, simplify = simplify, limit = limit)
   } else {
     res <- httr2::req_perform(req)
 
@@ -329,6 +320,10 @@ request_storefront <- function(api,
 request_steamspy <- function(params) {
   req <- httr2::request("https://steamspy.com/api.php")
   req <- do.call(httr2::req_url_query, c(list(req), params))
+
+  if (getOption("steamr_verbose", FALSE)) {
+    cat("GET", utils::URLdecode(req$url), "\n")
+  }
 
   if (identical(params$request, "all")) {
     is_http_code <- function(resp, code = 500) resp$status_code %in% code
@@ -374,7 +369,7 @@ request_steamspy <- function(params) {
 #' request.
 request_generic <- function(url,
                             params = NULL,
-                            method = "GET",
+                            http_method = "GET",
                             format = "json",
                             ...,
                             headers = NULL,
@@ -383,7 +378,7 @@ request_generic <- function(url,
 
   if (!is.null(params)) {
     req <- switch(
-      method,
+      http_method,
       GET = do.call(httr2::req_url_query, c(list(req), params)),
       POST = do.call(httr2::req_body_form, c(list(req), params))
     )
@@ -391,10 +386,14 @@ request_generic <- function(url,
 
   req <- use_session(req)
   req <- use_auth(req, url)
-  req <- httr2::req_method(req, method)
+  req <- httr2::req_method(req, http_method)
 
   if (!is.null(headers)) {
     req <- do.call(httr2::req_headers, c(list(req), headers))
+  }
+
+  if (getOption("steamr_verbose", FALSE)) {
+    cat(http_method, utils::URLdecode(req$url), "\n")
   }
 
   if (dry) {
@@ -465,9 +464,68 @@ fix_steam_bool <- function(res) {
 }
 
 
-paginate_steam <- function(req, paginate, simplify) {
-  limit <- getOption("steamr_max_reqs", Inf)
+prepare_params <- function(params, api = "webapi") {
+  do_auth <- getOption("steamr_do_auth", TRUE)
+  if (!inherits(params, "steam_params") && do_auth) {
+    params <- local(do.call(.make_params, params))
+  }
 
+  if (!do_auth) {
+    params$key <- NULL
+    params$access_token <- NULL
+  }
+
+  params <- params[lengths(params) > 0]
+  pnames <- names(params)
+  switch(
+    api,
+    webapi = webapi_params(params),
+    storefront = storefront_params(params)
+  )
+}
+
+
+webapi_params <- function(params) {
+  for (k in names(params)) {
+    x <- params[[k]]
+    if (is.logical(x)) {
+      params[[k]] <- as.numeric(x)
+    } else if (is.numeric(x)) {
+      params[[k]] <- format(x, scientific = FALSE, trim = TRUE)
+    }
+
+    if (length(x) > 1 && !is.null(names(x))) {
+      params[[k]] <- jsonlite::toJSON(x, auto_unbox = TRUE, force = TRUE)
+    } else if (is.list(x) || length(x) > 1) {
+      idx <- match(k, names(params))
+      for (i in seq_along(x)) {
+        names(x)[i] <- sprintf("%s[%s]", k, i - 1)
+      }
+      params <- append(params, x, after = idx)
+      params[[k]] <- NULL
+    }
+  }
+
+  params
+}
+
+
+storefront_params <- function(params) {
+  for (k in names(params)) {
+    x <- params[[k]]
+    if (is.logical(x)) {
+      params[[k]] <- as.numeric(x)
+    } else if (is.list(x)) {
+      paste(x, collapse = ",")
+    }
+  }
+
+  params
+}
+
+
+
+paginate_steam <- function(req, paginate, simplify, limit) {
   paginator <- switch(
     paginate,
     cursor = httr2::iterate_with_cursor(

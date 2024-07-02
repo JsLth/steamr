@@ -30,8 +30,7 @@
 #' \code{\link{steamspy}} for a similar approach by the SteamSpy API
 #'
 #' @examples
-#' \dontrun{
-#' get_all_list()
+#' get_app_list()
 #'
 #' # get most played games
 #' get_games_by_ccu()
@@ -41,16 +40,16 @@
 #'
 #' # get the best releases
 #' get_top_releases()
-#' }
 get_app_list <- function() {
   res <- request_webapi(
     api = public_api(),
     interface = "ISteamApps",
     method = "GetAppList",
     version = "v2"
-  )
+  )$applist$apps
 
-  as_data_frame(res$applist$apps)
+  res <- res[order(res$appid), ]
+  as_data_frame(res)
 }
 
 

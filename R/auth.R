@@ -88,6 +88,9 @@ auth_credentials <- function(username,
   }
 
   password <- password()
+  if (is.null(password)) {
+    return()
+  }
 
   # request public key from web api
   params <- get_password_rsa_public_key(username)
@@ -219,7 +222,8 @@ logout <- function() {
   request_generic(
     url,
     params = params,
-    method = "POST",
+    http_method = "POST",
+    format = "html",
     headers = list(`Content-Length` = nchar(params$sessionid) + 10)
   )
 
@@ -229,7 +233,7 @@ logout <- function() {
 
   unlink(cache_path(), recursive = TRUE)
   unlink(session)
-  rm("session", envir = globst)
+  rm("session", "auth", envir = globst)
 }
 
 
@@ -375,7 +379,7 @@ finalize_login <- function(refresh_token, sessionid = NULL) {
     sessionid = sessionid,
     redir = "https://steamcommunity.com/login/home/?goto="
   )
-  request_generic(url, params, method = "POST")
+  request_generic(url, params, http_method = "POST")
 }
 
 
@@ -388,7 +392,7 @@ set_tokens <- function(transfer) {
 
   for (redir in params) {
     redir$params$steamID <- transfer$steamID
-    request_generic(redir$url, redir$params, method = "POST")
+    request_generic(redir$url, redir$params, method = "POST", format = "html")
   }
 }
 
@@ -397,7 +401,8 @@ get_access_token <- function() {
   request_storefront(
     api = store_api(),
     interface = "pointssummary",
-    method = "ajaxgetasyncconfig"
+    method = "ajaxgetasyncconfig",
+    cache = FALSE
   )$data$webapi_token
 }
 

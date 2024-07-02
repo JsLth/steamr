@@ -1,5 +1,5 @@
 .make_params <- function(...,
-                         key = F,
+                         key = TRUE,
                          access_token = TRUE,
                          env = parent.frame()) {
   if (!...length()) {
@@ -18,7 +18,9 @@
   }
 
   params <- drop_empty(drop_null(params))
-  c(key, params)
+  params <- c(key, params)
+  class(params) <- "steam_params"
+  params
 }
 
 
