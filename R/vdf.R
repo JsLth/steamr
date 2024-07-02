@@ -1,6 +1,6 @@
 #' Valve Data Files
 #' @description
-#' Parses Valve's VDF or KeyValues format. VDF files are similar to JSON
+#' Parse Valve's VDF or KeyValues format. VDF files are similar to JSON
 #' and are used to store hierarchical metadata on resources, scripts,
 #' materials, etc. Request functions such as \code{\link{request_webapi}}
 #' allow VDF as a response format. For most use cases in data analysis,
@@ -87,7 +87,7 @@ parse_vdf <- function(x, check_types = TRUE) {
 }
 
 
-recurse_vdf <- function(tokens, i = 0, check_types = TRUE) {
+recurse_vdf <- function(tokens, i = 0, level = 0, check_types = TRUE) {
   out <- list()
   key <- FALSE
 
@@ -95,31 +95,48 @@ recurse_vdf <- function(tokens, i = 0, check_types = TRUE) {
     ctok <- tokens[i]
     ntok <- tokens[i + 1]
 
+    valrex <- "\"?([^\"]+)\"?[[:space:]]\"?([^\"]+)\"?"
     if (startsWith(ctok, "#")) {
       # ctok is macro -> skip
       i <- i + 1
       next
     } else if (identical(ctok, "{")) {
       # ctok is next level
-      if (is.null(key)) {
-        stop(sprintf("Orphaned `{` token found at position %s", i + 1))
+      if (isFALSE(key)) {
+        stop(sprintf("Orphaned \"{\" token found at line %s.", i + 1))
       }
-      tmp <- recurse_vdf(tokens, i = i + 1, check_types = check_types)
+      if (is.na(ntok)) {
+        stop(sprintf("Trailing \"{\" token found at line %s.", i + 1))
+      }
+      tmp <- recurse_vdf(
+        tokens,
+        i = i + 1,
+        level = level + 1,
+        check_types = check_types
+      )
       i <- tmp$i
       out[[key]] <- tmp$map
     } else if (identical(ctok, "}")) {
       # ctok is previous level
+      if (level <= 0) {
+        stop(sprintf("Excess \"}\" token found at line %s", i))
+      }
       return(list(map = out, i = i + 1))
-    } else if (identical(ntok, "{")) {
+    } else if (identical(ntok, "{") && !grepl(valrex, ctok)) {
       # ctok is root key, ntok is next level
       key <- gsub("^\"|\"$", "", ctok)
 
       i <- i + 1
       next
+    } else if (is.na(ntok)) {
+      stop(sprintf(
+        "Unexpected end reached at line %s. Expected \"}\", got \"%s\".",
+        i + 1, ctok
+      ))
     } else {
       # ctok is key-value
       proto <- list(key = character(), value = character())
-      kv <- utils::strcapture("\"(.+)\"[[:space:]]\"(.+)\"", ctok, proto = proto)
+      kv <- utils::strcapture(valrex, ctok, proto = proto)
       pos <- ifelse(nzchar(kv$key), kv$key, length(out))
 
       if (check_types && is_number(kv$value)) {
