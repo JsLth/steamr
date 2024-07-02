@@ -26,7 +26,7 @@ sets for data analysis.
 You can install the development version of steamr like so:
 
 ``` r
-pak::install("jslth/steamr")
+pak::pkg_install("jslth/steamr")
 ```
 
 ## Overview
