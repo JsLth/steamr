@@ -17,6 +17,10 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![R-CMD-check](https://github.com/JsLth/steamr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/JsLth/steamr/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/JsLth/steamr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/JsLth/steamr?branch=main)
+[![CodeFactor](https://www.codefactor.io/repository/github/jslth/steamr/badge)](https://www.codefactor.io/repository/github/jslth/steamr)
 <!-- badges: end -->
 
 `steamr` is an R interface to the official

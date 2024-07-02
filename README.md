@@ -7,6 +7,10 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![R-CMD-check](https://github.com/JsLth/steamr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/JsLth/steamr/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/JsLth/steamr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/JsLth/steamr?branch=main)
+[![CodeFactor](https://www.codefactor.io/repository/github/jslth/steamr/badge)](https://www.codefactor.io/repository/github/jslth/steamr)
 <!-- badges: end -->
 
 `steamr` is an R interface to the official [Web
@@ -179,23 +183,23 @@ get_app_reviews(appid[1])
 #>  1 166639853        schinese "军团要塞2… 2024-06-04 06:05:33 2024-06-04 06:07:38
 #>  2 166633634        english  "TF2 is an… 2024-06-04 03:40:34 2024-06-04 03:40:34
 #>  3 166847493        english  "It was a … 2024-06-07 07:46:14 2024-06-07 07:46:14
-#>  4 166638518        english  "meet your… 2024-06-04 05:31:40 2024-06-04 05:31:40
+#>  4 166804792        english  "#fixtf2"   2024-06-06 16:50:29 2024-06-06 16:50:29
 #>  5 166757946        english  "Valve fix… 2024-06-05 22:41:14 2024-06-05 22:41:14
-#>  6 166804792        english  "#fixtf2"   2024-06-06 16:50:29 2024-06-06 16:50:29
-#>  7 166632469        russian  "Полтора р… 2024-06-04 03:13:53 2024-06-04 03:13:53
-#>  8 166707566        english  "I grew up… 2024-06-05 04:41:12 2024-06-05 04:41:12
-#>  9 166618701        english  "i wish i … 2024-06-03 22:40:03 2024-06-03 22:42:39
+#>  6 166638518        english  "meet your… 2024-06-04 05:31:40 2024-06-04 05:31:40
+#>  7 166707566        english  "I grew up… 2024-06-05 04:41:12 2024-06-05 04:41:12
+#>  8 166618701        english  "i wish i … 2024-06-03 22:40:03 2024-06-03 22:42:39
+#>  9 166632469        russian  "Полтора р… 2024-06-04 03:13:53 2024-06-04 03:13:53
 #> 10 166627856        english  "I have wa… 2024-06-04 01:36:35 2024-06-04 01:36:35
 #> 11 166606572        english  "Only revi… 2024-06-03 19:36:33 2024-06-03 19:36:33
 #> 12 166621632        english  "Valve is … 2024-06-03 23:31:38 2024-06-03 23:31:38
-#> 13 167445706        english  "Witnessin… 2024-06-15 22:54:19 2024-06-15 22:54:19
-#> 14 166607477        english  "dead inte… 2024-06-03 19:50:05 2024-06-03 19:50:05
-#> 15 166613918        italian  "This is t… 2024-06-03 21:23:21 2024-06-03 21:23:21
-#> 16 166685381        english  "I wish Va… 2024-06-04 21:38:37 2024-06-04 21:39:15
+#> 13 166607477        english  "dead inte… 2024-06-03 19:50:05 2024-06-03 19:50:05
+#> 14 167445706        english  "Witnessin… 2024-06-15 22:54:19 2024-06-15 22:54:19
+#> 15 166685381        english  "I wish Va… 2024-06-04 21:38:37 2024-06-04 21:39:15
+#> 16 166613918        italian  "This is t… 2024-06-03 21:23:21 2024-06-03 21:23:21
 #> 17 166654121        english  "It's a sh… 2024-06-04 12:33:08 2024-06-04 12:33:08
 #> 18 166757936        english  "TF2's com… 2024-06-05 22:41:06 2024-06-05 22:41:06
 #> 19 166627868        english  "Unplayabl… 2024-06-04 01:37:00 2024-06-04 01:37:00
-#> 20 166681530        english  "fix the g… 2024-06-04 20:37:11 2024-06-04 20:37:11
+#> 20 166743270        english  "Unplayabl… 2024-06-05 18:33:51 2024-06-05 18:33:51
 #> # ℹ 17 more variables: voted_up <lgl>, votes_up <int>, votes_funny <int>,
 #> #   weighted_vote_score <dbl>, comment_count <int>, steam_purchase <lgl>,
 #> #   received_for_free <lgl>, written_during_early_access <lgl>,
