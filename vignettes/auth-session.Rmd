@@ -20,7 +20,7 @@ library(steamr)
 
 The Steam API is very inconsistent in the way it provides access to its services. Some functions do not need any identification, others require a Steam API key, and the most sensitive ones require you to be logged in. It is not always obvious which functions require which type of authentication, but `steamr` functions perform initial checks to ensure that authentication is given:
 
-```{r error=FALSE}
+```{r error=TRUE}
 get_userdata()
 ```
 
