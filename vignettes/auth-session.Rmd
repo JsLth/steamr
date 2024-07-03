@@ -73,8 +73,8 @@ Although `auth_credentials` takes great care of encrypting and obfuscating passw
 
 The QR code is generated using the `qrcode` package and rendered as an R plot. This QR code can be scanned using the Steam mobile app to authenticate the session.
 
-```{r}
-qrcode::qr_code("this could be a steam login url")
+```{r echo=FALSE}
+plot(qrcode::qr_code("this could be a steam login url"))
 ```
 
 While this method avoids password prompts entirely, it depends on the ability to render and scan R plots interactively. At the end of the day, both functions require an interactive session and active user feedback.
