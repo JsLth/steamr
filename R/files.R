@@ -111,7 +111,8 @@ query_files <- function(query_type = NULL,
                         playtime_days = NULL,
                         strip_bbcode = FALSE,
                         desired_revision = NULL,
-                        paginate = TRUE) {
+                        paginate = FALSE,
+                        max_pages = Inf) {
   check_steam_key()
   check_number(query_type, null = TRUE)
   check_integerish(numperpage)
@@ -169,7 +170,7 @@ query_files <- function(query_type = NULL,
     method = "QueryFiles",
     version = "v1",
     params = params,
-    paginate = if (paginate) "cursor"
+    paginate = if (paginate) list(method = "cursor", limit = max_pages)
   )
 
   if (paginate) {

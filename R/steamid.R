@@ -353,7 +353,7 @@ parse_steam2 <- function(ids, resolve = FALSE) {
       stop(sprintf("Value %s is not a valid Steam2 ID.", id))
     }
 
-    match <- strcapture(
+    match <- utils::strcapture(
       "^STEAM_([0-4]):([0-1]):(0|[1-9][0-9]{0,9})$",
       id,
       proto = list(
@@ -390,7 +390,7 @@ parse_steam3 <- function(ids, resolve = FALSE) {
 
     types <- strtoi(names(type_chars))
     names(types) <- type_chars
-    match <- strcapture(
+    match <- utils::strcapture(
       "^\\[([AGMPCgcLTIUai]):([0-4]):(0|[1-9][0-9]{0,9})([0-9]+)?\\]$",
       id,
       proto = list(

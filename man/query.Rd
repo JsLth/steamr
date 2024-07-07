@@ -36,7 +36,8 @@ query(
   steam_realm = 1,
   include = "basic_info",
   apply_user_filters = FALSE,
-  paginate = FALSE
+  paginate = FALSE,
+  max_pages = Inf
 )
 }
 \arguments{

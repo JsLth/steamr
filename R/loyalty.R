@@ -64,7 +64,9 @@ query_loyalty_rewards <- function(search_term = NULL,
                                   contains_definitionids = NULL,
                                   include_direct_purchase_disabled = FALSE,
                                   excluded_content_descriptors = NULL,
-                                  excluded_appids = NULL) {
+                                  excluded_appids = NULL,
+                                  paginate = FALSE,
+                                  max_pages = Inf) {
   check_string(search_term, null = TRUE)
 
   params <- .make_params()
@@ -74,7 +76,7 @@ query_loyalty_rewards <- function(search_term = NULL,
     method = "QueryRewardItems",
     version = "v1",
     params = params,
-    paginate = "cursor"
+    paginate = if (paginate) list(method = "cursor", limit = max_pages)
   )
   res <- lapply(res, function(x) x$response$definitions)
   as_data_frame(rbind_list(res))

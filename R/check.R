@@ -28,6 +28,16 @@ check_scalar <- function(x) {
 }
 
 
+check_numeric <- function(x, null = FALSE) {
+  if (null && is.null(x)) return()
+  x <- as.double(x)
+  check <- is.double(x)
+  if (!check) {
+    stop(sprintf("%s must be a numeric.", obj_name(x)))
+  }
+}
+
+
 check_integerish <- function(x, null = FALSE) {
   if (null && is.null(x)) return()
   x <- as.double(x)

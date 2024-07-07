@@ -22,6 +22,7 @@ request_webapi(
   simplify = TRUE,
   paginate = NULL,
   format = c("json", "xml", "vdf"),
+  cache = FALSE,
   serror = TRUE,
   dry = FALSE
 )
@@ -32,9 +33,11 @@ request_storefront(
   method,
   params = list(),
   params_as_query = TRUE,
+  http_method = "GET",
   simplify = TRUE,
   paginate = NULL,
   rate = NULL,
+  cache = FALSE,
   dry = FALSE
 )
 
@@ -43,7 +46,7 @@ request_steamspy(params)
 request_generic(
   url,
   params = NULL,
-  method = "GET",
+  http_method = "GET",
   format = "json",
   ...,
   headers = NULL,
@@ -86,14 +89,40 @@ API only take \code{GET} and \code{POST}.}
 list.}
 
 \item{paginate}{If specified, tries to paginate through response pages.
-Can be one of \code{cursor}, \code{offset}, and \code{input_json}.
-\code{cursor} takes the \code{next_cursor} value of the response and
-re-inserts it in the \code{cursor} parameter of the next request
-(see \code{\link[httr2]{iterate_with_cursor}}). \code{offset} takes
-increments the \code{page} parameter by 1 with
-each request (see \code{\link[httr2]{iterate_with_offset}}).
-\code{input_json} re-creates the \code{input_json} blob
-with an incremented \code{page} parameter with each request.}
+Must be a named list containing parameters for the pagination process.
+Can contain the following keys:
+
+\describe{
+ \item{method}{Can be one of \code{cursor}, \code{offset}, and \code{input_json}.
+ \code{cursor} takes the \code{next_cursor} value of the response and
+ re-inserts it in the \code{cursor} parameter of the next request
+ (see \code{\link[httr2]{iterate_with_cursor}}). \code{offset} takes
+ increments the \code{page} parameter by 1 with
+ each request (see \code{\link[httr2]{iterate_with_offset}}).
+ \code{input_json} re-creates the \code{input_json} blob
+ with an incremented \code{page} parameter with each request.}
+
+ \item{limit}{Integer specifying the maximum number of requests or pages
+ sent. If \code{limit = 3}, returns the first three pages.}
+
+ \item{cursor}{If \code{method} is cursor, specifies the name of the
+ cursor parameter in the request. Defaults to \code{"cursor"}}.
+
+ \item{next_cursor}{If \code{method} is cursor, specifies the name of the
+ response key giving the next cursor. Defaults to \code{"next_cursor"}}.
+
+ \item{content_field}{If \code{method} is cursor, specifies the field name
+ that must be populated with contents in order to continue paginating.
+ If not specified, defaults to the first field. This can be useful if
+ the only indicator of pagination ending is if a certain field is not
+ present in the response.}
+
+ \item{total_count}{If \code{method} is start, specifies the name of the
+ response field giving the total number of results.}
+
+ \item{page_size}{If \code{method} is start, specifies the total number
+ of results per page.}
+}}
 
 \item{format}{Format of the response. One of \code{json}, \code{xml}, or
 \code{vdf}. \code{vdf} is Steam's
@@ -134,13 +163,12 @@ Send HTTP requests to any of the available Steam APIs. As of yet,
 steamcmd.net. Generic requests to any other URL can also be made.
 }
 \examples{
-\dontrun{
 # simple Web API request
 request_webapi(
   api = public_api(),
-  interface = "ISteamApps",
-  method = "GetAppList",
-  version = "v2"
+  interface = "IStoreBrowseService",
+  method = "GetStoreCategories",
+  version = "v1"
 )
 
 # paginate through query results
@@ -166,6 +194,7 @@ request_storefront(
 # steamspy function
 request_steamspy(list(request = "tag", tag = "Early Access"))
 
+\dontrun{
 # request_generic exists to enable non-standard API queries
 # the following example is used internally in auth_* functions
 request_generic(

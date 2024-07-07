@@ -308,20 +308,6 @@ begin_auth_session <- function(device_friendly_name,
 }
 
 
-get_auth_session_info <- function(client_id, token) {
-  params <- .make_params(client_id = client_id)
-  request_webapi(
-    api = public_api(),
-    interface = "IAuthenticationService",
-    method = "GetAuthSessionInfo",
-    version = "v1",
-    params = params,
-    http_method = "POST",
-    access_token = token
-  )$response
-}
-
-
 poll_auth_session_status <- function(client_id, request_id) {
   params <- .make_params()
   request_webapi(
@@ -475,6 +461,9 @@ is_authenticated <- function() {
 #' object is attached to the R session. This object can be useful when
 #' manually creating requests to the Steam API. Use this function to retrieve
 #' these informations. Only for advanced usage.
+#'
+#' @param auth Field to extract. Can be one of \code{vanity}, \code{steamid},
+#' \code{client_id}, \code{request_id} and \code{token}.
 #'
 #' @returns An auth object as returned by \code{auth_credentials} and
 #' \code{auth_qr}.

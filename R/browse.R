@@ -213,7 +213,7 @@ store_items <- function(items, type = NULL) {
   lapply(items, function(x) {
     arg <- list(x)
     names(arg) <- type
-    box(do.call(store_item, arg))
+    do.call(store_item, arg)
   })
 }
 

@@ -139,7 +139,8 @@ query <- function(start = NULL,
                   steam_realm = 1,
                   include = "basic_info",
                   apply_user_filters = FALSE,
-                  paginate = FALSE) {
+                  paginate = FALSE,
+                  max_pages = Inf) {
   args <- as.list(environment())
   query <- do.call(store_query_params, args)
   context <- do.call(store_browse_context, args)
@@ -162,7 +163,7 @@ query <- function(start = NULL,
     method = "Query",
     version = "v1",
     params = params,
-    paginate = if (paginate) "input_json"
+    paginate = if (paginate) list(method = "input_json", limit = max_pages)
   )
 
   if (paginate) {

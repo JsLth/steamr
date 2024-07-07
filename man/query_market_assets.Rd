@@ -13,7 +13,8 @@ query_market_assets(
   sort_column = NULL,
   sort_dir = NULL,
   search_description = NULL,
-  paginate = TRUE
+  paginate = FALSE,
+  max_pages = Inf
 )
 
 get_asset_prices(appid, currency = NULL, language = "english")
@@ -38,6 +39,15 @@ get_price_history(appid, market_hash_name)
 \item{sort_dir}{Direction of sorting if \code{sort_column} is not
 \code{NULL}. Can be \code{asc} or \code{desc}.}
 
+\item{paginate}{If \code{TRUE}, paginates through the results. Some methods
+provide data access in digestible chunks and do not return all available
+information at once. The \code{paginate} automatically retrieves all pages
+until \code{max_pages} is reached.}
+
+\item{max_pages}{Maximum number of pages to paginate. Ignored if
+\code{paginate} is \code{FALSE}. Defaults to \code{Inf} such that all
+available data are paginated.}
+
 \item{currency}{ISO 4217 code to filter by currency. Defaults to all
 available currencies.}
 
@@ -54,7 +64,7 @@ for all languages. If no translation is available, defaults to English.}
 }
 \value{
 \describe{
- \item{\code{query_market_assets}A dataframe with each row representing
+ \item{\code{query_market_assets}}{A dataframe with each row representing
  one asset. The dataframe provides data on name, hash names, prices,
  the corresponding app, asset classIDs, and the output of
  \code{get_asset_info}.}

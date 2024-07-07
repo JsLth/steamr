@@ -2,7 +2,7 @@
 % Please edit documentation in R/reviews.R
 \name{get_app_reviews}
 \alias{get_app_reviews}
-\alias{get_all_app_reviews}
+\alias{get_app_review}
 \alias{get_review_histogram}
 \title{Get reviews}
 \usage{
@@ -20,24 +20,11 @@ get_app_reviews(
   filter_offtopic_activity = TRUE,
   summary_num_positive_reviews = NULL,
   summary_num_reviews = NULL,
-  num_per_page = 20,
-  cursor = NULL
+  paginate = FALSE,
+  max_pages = Inf
 )
 
-get_all_app_reviews(
-  appid,
-  day_range = NULL,
-  start_date = NULL,
-  end_date = NULL,
-  date_range_type = NULL,
-  filter = "recent",
-  language = "english",
-  review_type = "all",
-  purchase_type = "steam",
-  playtime = c(0, 0),
-  filter_offtopic_activity = TRUE,
-  max_tries = 10
-)
+get_app_review(steamids, appids)
 
 get_review_histogram(appid, language = "english", review_score_preference = 2)
 }
@@ -94,40 +81,120 @@ game. See the Steam
 \href{https://steamcommunity.com/games/593110/announcements/detail/1808664240333155775}{blog entry}
 for more information.}
 
-\item{num_per_page}{By default, Steam only shows 20 reviews per query.
-By setting \code{num_per_page}, this number can go up to a maximum of 100.
-For larger queries, consider iterating using \code{get_all_app_reviews}.}
+\item{paginate}{If \code{TRUE}, paginates through the results. Some methods
+provide data access in digestible chunks and do not return all available
+information at once. The \code{paginate} automatically retrieves all pages
+until \code{max_pages} is reached.}
+
+\item{max_pages}{Maximum number of pages to paginate. Ignored if
+\code{paginate} is \code{FALSE}. Defaults to \code{Inf} such that all
+available data are paginated.}
+
+\item{steamids}{A vector of steamIDs corresponding to the appIDs in
+\code{appids}. SteamIDs are recycled to match the length of \code{appids}.}
+
+\item{appids}{A vector of multiple appIDs of applications in the Steam store.}
+
+\item{review_score_preference}{Unknown.}
 
 \item{cursor}{For each review page query, \code{get_app_reviews} returns a
 cursor ID. This ID can be used to paginate and iterate through many review pages
 at once. This argument is probably useless for most use cases and is
 extensively used for iteration purposes by \code{get_all_app_reviews}.}
 
-\item{max_tries}{Maximum number of pages until breaking the iteration
-and returning the result up to this point.}
+\item{appIDs}{A vector of appIDs written by the steamIDs in \code{steamids}.
+AppIDs are recycled to match the length of \code{steamids}.}
 }
 \value{
-A dataframe containing IDs, texts, and metadata of application
-reviews on Steam.
+\describe{
+ \item{get_app_reviews}{A dataframe containing information about the review.
+ \code{recommendationid} contains the unique recommendationID. \code{language}
+ contains the language of the review. \code{review} contains the review
+ text. The \code{weighted_vote_score} represents Steams helpfulness weighting
+ as described \href{https://steamcommunity.com/games/593110/announcements/detail/2666556941788470579}{here}.
+ Weights closer to one indicate a higher helpfulness.}
+
+ \item{get_app_review}{A dataframe similar to the one returned by
+ \code{get_app_reviews}, but with more detailed and undocumented metadata.}
+
+ \item{get_review_histogram}{A list containing two dataframes \code{rollups}
+ and \code{recent}. Both dataframes contain the date and the corresponding
+ upvotes and downvotes. \code{rollups} is for all reviews, \code{recent} only
+ for the last month.}
+}
 }
 \description{
-Retrieve user reviews for a given Steam application.
-
-\itemize{
- \item{\code{get_app_reviews} retrieves up to 100 reviews.}
- \item{\code{get_all_app_reviews} has the ability to return much more reviews
-depending on input parameters.}
-}
+Retrieve user reviews for a given Steam application or from a specific user.
+Generate review histograms.
 }
 \examples{
-\dontrun{
 # reviews of counter-strike
 get_app_reviews(10)
 
 # get all negative bulgarian reviews
 get_app_reviews(10, language = "bulgarian", review_type = "negative")
 
-# get all recent reviews up to page 10
-get_all_app_reviews(10, filter = "recent", max_tries = 10)
+# replicate steam histogram
+has_pkgs <- require(tidyr) &&
+  require(dplyr) &&
+  require(ggplot2) &&
+  require(ggtext)
+
+if (has_pkgs) {
+  histo <- get_review_histogram("440", language = NULL, review_score_preference = 2)
+
+  rollups <- histo$rollups \%>\%
+    mutate(recommendations_down = recommendations_down * -1) \%>\%
+    pivot_longer(
+      cols = starts_with("rec"),
+      names_prefix = "recommendations_",
+      names_to = "vote"
+    )
+
+  ggplot(rollups) +
+    aes(x = date, y = value, fill = vote) +
+    geom_bar(
+      stat = "identity",
+      show.legend = FALSE,
+      width = resolution(as.double(rollups$date) * 0.5)
+    ) +
+    geom_hline(yintercept = 0, color = "#66c0f4") +
+    scale_x_datetime(date_breaks = "2 years", date_labels = "\%b \%Y", expand = c(0, 0)) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.05))) +
+    scale_fill_manual(values = c(up = "#66c0f4", down = "#a34c25")) +
+    labs(
+      title = "Overall reviews:",
+      subtitle = sprintf(
+        paste(
+          "<b style='color:#66c0f4;font-size:20px;text-shadow:8px 8px 16px",
+          "#000000aa;font-weight:bold'>Very Positive</b> <span style='color:#8ba6b6;",
+          "font-size:15px'>(\%s reviews)</span>"
+        ),
+        format(sum(abs(rollups$value)), big.mark = ",")
+      ),
+      x = NULL,
+      y = NULL
+    ) +
+    theme_minimal() +
+    annotate(
+      geom = "segment",
+      y = as.POSIXct(Inf), yend = as.POSIXct(Inf),
+      x = as.POSIXct(-Inf), xend = as.POSIXct(Inf)
+    ) +
+    theme(
+      plot.background = element_rect(fill = "#2a475e"),
+      text = element_text(color = "white"),
+      panel.grid = element_blank(),
+      axis.line = element_blank(),
+      title = element_markdown(),
+      axis.text.y = element_text(color = "white"),
+      axis.text.x = element_text(color = "#66c0f4")
+    )
+}
+
+\dontrun{
+# requires authentication
+# get reviews for a single steamID
+get_app_review("76561198092541763", c(730, 220200))
 }
 }
