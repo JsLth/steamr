@@ -76,7 +76,7 @@ Many functions need an app ID to work, for example the following function which
 retrieves user review data from an application:
 
 ```{r}
-get_app_reviews(appid[1])
+get_app_reviews(440)
 ```
 
 Steam can also use the official Web API given a valid API key. One function

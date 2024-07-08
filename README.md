@@ -26,7 +26,7 @@ sets for data analysis.
 You can install the development version of steamr like so:
 
 ``` r
-pak::pkg_install("jslth/steamr")
+pak::install("jslth/steamr")
 ```
 
 ## Overview
@@ -65,91 +65,100 @@ The following table gives an overview of the package functions, the API
 they use, whether they need an API key, and whether they need
 authentication.
 
-| Topic          | Function                        | API        | Needs.key          | Needs.auth         |
-|:---------------|:--------------------------------|:-----------|:-------------------|:-------------------|
-| Apps           | `get_app_list`                  | Web        | :x:                | :x:                |
-| Apps           | `get_games_by_ccu`              | Web        | :x:                | :x:                |
-| Apps           | `get_most_played_games`         | Web        | :x:                | :x:                |
-| Apps           | `get_top_releases`              | Web        | :x:                | :x:                |
-| Apps           | `get_apps_in_genre`             | Storefront | :x:                | :x:                |
-| Apps           | `get_apps_in_category`          | Storefront | :x:                | :x:                |
-| Apps           | `get_apps_in_genre`             | Storefront | :x:                | :x:                |
-| Store          | `query`                         | Web        | :x:                | :x:                |
-| Store          | `get_items`                     | Web        | :x:                | :x:                |
-| Store          | `get_hardware_items`            | Web        | :x:                | :x:                |
-| Store          | `search_apps`                   | Storefront | :x:                | :x:                |
-| Store          | `suggest`                       | Storefront | :x:                | :x:                |
-| Store          | `store_search`                  | Storefront | :x:                | :x:                |
-| Market         | `query_market_assets`           | Storefront | :x:                | :x:                |
-| Market         | `get_asset_prices`              | Web        | :heavy_check_mark: | :x:                |
-| Market         | `get_asset_info`                | Web        | :heavy_check_mark: | :x:                |
-| Market         | `get_price_history`             | Storefront | :x:                | :x:                |
-| Details        | `appdetails`                    | Storefront | :x:                | :x:                |
-| Files          | `query_files`                   | Web        | :heavy_check_mark: | :x:                |
-| Files          | `get_published_file`            | Web        | :heavy_check_mark: | :x:                |
-| Friends        | `get_friend_list`               | Web        | :heavy_check_mark: | :x:                |
-| Friends        | `get_friends_playtimes`         | Web        | :heavy_check_mark: | :heavy_check_mark: |
-| Friends        | `get_friends_recommendations`   | Web        | :heavy_check_mark: | :heavy_check_mark: |
-| Friends        | `get_friends`                   | Storefront | :x:                | :heavy_check_mark: |
-| Friends        | `get_friend_data`               | Storefront | :x:                | :heavy_check_mark: |
-| User           | `get_player_summary`            | Web        | :heavy_check_mark: | :x:                |
-| User           | `get_user_group_list`           | Web        | :heavy_check_mark: | :x:                |
-| User           | `get_player_bans`               | Web        | :heavy_check_mark: | :x:                |
-| User           | `get_owned_games`               | Web        | :heavy_check_mark: | :x:                |
-| User           | `get_recently_played_games`     | Web        | :heavy_check_mark: | :x:                |
-| User           | `get_game_playtime`             | Web        | :heavy_check_mark: | :heavy_check_mark: |
-| User           | `get_last_playtimes`            | Web        | :heavy_check_mark: | :x:                |
-| Auth user      | `get_userdata`                  | Storefront | :x:                | :heavy_check_mark: |
-| Auth user      | `get_app_user_details`          | Storefront | :x:                | :heavy_check_mark: |
-| Auth user      | `get_library_stats`             | Storefront | :x:                | :heavy_check_mark: |
-| Auth user      | `get_owned_apps`                | Storefront | :x:                | :heavy_check_mark: |
-| Auth user      | `get_badge`                     | Storefront | :x:                | :heavy_check_mark: |
-| Auth user      | `get_badge_info`                | Storefront | :x:                | :heavy_check_mark: |
-| Auth user      | `recommend_apps`                | Storefront | :x:                | :heavy_check_mark: |
-| Profile        | `get_profile_items`             | Web        | :heavy_check_mark: | :heavy_check_mark: |
-| Profile        | `get_profile_reactions`         | Web        | :x:                | :x:                |
-| Profile        | `get_profile_avatar`            | Web        | :x:                | :x:                |
-| Profile        | `get_profile_frame`             | Web        | :x:                | :x:                |
-| Profile        | `get_profile_background`        | Web        | :x:                | :x:                |
-| Profile        | `get_profile_mini_background`   | Web        | :x:                | :x:                |
-| Profile        | `get_profile_badges`            | Web        | :heavy_check_mark: | :x:                |
-| Profile        | `get_equipped_profile_items`    | Web        | :x:                | :x:                |
-| Profile        | `get_profile_themes`            | Web        | :heavy_check_mark: | :heavy_check_mark: |
-| Profile        | `get_profile_customization`     | Web        | :x:                | :x:                |
-| Level          | `get_steam_level`               | Web        | :heavy_check_mark: | :x:                |
-| Level          | `get_level_percentile`          | Web        | :heavy_check_mark: | :x:                |
-| Reviews        | `get_app_reviews`               | Storefront | :x:                | :x:                |
-| Reviews        | `get_app_review`                | Web        | :heavy_check_mark: | :x:                |
-| Reviews        | `get_review_histogram`          | Storefront | :x:                | :x:                |
-| News           | `get_news`                      | Web        | :x:                | :x:                |
-| Stats          | `get_game_schema`               | Web        | :heavy_check_mark: | :x:                |
-| Stats          | `get_game_stats`                | Web        | :x:                | :x:                |
-| Stats          | `get_user_stats_for_game`       | Web        | :heavy_check_mark: | :x:                |
-| Tags           | `get_tags`                      | Web        | :x:                | :x:                |
-| Tags           | `get_most_popular_tags`         | Web        | :x:                | :x:                |
-| Tags           | `get_frequent_tags`             | Storefront | :x:                | :heavy_check_mark: |
-| Tags           | `get_recommended_tags`          | Storefront | :x:                | :heavy_check_mark: |
-| Categories     | `get_categories`                | Storefront | :x:                | :x:                |
-| Categories     | `get_genres`                    | Storefront | :x:                | :x:                |
-| Categories     | `get_store_categories`          | Web        | :x:                | :x:                |
-| Achievements   | `get_game_achievements`         | Web        | :x:                | :x:                |
-| Achievements   | `get_top_achievements`          | Web        | :heavy_check_mark: | :x:                |
-| Achievements   | `get_player_achievements`       | Web        | :heavy_check_mark: | :x:                |
-| Loyalty        | `query_loyalty_rewards`         | Web        | :x:                | :x:                |
-| Loyalty        | `get_loyalty_apps`              | Web        | :x:                | :x:                |
-| Events         | `query_events`                  | Storefront | :x:                | :x:                |
-| Events         | `get_best_events`               | Storefront | :x:                | :heavy_check_mark: |
-| Marketing      | `get_active_marketing_messages` | Web        | :x:                | :x:                |
-| Year in review | `user_in_review`                | Web        | :x:                | :x:                |
-| Year in review | `friends_in_review`             | Web        | :heavy_check_mark: | :heavy_check_mark: |
-| Year in review | `achievements_in_review`        | Web        | :x:                | :x:                |
-| Year in review | `screenshots_in_review`         | Web        | :x:                | :x:                |
-| Location       | `query_locations`               | Storefront | :x:                | :x:                |
-| Location       | `get_country_list`              | Web        | :x:                | :x:                |
-| Meta           | `steam_stats`                   | Storefront | :x:                | :x:                |
-| Meta           | `get_supported_api_list`        | Web        | :x:                | :x:                |
-| Meta           | `get_servertime`                | Web        | :x:                | :x:                |
-| Meta           | `get_servers`                   | Web        | :heavy_check_mark: | :x:                |
+| Topic          | Function                        | API                | Needs.key          | Needs.auth         |
+|:---------------|:--------------------------------|:-------------------|:-------------------|:-------------------|
+| Apps           | `get_app_list`                  | Web                | :x:                | :x:                |
+| Apps           | `get_games_by_ccu`              | Web                | :x:                | :x:                |
+| Apps           | `get_most_played_games`         | Web                | :x:                | :x:                |
+| Apps           | `get_top_releases`              | Web                | :x:                | :x:                |
+| Apps           | `get_apps_in_genre`             | Storefront         | :x:                | :x:                |
+| Apps           | `get_apps_in_category`          | Storefront         | :x:                | :x:                |
+| Apps           | `get_apps_in_genre`             | Storefront         | :x:                | :x:                |
+| Store          | `query`                         | Web                | :x:                | :x:                |
+| Store          | `get_items`                     | Web                | :x:                | :x:                |
+| Store          | `get_hardware_items`            | Web                | :x:                | :x:                |
+| Store          | `search_apps`                   | Storefront         | :x:                | :x:                |
+| Store          | `suggest`                       | Storefront         | :x:                | :x:                |
+| Store          | `store_search`                  | Storefront         | :x:                | :x:                |
+| Store          | `get_weeky_top_sellers`         | Web                | :x:                | :x:                |
+| Market         | `query_market_assets`           | Storefront         | :x:                | :x:                |
+| Market         | `get_asset_prices`              | Web                | :heavy_check_mark: | :x:                |
+| Market         | `get_asset_info`                | Web                | :heavy_check_mark: | :x:                |
+| Market         | `get_price_history`             | Storefront         | :x:                | :x:                |
+| Details        | `appdetails`                    | Storefront         | :x:                | :x:                |
+| Files          | `query_files`                   | Web                | :heavy_check_mark: | :x:                |
+| Files          | `get_published_file`            | Web                | :heavy_check_mark: | :x:                |
+| Friends        | `get_friend_list`               | Web                | :heavy_check_mark: | :x:                |
+| Friends        | `get_friends_playtimes`         | Web                | :heavy_check_mark: | :heavy_check_mark: |
+| Friends        | `get_friends_recommendations`   | Web                | :heavy_check_mark: | :heavy_check_mark: |
+| Friends        | `get_friends`                   | Storefront         | :x:                | :heavy_check_mark: |
+| Friends        | `get_friend_data`               | Storefront         | :x:                | :heavy_check_mark: |
+| User           | `get_player_summary`            | Web                | :heavy_check_mark: | :x:                |
+| User           | `get_user_group_list`           | Web                | :heavy_check_mark: | :x:                |
+| User           | `get_player_bans`               | Web                | :heavy_check_mark: | :x:                |
+| User           | `get_owned_games`               | Web                | :heavy_check_mark: | :x:                |
+| User           | `get_recently_played_games`     | Web                | :heavy_check_mark: | :x:                |
+| User           | `get_game_playtime`             | Web                | :heavy_check_mark: | :heavy_check_mark: |
+| User           | `get_last_playtimes`            | Web                | :heavy_check_mark: | :x:                |
+| Auth user      | `get_userdata`                  | Storefront         | :x:                | :heavy_check_mark: |
+| Auth user      | `get_app_user_details`          | Storefront         | :x:                | :heavy_check_mark: |
+| Auth user      | `get_library_stats`             | Storefront         | :x:                | :heavy_check_mark: |
+| Auth user      | `get_owned_apps`                | Storefront         | :x:                | :heavy_check_mark: |
+| Auth user      | `get_badge`                     | Storefront         | :x:                | :heavy_check_mark: |
+| Auth user      | `get_badge_info`                | Storefront         | :x:                | :heavy_check_mark: |
+| Auth user      | `recommend_apps`                | Storefront         | :x:                | :heavy_check_mark: |
+| Profile        | `get_profile_items`             | Web                | :heavy_check_mark: | :heavy_check_mark: |
+| Profile        | `get_profile_reactions`         | Web                | :x:                | :x:                |
+| Profile        | `get_profile_avatar`            | Web                | :x:                | :x:                |
+| Profile        | `get_profile_frame`             | Web                | :x:                | :x:                |
+| Profile        | `get_profile_background`        | Web                | :x:                | :x:                |
+| Profile        | `get_profile_mini_background`   | Web                | :x:                | :x:                |
+| Profile        | `get_profile_badges`            | Web                | :heavy_check_mark: | :x:                |
+| Profile        | `get_equipped_profile_items`    | Web                | :x:                | :x:                |
+| Profile        | `get_profile_themes`            | Web                | :heavy_check_mark: | :heavy_check_mark: |
+| Profile        | `get_profile_customization`     | Web                | :x:                | :x:                |
+| Level          | `get_steam_level`               | Web                | :heavy_check_mark: | :x:                |
+| Level          | `get_level_percentile`          | Web                | :heavy_check_mark: | :x:                |
+| Reviews        | `get_app_reviews`               | Storefront         | :x:                | :x:                |
+| Reviews        | `get_app_review`                | Web                | :heavy_check_mark: | :x:                |
+| Reviews        | `get_review_histogram`          | Storefront         | :x:                | :x:                |
+| News           | `get_news`                      | Web                | :x:                | :x:                |
+| Stats          | `get_game_schema`               | Web                | :heavy_check_mark: | :x:                |
+| Stats          | `get_game_stats`                | Web                | :x:                | :x:                |
+| Stats          | `get_user_stats_for_game`       | Web                | :heavy_check_mark: | :x:                |
+| Tags           | `get_tags`                      | Web                | :x:                | :x:                |
+| Tags           | `get_most_popular_tags`         | Web                | :x:                | :x:                |
+| Tags           | `get_frequent_tags`             | Storefront         | :x:                | :heavy_check_mark: |
+| Tags           | `get_recommended_tags`          | Storefront         | :x:                | :heavy_check_mark: |
+| Categories     | `get_categories`                | Storefront         | :x:                | :x:                |
+| Categories     | `get_genres`                    | Storefront         | :x:                | :x:                |
+| Categories     | `get_store_categories`          | Web                | :x:                | :x:                |
+| Achievements   | `get_game_achievements`         | Web                | :x:                | :x:                |
+| Achievements   | `get_top_achievements`          | Web                | :heavy_check_mark: | :x:                |
+| Achievements   | `get_player_achievements`       | Web                | :heavy_check_mark: | :x:                |
+| Loyalty        | `query_loyalty_rewards`         | Web                | :x:                | :x:                |
+| Loyalty        | `get_loyalty_apps`              | Web                | :x:                | :x:                |
+| Events         | `query_events`                  | Storefront         | :x:                | :x:                |
+| Events         | `get_best_events`               | Storefront         | :x:                | :heavy_check_mark: |
+| Marketing      | `get_active_marketing_messages` | Web                | :x:                | :x:                |
+| Year in review | `user_in_review`                | Web                | :x:                | :x:                |
+| Year in review | `friends_in_review`             | Web                | :heavy_check_mark: | :heavy_check_mark: |
+| Year in review | `achievements_in_review`        | Web                | :x:                | :x:                |
+| Year in review | `screenshots_in_review`         | Web                | :x:                | :x:                |
+| Discovery      | `get_discovery_queue`           | :x:                | :heavy_check_mark: |                    |
+| Discovery      | `get_discovery_settings`        | :x:                | :heavy_check_mark: |                    |
+| Discovery      | `get_discovery_skipped`         | :x:                | :heavy_check_mark: |                    |
+| Weights        | `weight_app`                    | :heavy_check_mark: | :x:                |                    |
+| Location       | `query_locations`               | Storefront         | :x:                | :x:                |
+| Location       | `get_country_list`              | Web                | :x:                | :x:                |
+| Session        | `get_logon_info`                | Web                | :heavy_check_mark: | :heavy_check_mark: |
+| Session        | `get_client_info`               | Web                | :heavy_check_mark: | :heavy_check_mark: |
+| Misc           | `html_to_bbcode`                | Web                | :x:                | :x:                |
+| Misc           | `search_support`                | Web                | :x:                | :x:                |
+| Meta           | `steam_stats`                   | Storefront         | :x:                | :x:                |
+| Meta           | `get_supported_api_list`        | Web                | :x:                | :x:                |
+| Meta           | `get_servertime`                | Web                | :x:                | :x:                |
+| Meta           | `get_servers`                   | Web                | :heavy_check_mark: | :x:                |
 
 ## Example
 
@@ -176,37 +185,27 @@ Many functions need an app ID to work, for example the following
 function which retrieves user review data from an application:
 
 ``` r
-get_app_reviews(appid[1])
-#> # A tibble: 20 × 22
+get_app_reviews(440)
+#> # A tibble: 100 × 22
 #>    recommendationid language review      timestamp_created   timestamp_updated  
 #>    <chr>            <chr>    <chr>       <dttm>              <dttm>             
-#>  1 166639853        schinese "军团要塞2… 2024-06-04 06:05:33 2024-06-04 06:07:38
-#>  2 166633634        english  "TF2 is an… 2024-06-04 03:40:34 2024-06-04 03:40:34
-#>  3 166847493        english  "It was a … 2024-06-07 07:46:14 2024-06-07 07:46:14
-#>  4 166804792        english  "#fixtf2"   2024-06-06 16:50:29 2024-06-06 16:50:29
-#>  5 166757946        english  "Valve fix… 2024-06-05 22:41:14 2024-06-05 22:41:14
-#>  6 166638518        english  "meet your… 2024-06-04 05:31:40 2024-06-04 05:31:40
-#>  7 166707566        english  "I grew up… 2024-06-05 04:41:12 2024-06-05 04:41:12
-#>  8 166618701        english  "i wish i … 2024-06-03 22:40:03 2024-06-03 22:42:39
-#>  9 166632469        russian  "Полтора р… 2024-06-04 03:13:53 2024-06-04 03:13:53
-#> 10 166627856        english  "I have wa… 2024-06-04 01:36:35 2024-06-04 01:36:35
-#> 11 166606572        english  "Only revi… 2024-06-03 19:36:33 2024-06-03 19:36:33
-#> 12 166621632        english  "Valve is … 2024-06-03 23:31:38 2024-06-03 23:31:38
-#> 13 166607477        english  "dead inte… 2024-06-03 19:50:05 2024-06-03 19:50:05
-#> 14 167445706        english  "Witnessin… 2024-06-15 22:54:19 2024-06-15 22:54:19
-#> 15 166685381        english  "I wish Va… 2024-06-04 21:38:37 2024-06-04 21:39:15
-#> 16 166613918        italian  "This is t… 2024-06-03 21:23:21 2024-06-03 21:23:21
-#> 17 166654121        english  "It's a sh… 2024-06-04 12:33:08 2024-06-04 12:33:08
-#> 18 166757936        english  "TF2's com… 2024-06-05 22:41:06 2024-06-05 22:41:06
-#> 19 166627868        english  "Unplayabl… 2024-06-04 01:37:00 2024-06-04 01:37:00
-#> 20 166743270        english  "Unplayabl… 2024-06-05 18:33:51 2024-06-05 18:33:51
+#>  1 166847493        english  "It was a … 2024-06-07 07:46:14 2024-06-07 07:46:14
+#>  2 167445706        english  "Witnessin… 2024-06-15 22:54:19 2024-06-15 22:54:19
+#>  3 167057723        english  "So long a… 2024-06-10 03:41:34 2024-06-10 03:41:34
+#>  4 166858627        russian  "#FixTf2"   2024-06-07 13:08:08 2024-06-07 13:08:08
+#>  5 167665571        english  "Leaving t… 2024-06-19 03:13:21 2024-06-19 03:13:21
+#>  6 168896025        russian  "Игра под … 2024-07-03 18:34:04 2024-07-03 18:34:04
+#>  7 166920297        russian  "#FixTF2 \… 2024-06-08 10:22:54 2024-06-08 10:22:54
+#>  8 167060501        english  "Grew up w… 2024-06-10 04:44:50 2024-06-10 04:44:50
+#>  9 167532816        english  "Valve has… 2024-06-17 02:47:55 2024-06-17 02:47:55
+#> 10 166847042        english  "This game… 2024-06-07 07:32:21 2024-06-07 07:32:21
+#> # ℹ 90 more rows
 #> # ℹ 17 more variables: voted_up <lgl>, votes_up <int>, votes_funny <int>,
 #> #   weighted_vote_score <dbl>, comment_count <int>, steam_purchase <lgl>,
 #> #   received_for_free <lgl>, written_during_early_access <lgl>,
 #> #   hidden_in_steam_china <lgl>, steam_china_location <chr>,
 #> #   author.steamid <chr>, author.num_games_owned <int>,
-#> #   author.num_reviews <int>, author.playtime_forever <int>,
-#> #   author.playtime_last_two_weeks <int>, author.playtime_at_review <int>, …
+#> #   author.num_reviews <int>, author.playtime_forever <int>, …
 ```
 
 Steam can also use the official Web API given a valid API key. One
