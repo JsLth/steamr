@@ -14,7 +14,7 @@ convert them to R objects. By default, the KeyValues format only knows
 strings.}
 }
 \description{
-Parses Valve's VDF or KeyValues format. VDF files are similar to JSON
+Parse Valve's VDF or KeyValues format. VDF files are similar to JSON
 and are used to store hierarchical metadata on resources, scripts,
 materials, etc. Request functions such as \code{\link{request_webapi}}
 allow VDF as a response format. For most use cases in data analysis,

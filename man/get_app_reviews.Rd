@@ -18,8 +18,6 @@ get_app_reviews(
   purchase_type = "steam",
   playtime = c(0, 0),
   filter_offtopic_activity = TRUE,
-  summary_num_positive_reviews = NULL,
-  summary_num_reviews = NULL,
   num_per_page = 20,
   cursor = NULL
 )
@@ -31,7 +29,7 @@ get_all_app_reviews(
   end_date = NULL,
   date_range_type = NULL,
   filter = "recent",
-  language = "english",
+  language = "all",
   review_type = "all",
   purchase_type = "steam",
   playtime = c(0, 0),
@@ -75,7 +73,8 @@ sorts by creation time and \code{updated} sorts by update time. For
 
 \item{language}{Which review language to include in the output. A full
 list of platform supported languages can be found in the
-\href{https://partner.steamgames.com/doc/store/localization/languages}{Steamworks documentation}.}
+\href{https://partner.steamgames.com/doc/store/localization/languages}{Steamworks documentation}.
+Defaults to \code{"all"}, which removes the language filter.}
 
 \item{review_type}{Filters by the type of review. Can be either
 \code{positive}, \code{negative}, or \code{all}.}

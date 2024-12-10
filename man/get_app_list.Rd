@@ -68,8 +68,7 @@ Get a list of applications in the Steam store, either a complete list
 or the top games by concurrent players, all-time players, or top releases.
 }
 \examples{
-\dontrun{
-get_all_list()
+get_app_list()
 
 # get most played games
 get_games_by_ccu()
@@ -79,7 +78,6 @@ get_most_played_games()
 
 # get the best releases
 get_top_releases()
-}
 }
 \seealso{
 \code{\link{steamspy}} for a similar approach by the SteamSpy API

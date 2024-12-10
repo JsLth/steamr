@@ -36,6 +36,7 @@
 #' @param language Which review language to include in the output. A full
 #' list of platform supported languages can be found in the
 #' \href{https://partner.steamgames.com/doc/store/localization/languages}{Steamworks documentation}.
+#' Defaults to \code{"all"}, which removes the language filter.
 #' @param review_type Filters by the type of review. Can be either
 #' \code{positive}, \code{negative}, or \code{all}.
 #' @param purchase_type Filters by the type of purchase. Can be either
@@ -84,8 +85,6 @@ get_app_reviews <- function(appid,
                             purchase_type = "steam",
                             playtime = c(0, 0),
                             filter_offtopic_activity = TRUE,
-                            summary_num_positive_reviews = NULL,
-                            summary_num_reviews = NULL,
                             num_per_page = 20,
                             cursor = NULL) {
   check_length(playtime, ge = 2, le = 2)
@@ -136,7 +135,7 @@ get_all_app_reviews <- function(appid,
                                 end_date = NULL,
                                 date_range_type = NULL,
                                 filter = "recent",
-                                language = "english",
+                                language = "all",
                                 review_type = "all",
                                 purchase_type = "steam",
                                 playtime = c(0, 0),
@@ -168,7 +167,7 @@ get_all_app_reviews <- function(appid,
     cursor[i] <- attr(res[[i]], "cursor")
     i <- i + 1
   }
-  res <- do.call(rbind.data.frame, res)
+  res <- rbind_list(res)
   res[!duplicated(res), ]
 }
 

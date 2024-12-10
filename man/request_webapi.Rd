@@ -21,7 +21,9 @@ request_webapi(
   http_method = "GET",
   simplify = TRUE,
   paginate = NULL,
+  limit = Inf,
   format = c("json", "xml", "vdf"),
+  cache = TRUE,
   serror = TRUE,
   dry = FALSE
 )
@@ -32,9 +34,12 @@ request_storefront(
   method,
   params = list(),
   params_as_query = TRUE,
+  http_method = "GET",
   simplify = TRUE,
   paginate = NULL,
+  limit = Inf,
   rate = NULL,
+  cache = TRUE,
   dry = FALSE
 )
 
@@ -43,7 +48,7 @@ request_steamspy(params)
 request_generic(
   url,
   params = NULL,
-  method = "GET",
+  http_method = "GET",
   format = "json",
   ...,
   headers = NULL,
@@ -134,13 +139,12 @@ Send HTTP requests to any of the available Steam APIs. As of yet,
 steamcmd.net. Generic requests to any other URL can also be made.
 }
 \examples{
-\dontrun{
 # simple Web API request
 request_webapi(
   api = public_api(),
-  interface = "ISteamApps",
-  method = "GetAppList",
-  version = "v2"
+  interface = "IStoreBrowseService",
+  method = "GetStoreCategories",
+  version = "v1"
 )
 
 # paginate through query results
@@ -166,6 +170,7 @@ request_storefront(
 # steamspy function
 request_steamspy(list(request = "tag", tag = "Early Access"))
 
+\dontrun{
 # request_generic exists to enable non-standard API queries
 # the following example is used internally in auth_* functions
 request_generic(
