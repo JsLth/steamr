@@ -159,12 +159,12 @@ an API key is required to be set.</p>
 applying some high-precision logical operations, resolving vanity IDs
 requires communicating with the Steam Web API. Vanity conversions are
 powered by the <code>ResolveVanityURL</code> endpoint in the
-<code>resolve_vanity_url</code> function. Here, we can also specify the
-type of profile, i.e. profile, group, or game group. For example, we can
-look up the name of the <a href="https://steamcommunity.com/groups/Valve" class="external-link">official Valve
+<code>resolve_vanity</code> function. Here, we can also specify the type
+of profile, i.e. profile, group, or game group. For example, we can look
+up the name of the <a href="https://steamcommunity.com/groups/Valve" class="external-link">official Valve
 group</a>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/resolve_vanity_url.html">resolve_vanity_url</a></span><span class="op">(</span><span class="st">"Valve"</span>, type <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/resolve_vanity.html">resolve_vanity</a></span><span class="op">(</span><span class="st">"Valve"</span>, type <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "103582791429521412"</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/convert_steamid.html">lookup_steamid</a></span><span class="op">(</span><span class="st">"Valve"</span>, vanity_type <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span>
