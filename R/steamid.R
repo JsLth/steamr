@@ -16,10 +16,10 @@
 #' There are various way of retrieving vanity IDs depending on the type of
 #' vanity URL type. The vanity URL of a Steam user is the account name
 #' (not the display name). It can be retrieved by inspecting the profile URL:
-#' \preformatted{https://steamcommunity.com/id/{vanity_id}/}.
+#' \preformatted{https://steamcommunity.com/id/{vanity_id}/}
 #'
 #' Vanity IDs of groups can be retrieved in a similar way:
-#' \preformatted{https://steamcommunity.com/groups/{vanity_id}/}.
+#' \preformatted{https://steamcommunity.com/groups/{vanity_id}/}
 #'
 #' Vanity IDs of game hubs are not easily locatable as game hubs are
 #' closely linked to store pages. They can be found by inspecting the
@@ -28,21 +28,21 @@
 #' original title, e.g. \code{dota2} for DOTA 2, \code{TF2} for Team Fortress 2
 #' or simply \code{70} for Half-Life
 #'
-#'
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' # get user ID
-#' get_steam_id("gabelogannewell")
+#' resolve_vanity("gabelogannewell")
 #'
 #' # get group ID
-#' get_steam_id("SteamDB", type = "group")
+#' resolve_vanity("SteamDB", type = "group")
 #'
 #' # get game hub ID
-#' get_steam_id("TF2", type = "game_group")
+#' resolve_vanity("TF2", type = "game_group")
 #' }
-resolve_vanity_url <- function(name, type = "profile") {
+resolve_vanity <- function(name, type = "profile") {
+  check_steam_key()
   check_string(name)
   check_string(type)
 
@@ -99,7 +99,7 @@ lookup_steamid <- function(ids, include_vanity = TRUE, vanity_type = "profile") 
 #' \code{steam2}, \code{steam3}, or \code{vanity}. Conversions from or to
 #' vanity require a Steam API key to be set.
 #' @param vanity_type Type of profile identified by the vanity ID. Passed to
-#' \code{\link{resolve_vanity_url}}. Ignored if \code{ids} does not contain
+#' \code{\link{resolve_vanity}}. Ignored if \code{ids} does not contain
 #' vanity IDs.
 #'
 #' @details
@@ -222,7 +222,7 @@ convert_steamid <- function(ids, to, vanity_type = "profile") {
         x
       )
     } else {
-      steam64 <- resolve_vanity_url(x, type = vanity_type)
+      steam64 <- resolve_vanity(x, type = vanity_type)
       switch(
         to,
         steam64 = steam64,

@@ -27,7 +27,7 @@ assumes vanity.}
 \code{lookup_steamid}. Useful to prevent Web API lookups.}
 
 \item{vanity_type}{Type of profile identified by the vanity ID. Passed to
-\code{\link{resolve_vanity_url}}. Ignored if \code{ids} does not contain
+\code{\link{resolve_vanity}}. Ignored if \code{ids} does not contain
 vanity IDs.}
 
 \item{to}{Steam ID format to convert to. Must be one of \code{steam64},

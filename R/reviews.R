@@ -127,8 +127,9 @@ get_app_reviews <- function(appid,
 
 #' @rdname get_app_reviews
 #' @export
-#' @param max_tries Maximum number of pages until breaking the iteration
-#' and returning the result up to this point.
+#' @param max_pages Maximum number of pages until breaking the iteration
+#' and returning the result up to this point. You may set this to \code{Inf}
+#' to retrieve all reviews for a given query.
 get_all_app_reviews <- function(appid,
                                 day_range = NULL,
                                 start_date = NULL,

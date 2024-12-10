@@ -102,8 +102,9 @@ cursor ID. This ID can be used to paginate and iterate through many review pages
 at once. This argument is probably useless for most use cases and is
 extensively used for iteration purposes by \code{get_all_app_reviews}.}
 
-\item{max_tries}{Maximum number of pages until breaking the iteration
-and returning the result up to this point.}
+\item{max_pages}{Maximum number of pages until breaking the iteration
+and returning the result up to this point. You may set this to \code{Inf}
+to retrieve all reviews for a given query.}
 }
 \value{
 A dataframe containing IDs, texts, and metadata of application

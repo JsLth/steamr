@@ -26,7 +26,7 @@ get_game_group(c(10, 440))
 }
 }
 \seealso{
-\code{\link{resolve_vanity_url}}
+\code{\link{resolve_vanity}}
 
 \code{\link{parse_steam64}}
 }

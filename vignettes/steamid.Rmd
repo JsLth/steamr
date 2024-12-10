@@ -84,13 +84,13 @@ convert_steamid(steam3, to = "vanity")
 While conversions between Steam64, Steam2 and Steam3 can be done by applying
 some high-precision logical operations, resolving vanity IDs requires
 communicating with the Steam Web API. Vanity conversions are powered by
-the `ResolveVanityURL` endpoint in the `resolve_vanity_url` function. Here,
+the `ResolveVanityURL` endpoint in the `resolve_vanity` function. Here,
 we can also specify the type of profile, i.e. profile, group, or game group.
 For example, we can look up the name of the
 [official Valve group](https://steamcommunity.com/groups/Valve):
 
 ```{r}
-resolve_vanity_url("Valve", type = "group")
+resolve_vanity("Valve", type = "group")
 ```
 ```{r}
 lookup_steamid("Valve", vanity_type = "group")
