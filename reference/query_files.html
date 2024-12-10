@@ -3,7 +3,7 @@
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]--></head><body data-spy="scroll" data-target="#toc">
-    
+
 
     <div class="container template-reference-topic">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -31,7 +31,7 @@
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
-     
+
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
@@ -45,13 +45,13 @@
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-      
+
 
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Published files</h1>
-    
+
     <div class="hidden name"><code>query_files.Rd</code></div>
     </div>
 
@@ -118,88 +118,90 @@
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>query_type</dt>
+
+
+<dl><dt id="arg-query-type">query_type<a class="anchor" aria-label="anchor" href="#arg-query-type"></a></dt>
 <dd><p>How to rank the query. Can be a code defined in
 <code><a href="steamkit_enum.html">EPublishedFileQueryType</a></code>.</p></dd>
 
 
-<dt>numperpage</dt>
+<dt id="arg-numperpage">numperpage<a class="anchor" aria-label="anchor" href="#arg-numperpage"></a></dt>
 <dd><p>Number of results per page, up to a maximum of 100.</p></dd>
 
 
-<dt>creator_appid</dt>
+<dt id="arg-creator-appid">creator_appid<a class="anchor" aria-label="anchor" href="#arg-creator-appid"></a></dt>
 <dd><p>AppID to filter by. Only files created by this
 appID will be returned.</p></dd>
 
 
-<dt>consumer_appid</dt>
+<dt id="arg-consumer-appid">consumer_appid<a class="anchor" aria-label="anchor" href="#arg-consumer-appid"></a></dt>
 <dd><p>AppID to filter by. Only files consumed by this
 appID will be returned.</p></dd>
 
 
-<dt>required_tags</dt>
+<dt id="arg-required-tags">required_tags<a class="anchor" aria-label="anchor" href="#arg-required-tags"></a></dt>
 <dd><p>Tags that must be present in the queried files. If
 <code>match_all_tags</code> is  <code>TRUE</code>, then all tags must be present.</p></dd>
 
 
-<dt>excluded_tags</dt>
+<dt id="arg-excluded-tags">excluded_tags<a class="anchor" aria-label="anchor" href="#arg-excluded-tags"></a></dt>
 <dd><p>Tags that must not be present in the queried files.</p></dd>
 
 
-<dt>match_all_tags</dt>
+<dt id="arg-match-all-tags">match_all_tags<a class="anchor" aria-label="anchor" href="#arg-match-all-tags"></a></dt>
 <dd><p>If <code>TRUE</code>, then all tags in <code>required_tags</code>
 must be present in the queried files, otherwise only at least one.</p></dd>
 
 
-<dt>required_flags</dt>
+<dt id="arg-required-flags">required_flags<a class="anchor" aria-label="anchor" href="#arg-required-flags"></a></dt>
 <dd><p>Flags that must be present in the queried files.</p></dd>
 
 
-<dt>omitted_flags</dt>
+<dt id="arg-omitted-flags">omitted_flags<a class="anchor" aria-label="anchor" href="#arg-omitted-flags"></a></dt>
 <dd><p>Flags that must not be present in the queried files.</p></dd>
 
 
-<dt>search_text</dt>
+<dt id="arg-search-text">search_text<a class="anchor" aria-label="anchor" href="#arg-search-text"></a></dt>
 <dd><p>Text to match in the file's title or description.</p></dd>
 
 
-<dt>filetype</dt>
+<dt id="arg-filetype">filetype<a class="anchor" aria-label="anchor" href="#arg-filetype"></a></dt>
 <dd><p>File types to return. Can be one of the codes in
 <code>EPublishedFileInfoMatchingFileType</code>.</p></dd>
 
 
-<dt>child_publishedfileid</dt>
+<dt id="arg-child-publishedfileid">child_publishedfileid<a class="anchor" aria-label="anchor" href="#arg-child-publishedfileid"></a></dt>
 <dd><p>PublishedfileID that must be referenced by
 the queried files.</p></dd>
 
 
-<dt>days</dt>
+<dt id="arg-days">days<a class="anchor" aria-label="anchor" href="#arg-days"></a></dt>
 <dd><p>If <code>query_type = 3</code> (ranked by trend), specifies the
 number of days to get votes for (between 1 and 7 days).</p></dd>
 
 
-<dt>only_recent_votes</dt>
+<dt id="arg-only-recent-votes">only_recent_votes<a class="anchor" aria-label="anchor" href="#arg-only-recent-votes"></a></dt>
 <dd><p>If <code>query_type = 3</code> (ranked by trend),
 specifies whether result should only include files that have been voted
 on in the last <code>days</code> days.</p></dd>
 
 
-<dt>cache_max_age_seconds</dt>
+<dt id="arg-cache-max-age-seconds">cache_max_age_seconds<a class="anchor" aria-label="anchor" href="#arg-cache-max-age-seconds"></a></dt>
 <dd><p>Maximum file age in seconds. If set, files
 are allowed to get stale by the amount of time specified.</p></dd>
 
 
-<dt>total_only</dt>
+<dt id="arg-total-only">total_only<a class="anchor" aria-label="anchor" href="#arg-total-only"></a></dt>
 <dd><p>If <code>TRUE</code>, only returns the total number of queried
 files.</p></dd>
 
 
-<dt>ids_only</dt>
+<dt id="arg-ids-only">ids_only<a class="anchor" aria-label="anchor" href="#arg-ids-only"></a></dt>
 <dd><p>If <code>TRUE</code>, only returns the queried publishedfileIDs.
 Takes precedence over the <code>return</code> argument.</p></dd>
 
 
-<dt>return</dt>
+<dt id="arg-return">return<a class="anchor" aria-label="anchor" href="#arg-return"></a></dt>
 <dd><p>A character vector specifying the information that should be
 returned. Can be several of the following: <code>vote_data</code>, <code>tags</code>,
 <code>kv_tags</code>, <code>previews</code>, <code>children</code>, <code>short_description</code>,
@@ -213,28 +215,27 @@ replaces the <code>file_description</code> with a <code>short_description</code>
 containing a shorter description.</p></dd>
 
 
-<dt>playtime_days</dt>
+<dt id="arg-playtime-days">playtime_days<a class="anchor" aria-label="anchor" href="#arg-playtime-days"></a></dt>
 <dd><p>If <code>return</code> includes <code>playtime_stats</code>,
 specifies the number of days for which to return stats.</p></dd>
 
 
-<dt>strip_bbcode</dt>
+<dt id="arg-strip-bbcode">strip_bbcode<a class="anchor" aria-label="anchor" href="#arg-strip-bbcode"></a></dt>
 <dd><p>If <code>TRUE</code>, strips all BB code from descriptions.</p></dd>
 
 
-<dt>desired_revision</dt>
+<dt id="arg-desired-revision">desired_revision<a class="anchor" aria-label="anchor" href="#arg-desired-revision"></a></dt>
 <dd><p>Specifies the state of file revision. Can be a
 code specified in <code>EPublishedFileRevision</code>.</p></dd>
 
 
-<dt>publishedfileid</dt>
+<dt id="arg-publishedfileid">publishedfileid<a class="anchor" aria-label="anchor" href="#arg-publishedfileid"></a></dt>
 <dd><p>A vector of publishedfileID of a file to get details
 for.</p></dd>
 
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
 
 <dl><dt><code>query_files</code></dt>
 <dd><p>A dataframe containing least the request result
@@ -260,31 +261,6 @@ for.</p></dd>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>steamr_max_reqs <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">query_files</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  33% | ETA:  7s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  67% | ETA:  4s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 300 × 52</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    result publishedfileid creator           creator_appid consumer_appid</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 194738190       76561197988525039           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1 311707837       76561197978098862           570            570</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      1 1969434487      76561198284001308        <span style="text-decoration: underline;">955</span>900         <span style="text-decoration: underline;">955</span>900</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      1 1505740227      76561197987845309           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      1 194737282       76561197988525039           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      1 1238849347      76561197960948593           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      1 527145539       76561198043785932           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1 162215291       76561197992264974           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      1 1452570835      76561198106419992           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      1 140375753       76561197962645654           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 290 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 47 more variables: consumer_shortcutid &lt;int&gt;, filename &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   file_size &lt;chr&gt;, preview_file_size &lt;chr&gt;, preview_url &lt;chr&gt;, url &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   hcontent_preview &lt;chr&gt;, title &lt;chr&gt;, file_description &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   time_created &lt;int&gt;, time_updated &lt;int&gt;, visibility &lt;int&gt;, flags &lt;int&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   workshop_file &lt;lgl&gt;, workshop_accepted &lt;lgl&gt;, show_subscribe_all &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   num_comments_public &lt;int&gt;, banned &lt;lgl&gt;, ban_reason &lt;chr&gt;, banner &lt;chr&gt;, …</span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># return essential details and pricing data</span></span></span>
-<span class="r-in"><span><span class="fu">query_files</span><span class="op">(</span>return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"details"</span>, <span class="st">"for_sale_data"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  67% | ETA:  3s</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 300 × 52</span></span>
@@ -296,9 +272,35 @@ for.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      1 1505740227      76561197987845309           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      1 194737282       76561197988525039           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      1 1238849347      76561197960948593           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      1 527145539       76561198043785932           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1 162215291       76561197992264974           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      1 1452570835      76561198106419992           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      1 162215291       76561197992264974           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1 1452570835      76561198106419992           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      1 527145539       76561198043785932           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      1 140375753       76561197962645654           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 290 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 47 more variables: consumer_shortcutid &lt;int&gt;, filename &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   file_size &lt;chr&gt;, preview_file_size &lt;chr&gt;, preview_url &lt;chr&gt;, url &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   hcontent_preview &lt;chr&gt;, title &lt;chr&gt;, file_description &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   time_created &lt;int&gt;, time_updated &lt;int&gt;, visibility &lt;int&gt;, flags &lt;int&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   workshop_file &lt;lgl&gt;, workshop_accepted &lt;lgl&gt;, show_subscribe_all &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   num_comments_public &lt;int&gt;, banned &lt;lgl&gt;, ban_reason &lt;chr&gt;, banner &lt;chr&gt;, …</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># return essential details and pricing data</span></span></span>
+<span class="r-in"><span><span class="fu">query_files</span><span class="op">(</span>return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"details"</span>, <span class="st">"for_sale_data"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  33% | ETA:  7s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  67% | ETA:  4s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 300 × 52</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    result publishedfileid creator           creator_appid consumer_appid</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>      1 194738190       76561197988525039           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1 311707837       76561197978098862           570            570</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      1 1969434487      76561198284001308        <span style="text-decoration: underline;">955</span>900         <span style="text-decoration: underline;">955</span>900</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      1 1505740227      76561197987845309           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      1 194737282       76561197988525039           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      1 1238849347      76561197960948593           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      1 162215291       76561197992264974           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1 1452570835      76561198106419992           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      1 527145539       76561198043785932           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      1 140375753       76561197962645654           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 290 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 47 more variables: consumer_shortcutid &lt;int&gt;, filename &lt;chr&gt;,</span></span>
@@ -312,7 +314,7 @@ for.</p></dd>
 <span class="r-in"><span><span class="co"># an overview of filetypes can be retrieved using:</span></span></span>
 <span class="r-in"><span><span class="co"># EPublishedFileInfoMatchingFileType()</span></span></span>
 <span class="r-in"><span><span class="fu">query_files</span><span class="op">(</span>filetype <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  33% | ETA:  4s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  33% | ETA:  3s</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 300 × 53</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    result publishedfileid creator           creator_appid consumer_appid</span>
@@ -337,8 +339,6 @@ for.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># query only workshop collections</span></span></span>
 <span class="r-in"><span><span class="fu">query_files</span><span class="op">(</span>filetype <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  33% | ETA:  3s</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 300 × 53</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    result publishedfileid creator           creator_appid consumer_appid</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
@@ -350,8 +350,8 @@ for.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      1 218837842       76561197982669173           766            730</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      1 79384336        76561198039934675           766          <span style="text-decoration: underline;">72</span>850</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1 68540935        76561197993200793           620            620</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      1 188631276       76561198024157545           766            570</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      1 2286342770      76561198123787099           766         <span style="text-decoration: underline;">881</span>100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      1 2286342770      76561198123787099           766         <span style="text-decoration: underline;">881</span>100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      1 188631276       76561198024157545           766            570</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 290 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 48 more variables: consumer_shortcutid &lt;int&gt;, filename &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   file_size &lt;chr&gt;, preview_file_size &lt;chr&gt;, file_url &lt;chr&gt;,</span></span>
@@ -369,9 +369,9 @@ for.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>      1 1505740227      76561197987845309           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>      1 194737282       76561197988525039           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      1 1238849347      76561197960948593           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      1 527145539       76561198043785932           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      1 162215291       76561197992264974           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      1 1452570835      76561198106419992           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      1 162215291       76561197992264974           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      1 1452570835      76561198106419992           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      1 527145539       76561198043785932           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1 140375753       76561197962645654           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      1 269947174       76561197970127395           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      1 197944631       76561197970127395           440            440</span>
@@ -385,7 +385,7 @@ for.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get the number of files produced by team fortress</span></span></span>
 <span class="r-in"><span><span class="fu">query_files</span><span class="op">(</span>total_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■           </span>  67% | ETA:  1s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  33% | ETA:  7s</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 300 × 52</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    result publishedfileid creator           creator_appid consumer_appid</span>
@@ -396,9 +396,9 @@ for.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>      1 1505740227      76561197987845309           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>      1 194737282       76561197988525039           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>      1 1238849347      76561197960948593           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      1 527145539       76561198043785932           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1 162215291       76561197992264974           440            440</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      1 1452570835      76561198106419992           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>      1 162215291       76561197992264974           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>      1 1452570835      76561198106419992           440            440</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>      1 527145539       76561198043785932           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>      1 140375753       76561197962645654           440            440</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 290 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 47 more variables: consumer_shortcutid &lt;int&gt;, filename &lt;chr&gt;,</span></span>
@@ -425,15 +425,15 @@ for.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer></div>
 
-  
 
 
-  
+
+
 
   </body></html>
 
