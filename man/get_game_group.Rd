@@ -7,7 +7,12 @@
 get_game_group(appids)
 }
 \arguments{
-\item{appids}{A vector of multiple appIDs of applications in the Steam store.}
+\item{appids}{A vector of multiple appIDs of applications in the Steam store.
+There are generally two ways of retrieving an appID:
+\itemize{
+ \item{Inspect or parse the store URL of an application, e.g. \code{https://store.steampowered.com/app/10/CounterStrike/}}
+ \item{Query applications programmatically, e.g. using \code{\link{search_apps}}}
+}}
 }
 \value{
 A dataframe containing information about the game group

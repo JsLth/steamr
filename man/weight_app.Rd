@@ -26,7 +26,12 @@ cluster_apps(steamid, n = NULL, cluster_index = NULL)
 be converted by \code{\link{convert_steamid}}. This includes vanity,
 Steam64, Steam2, and Steam3 IDs.}
 
-\item{appids}{A vector of multiple appIDs of applications in the Steam store.}
+\item{appids}{A vector of multiple appIDs of applications in the Steam store.
+There are generally two ways of retrieving an appID:
+\itemize{
+ \item{Inspect or parse the store URL of an application, e.g. \code{https://store.steampowered.com/app/10/CounterStrike/}}
+ \item{Query applications programmatically, e.g. using \code{\link{search_apps}}}
+}}
 
 \item{tag_score_factor}{Factor indicating the weight given to an ominous
 tag factor.}

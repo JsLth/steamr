@@ -19,7 +19,12 @@ appdetails_steamcmd(appid)
 appdetails_steamspy(appid)
 }
 \arguments{
-\item{appid}{A single appID of an application in the Steam store.}
+\item{appid}{Application ID referencing a Steam application. There are
+generally two ways of retrieving an appID:
+\itemize{
+ \item{Inspect or parse the store URL of an application, e.g. \code{https://store.steampowered.com/app/10/CounterStrike/}}
+ \item{Query appIDs programmatically, e.g. using \code{\link{search_apps}}}
+}}
 
 \item{client}{Unknown.}
 
