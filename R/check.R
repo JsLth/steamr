@@ -1,3 +1,12 @@
+check_class <- function(x, class, null = FALSE) {
+  if (null && is.null(x)) return()
+  check <- inherits(x, class)
+  if (!check) {
+    stop(sprintf("%s must be of class %s, not %s", obj_name(x), class, class(x)))
+  }
+}
+
+
 check_length <- function(x, ge = -Inf, le = Inf) {
   len <- length(x)
   check <- len >= ge && len <= le

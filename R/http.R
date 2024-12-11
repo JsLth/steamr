@@ -229,7 +229,7 @@ request_storefront <- function(api,
                                cache = FALSE,
                                dry = FALSE) {
   is_store_api <- identical(api, store_api())
-  params <- prepare_params(params)
+  params <- prepare_params(params, api = "storefront")
 
   req <- httr2::request(api)
   template <- sprintf("%s /{interface}/{method}", http_method)
@@ -508,8 +508,8 @@ storefront_params <- function(params) {
     x <- params[[k]]
     if (is.logical(x)) {
       params[[k]] <- as.numeric(x)
-    } else if (is.list(x)) {
-      paste(x, collapse = ",")
+    } else if (length(x) > 1) {
+      params[[k]] <- paste(x, collapse = ",")
     }
   }
 

@@ -51,11 +51,6 @@ available data are paginated.}
 \item{currency}{ISO 4217 code to filter by currency. Defaults to all
 available currencies.}
 
-\item{language}{ISO 639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a \code{#} in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.}
-
 \item{classids}{A vector of classIDs of the assets to retrieve.}
 
 \item{instanceids}{A vector of instanceIDs corresponding to the}

@@ -28,18 +28,6 @@ store_search(term, country_code = "US", language = "english")
 \item{links}{Whether to include links to icon and logo in the output.
 Defaults to \code{FALSE} to avoid littering the output.}
 
-\item{country_code}{ISO-2 country code as returned by
-\code{\link{get_countries}}. The Steam store differs depending on the
-country it is accessed from.}
-
-\item{language}{ISO639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a \code{#} in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.}
-
-\item{steam_realm}{Number describing the Steam realm. A value of 1
-indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.}
-
 \item{require_type}{Which application types should be returned? Can be
 one of \code{bundle}, \code{game}, \code{demo}, \code{mod} \code{dlc},
 \code{software}, \code{video}, \code{hardware}, \code{series},

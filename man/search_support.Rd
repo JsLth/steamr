@@ -9,10 +9,6 @@ search_support(search_text, elanguage = NULL, paginate = TRUE, max_pages = Inf)
 \arguments{
 \item{search_text}{Search text to match FAQ articles by.}
 
-\item{elanguage}{Numeric code representing the store language. A list
-of language codes and their corresponding languages is defined in
-\code{\link{ELanguage}}.}
-
 \item{paginate}{If \code{TRUE}, paginates through the results. Some methods
 provide data access in digestible chunks and do not return all available
 information at once. The \code{paginate} automatically retrieves all pages

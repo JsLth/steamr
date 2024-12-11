@@ -31,14 +31,6 @@ default keys: \code{type}, \code{name}, \code{steam_appid},
 \code{header_image}, \code{website}, \code{pc_requirements},
 \code{mac_requirements}, \code{linux_requirements}. \code{filters} does
 not accept any of these keys as input.}
-
-\item{country_code}{ISO 3166 country code representing the country from
-which to view the Steam store.}
-
-\item{language}{ISO 639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a \code{#} in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.}
 }
 \value{
 \describe{

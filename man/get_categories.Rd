@@ -18,21 +18,9 @@ get_genres(language = "english", country_code = "US")
 get_store_categories(language = "english", elanguage = NULL)
 }
 \arguments{
-\item{language}{ISO 639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a \code{#} in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.}
-
-\item{country_code}{ISO 3166 country code representing the country from
-which to view the Steam store.}
-
 \item{extra}{Unknown.}
 
 \item{trailer}{Unknown.}
-
-\item{elanguage}{Numeric code representing the store language. A list
-of language codes and their corresponding languages is defined in
-\code{\link{ELanguage}}.}
 }
 \value{
 \describe{

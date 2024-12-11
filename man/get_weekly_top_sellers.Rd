@@ -20,21 +20,6 @@ get_weekly_top_sellers(
 A list of Steam countries can be retrieved with
 \code{\link{get_country_list}}.}
 
-\item{language}{ISO 639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a \code{#} in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.}
-
-\item{elanguage}{Numeric code representing the store language. A list
-of language codes and their corresponding languages is defined in
-\code{\link{ELanguage}}.}
-
-\item{country_code}{ISO 3166 country code representing the country from
-which to view the Steam store.}
-
-\item{steam_realm}{Number describing the Steam realm. A value of 1
-indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.}
-
 \item{start_date}{Date-time object giving the earliest time for which to
 retrieve top sellers. Results will be returned for the time between
 the start date and the start date plus seven days.}

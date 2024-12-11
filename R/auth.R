@@ -73,14 +73,13 @@
 #' is_authenticated() # returns TRUE
 #'
 #' # sign in using a QR code
-#' auth_qr()
-#' }
+#' auth_qr()}
 auth_credentials <- function(username,
                              password = openssl::askpass,
                              shared_secret = NULL,
                              persistent = FALSE,
-                             friendly_name = NULL,
-                             details = NULL) {
+                             friendly_name = "steamr",
+                             details = "Login using credentials") {
   stopifnot(is.character(username))
   stopifnot(is.function(password))
   if (!interactive()) {
@@ -148,7 +147,8 @@ auth_credentials <- function(username,
 #' and refreshes every 5 seconds.
 #'
 #' @export
-auth_qr <- function(friendly_name = NULL, device_details = NULL) {
+auth_qr <- function(friendly_name = "steamr",
+                    device_details = "Login using QR code") {
   check_interactive()
 
   if (!loadable("qrcode")) {

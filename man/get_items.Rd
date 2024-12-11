@@ -2,79 +2,67 @@
 % Please edit documentation in R/browse.R
 \name{get_items}
 \alias{get_items}
+\alias{get_hardware_items}
 \title{Get store items}
 \usage{
-get_items(
-  items,
-  language = "english",
-  elanguage = NULL,
-  country_code = "US",
-  steam_realm = 1L,
-  include = NULL,
-  apply_user_filters = FALSE
-)
+get_items(items, context = NULL, data_request = NULL)
+
+get_hardware_items(items, context = NULL)
 }
 \arguments{
-\item{items}{Store item or list of store items as returned by
-\code{\link{store_item}}.}
+\item{items}{A dataframe, list, or vector containing item IDs. If a vector,
+interprets it as appIDs. If a list or character vector is passed, each
+column can refer to a different type of item ID. Available types are
+\code{appid}, \code{packageid}, \code{bundleid}, \code{tagid},
+\code{creatorid}, and \code{hubcategoryid}. In this way, multiple items
+with multiple ID types can be specified. For \code{get_hardware_items},
+only vectors are allowed and they are always interpreted as packageIDs.}
 
-\item{language}{ISO639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a \code{#} in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.}
+\item{context}{Object of class
+\code{\link[=store_context]{StoreBrowseContext}} that specifies the
+geographic context from which to access the store. Defaults to a global
+Steam realm (\code{steam_realm = 1}), English as the store language
+(\code{language = "english"}) and the USA as the access country
+(\code{country_code = "US"}).}
 
-\item{elanguage}{Language identifier of the returned information.}
-
-\item{country_code}{ISO-2 country code as returned by
-\code{\link{get_countries}}. The Steam store differs depending on the
-country it is accessed from.}
-
-\item{steam_realm}{Number describing the Steam realm. A value of 1
-indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.}
-
-\item{include}{List of extra information to include. Can be one or several
-of the following: \code{release}, \code{platforms},
-\code{all_purchase_options}, \code{screenshots}, \code{trailers},
-\code{ratings}, \code{tag_count}, \code{reviews}, \code{basic_info},
-\code{supported_languages}, \code{full_description}, \code{included_items}
-and \code{assets_without_overrides}. If \code{all}, returns all information.}
-
-\item{apply_user_filters}{Unknown.}
+\item{data_request}{Object of class
+\code{\link[=store_data_request]{StoreBrowseDataRequest}} that specifies
+the additional information to be included. Defaults to basic information.}
 }
 \value{
 A dataframe containing the requested information on the input
 IDs.
 }
 \description{
-Get information about items in the store
+Get information about items in the store. \code{get_hardware_items} more
+specifically requests special information about items that require physical
+shipping.
 }
 \examples{
-\dontrun{
-ids <- list(
-  store_item(268770),
-  store_item(1182620),
-  store_item(creatorid = 10)
+# if just an ID is passed, it is assumed to be an appID
+get_items(10)
+
+# by passing a dataframe, you can pass multiple types of ID at a time
+ids <- data.frame(
+  appid = c(10, NA, NA),
+  creatorid = c(NA, 10, NA),
+  packageid = c(NA, NA, 354231)
 )
 
 # request basic item info
 get_items(ids)
 
 # request info in german language
-get_items(ids, language = "german")
+get_items(ids, context = store_context(language = "german"))
 
 # request info for the swedish store
-get_items(ids, country_code = "SE")
+get_items(ids, context = store_context(country_code = "SE"))
 
 # request info on operating systems
-get_items(ids, include = "platforms")
+get_items(ids, data_request = store_data_request(include = "platforms"))
 
-# request all info
-get_items(ids, include = "all")
-}
-}
-\seealso{
-Other store: 
-\code{\link{get_hardware_items}()},
-\code{\link{store_item}()}
+# request special info on hardware
+get_items(ids, data_request = store_data_request(include = "all"))
+get_hardware_items(c(354231, 1628580))
 }
 \concept{store}

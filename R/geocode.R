@@ -61,7 +61,7 @@ geocode_steam <- function(country_code,
   check_string(country_code)
   check_string(state_code, null = TRUE)
   check_number(city_id, null = TRUE)
-  check_string(force_level)
+  check_string(force_level, null = TRUE)
   check_bool(cache)
   nas <- rep(NA, length(country_code))
   state_code <- as.character(state_code %||% nas)
@@ -98,6 +98,7 @@ geocode_steam <- function(country_code,
 geocode_single <- function(cc, sc, ci, geocodes, force_level = NULL) {
   gcd <- geocodes[[cc]]
   na_coords <- list(coordinates = list(lng = NA, lat = NA))
+  force_level <- force_level %||% ""
   can_state <- !force_level %in% "country"
   can_city <- !force_level %in% c("country", "state")
   must_state <- force_level %in% c("state", "city")

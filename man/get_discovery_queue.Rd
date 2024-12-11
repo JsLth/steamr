@@ -37,9 +37,6 @@ get_discovery_skipped(queue_type = NULL)
 \item{queue_type}{Integer indicating the queue type. Possible values can
 be retrieved using \code{node_enum("StoreDiscoveryQueueType")}.}
 
-\item{country_code}{ISO 3166 country code representing the country from
-which to view the Steam store.}
-
 \item{rebuild_queue}{If \code{TRUE}, rebuilds the queue. Otherwise,
 takes the previously generated one. Rebuilding the queue can lead to
 error codes 2. In this case, retrying helps.}

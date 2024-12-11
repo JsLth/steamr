@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @seealso
-#' \code{\link{resolve_vanity_url}}
+#' \code{\link{resolve_vanity}}
 #'
 #' \code{\link{parse_steam64}}
 #'

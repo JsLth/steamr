@@ -28,9 +28,6 @@ Steam64, Steam2, and Steam3 IDs.}
 
 \item{appids}{A vector of multiple appIDs of applications in the Steam store.}
 
-\item{country_code}{ISO 3166 country code representing the country from
-which to view the Steam store.}
-
 \item{tag_score_factor}{Factor indicating the weight given to an ominous
 tag factor.}
 
