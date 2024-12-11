@@ -74,29 +74,6 @@ storefront API.</p>
 <dd><p>A vector of multiple appIDs of applications in the Steam store.</p></dd>
 
 
-<dt id="arg-language">language<a class="anchor" aria-label="anchor" href="#arg-language"></a></dt>
-<dd><p>ISO 639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a <code>#</code> in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.</p></dd>
-
-
-<dt id="arg-elanguage">elanguage<a class="anchor" aria-label="anchor" href="#arg-elanguage"></a></dt>
-<dd><p>Numeric code representing the store language. A list
-of language codes and their corresponding languages is defined in
-<code>ELanguage</code>.</p></dd>
-
-
-<dt id="arg-country-code">country_code<a class="anchor" aria-label="anchor" href="#arg-country-code"></a></dt>
-<dd><p>ISO 3166 country code representing the country from
-which to view the Steam store.</p></dd>
-
-
-<dt id="arg-steam-realm">steam_realm<a class="anchor" aria-label="anchor" href="#arg-steam-realm"></a></dt>
-<dd><p>Number describing the Steam realm. A value of 1
-indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.</p></dd>
-
-
 <dt id="arg-steamid">steamid<a class="anchor" aria-label="anchor" href="#arg-steamid"></a></dt>
 <dd><p>SteamID of a user. The SteamID must be in a format that can
 be converted by <code><a href="convert_steamid.html">convert_steamid</a></code>. This includes vanity,
@@ -107,6 +84,19 @@ Steam64, Steam2, and Steam3 IDs.</p></dd>
 <dd><p>A vector of multiple SteamIDs of a user. The SteamIDs must
 be in a format that can be converted by <code><a href="convert_steamid.html">convert_steamid</a></code>.
 This includes vanity, Steam64, Steam2, and Steam3 IDs.</p></dd>
+
+
+<dt id="arg-paginate">paginate<a class="anchor" aria-label="anchor" href="#arg-paginate"></a></dt>
+<dd><p>If <code>TRUE</code>, paginates through the results. Some methods
+provide data access in digestible chunks and do not return all available
+information at once. The <code>paginate</code> automatically retrieves all pages
+until <code>max_pages</code> is reached.</p></dd>
+
+
+<dt id="arg-max-pages">max_pages<a class="anchor" aria-label="anchor" href="#arg-max-pages"></a></dt>
+<dd><p>Maximum number of pages to paginate. Ignored if
+<code>paginate</code> is <code>FALSE</code>. Defaults to <code>Inf</code> such that all
+available data are paginated.</p></dd>
 
 </dl></div>
 

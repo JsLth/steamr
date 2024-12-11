@@ -70,7 +70,8 @@ assets, see the <a href="https://partner.steamgames.com/doc/store/assets" class=
 <span>  sort_column <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sort_dir <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  search_description <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  paginate <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  paginate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  max_pages <span class="op">=</span> <span class="cn">Inf</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">get_asset_prices</span><span class="op">(</span><span class="va">appid</span>, currency <span class="op">=</span> <span class="cn">NULL</span>, language <span class="op">=</span> <span class="st">"english"</span><span class="op">)</span></span>
@@ -107,16 +108,22 @@ assets, see the <a href="https://partner.steamgames.com/doc/store/assets" class=
 <code>NULL</code>. Can be <code>asc</code> or <code>desc</code>.</p></dd>
 
 
+<dt id="arg-paginate">paginate<a class="anchor" aria-label="anchor" href="#arg-paginate"></a></dt>
+<dd><p>If <code>TRUE</code>, paginates through the results. Some methods
+provide data access in digestible chunks and do not return all available
+information at once. The <code>paginate</code> automatically retrieves all pages
+until <code>max_pages</code> is reached.</p></dd>
+
+
+<dt id="arg-max-pages">max_pages<a class="anchor" aria-label="anchor" href="#arg-max-pages"></a></dt>
+<dd><p>Maximum number of pages to paginate. Ignored if
+<code>paginate</code> is <code>FALSE</code>. Defaults to <code>Inf</code> such that all
+available data are paginated.</p></dd>
+
+
 <dt id="arg-currency">currency<a class="anchor" aria-label="anchor" href="#arg-currency"></a></dt>
 <dd><p>ISO 4217 code to filter by currency. Defaults to all
 available currencies.</p></dd>
-
-
-<dt id="arg-language">language<a class="anchor" aria-label="anchor" href="#arg-language"></a></dt>
-<dd><p>ISO 639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a <code>#</code> in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.</p></dd>
 
 
 <dt id="arg-classids">classids<a class="anchor" aria-label="anchor" href="#arg-classids"></a></dt>
@@ -134,11 +141,12 @@ for all languages. If no translation is available, defaults to English.</p></dd>
     <div id="value">
     <h2>Value</h2>
 
-<dl><dt><code>query_market_assets</code>A dataframe with each row representing
+<dl><dt><code>query_market_assets</code></dt>
+<dd><p>A dataframe with each row representing
  one asset. The dataframe provides data on name, hash names, prices,
  the corresponding app, asset classIDs, and the output of
- <code>get_asset_info</code>.</dt>
-<dd><p></p></dd>
+ <code>get_asset_info</code>.</p></dd>
+
 
  <dt><code>get_asset_prices</code></dt>
 <dd><p>A dataframe containg information on assert

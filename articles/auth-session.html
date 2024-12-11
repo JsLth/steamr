@@ -83,15 +83,13 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">steamr</span><span class="op">)</span></span></code></pre></div>
 <p>The Steam API is very inconsistent in the way it provides access to
 its services. Some functions do not need any identification, others
 require a Steam API key, and the most sensitive ones require you to be
 logged in. It is not always obvious which functions require which type
 of authentication, but <code>steamr</code> functions perform initial
 checks to ensure that authentication is given:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/get_userdata.html">get_userdata</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Error: Session is not authenticated. You can login using the auth_credentials or auth_qr functions.</span></span></code></pre></div>
 <p>This vignette covers two package features: API keys and user
@@ -111,13 +109,13 @@ view the API key anytime you visit Steam’s dev site.</p>
 <p>For use in <code>steamr</code>, set your API key as the environment
 variable <code>STEAM_API_KEY</code>. Requests sent to the Steam API will
 automatically fill in the <code>key</code> parameter.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Sys.setenv(STEAM_API_KEY = "XXXX")</span></span>
 <span><span class="fu"><a href="../reference/get_steam_level.html">get_steam_level</a></span><span class="op">(</span><span class="st">"76561197960435530"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 31</span></span></code></pre></div>
 <p>You can suppress this behavior by setting
 <code>options(steamr_do_auth = FALSE)</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>steamr_do_auth <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/get_steam_level.html">get_steam_level</a></span><span class="op">(</span><span class="st">"76561197960435530"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 31</span></span></code></pre></div>

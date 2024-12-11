@@ -109,24 +109,6 @@ in a slightly different manner.</p><ul><li><p><code>search_apps</code> has less 
 Defaults to <code>FALSE</code> to avoid littering the output.</p></dd>
 
 
-<dt id="arg-country-code">country_code<a class="anchor" aria-label="anchor" href="#arg-country-code"></a></dt>
-<dd><p>ISO-2 country code as returned by
-<code>get_countries</code>. The Steam store differs depending on the
-country it is accessed from.</p></dd>
-
-
-<dt id="arg-language">language<a class="anchor" aria-label="anchor" href="#arg-language"></a></dt>
-<dd><p>ISO639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a <code>#</code> in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.</p></dd>
-
-
-<dt id="arg-steam-realm">steam_realm<a class="anchor" aria-label="anchor" href="#arg-steam-realm"></a></dt>
-<dd><p>Number describing the Steam realm. A value of 1
-indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.</p></dd>
-
-
 <dt id="arg-require-type">require_type<a class="anchor" aria-label="anchor" href="#arg-require-type"></a></dt>
 <dd><p>Which application types should be returned? Can be
 one of <code>bundle</code>, <code>game</code>, <code>demo</code>, <code>mod</code> <code>dlc</code>,

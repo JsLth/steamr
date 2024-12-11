@@ -84,7 +84,7 @@
 </h2>
 <p>You can install the development version of steamr like so:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"jslth/steamr"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"jslth/steamr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
@@ -96,137 +96,193 @@
 <p>The following table gives an overview of the package functions, the API they use, whether they need an API key, and whether they need authentication.</p>
 <table class="table">
 <colgroup>
-<col width="15%">
-<col width="32%">
-<col width="11%">
-<col width="19%">
-<col width="19%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
+<col width="20%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Topic</th>
 <th align="left">Function</th>
 <th align="left">API</th>
-<th align="left">Needs.key</th>
-<th align="left">Needs.auth</th>
+<th align="left">Needs key</th>
+<th align="left">Needs auth</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">Apps</td>
-<td align="left"><code>get_app_list</code></td>
-<td align="left">Web</td>
+<td align="left">Profile</td>
+<td align="left"><code>get_profile_items</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="even">
+<td align="left">Profile</td>
+<td align="left"><code>get_profile_frame</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Countries</td>
+<td align="left"><code>get_country_list</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
-<td align="left">Apps</td>
-<td align="left"><code>get_games_by_ccu</code></td>
-<td align="left">Web</td>
+<td align="left">Discovery</td>
+<td align="left"><code>get_discovery_queue</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 </tr>
 <tr class="odd">
 <td align="left">Apps</td>
 <td align="left"><code>get_most_played_games</code></td>
-<td align="left">Web</td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
-<td align="left">Apps</td>
-<td align="left"><code>get_top_releases</code></td>
-<td align="left">Web</td>
+<td align="left">Profile</td>
+<td align="left"><code>get_profile_customization</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Apps</td>
-<td align="left"><code>get_apps_in_genre</code></td>
+<td align="left">News</td>
+<td align="left"><code>get_news</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Tags</td>
+<td align="left"><code>get_frequent_tags</code></td>
 <td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Apps</td>
-<td align="left"><code>get_apps_in_category</code></td>
-<td align="left">Storefront</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Apps</td>
-<td align="left"><code>get_apps_in_genre</code></td>
-<td align="left">Storefront</td>
+<td align="left">Loyalty</td>
+<td align="left"><code>query_loyalty_rewards</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
-<td align="left">Store</td>
-<td align="left"><code>query</code></td>
-<td align="left">Web</td>
+<td align="left">Userlevel</td>
+<td align="left"><code>get_level_percentile</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Store</td>
-<td align="left"><code>get_items</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Store</td>
-<td align="left"><code>get_hardware_items</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Store</td>
+<td align="left">Search</td>
 <td align="left"><code>search_apps</code></td>
 <td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
-<td align="left">Store</td>
-<td align="left"><code>suggest</code></td>
-<td align="left">Storefront</td>
+<td align="left">Profile</td>
+<td align="left"><code>get_profile_background</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Store</td>
-<td align="left"><code>store_search</code></td>
+<td align="left">Profile</td>
+<td align="left"><code>get_profile_badges</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">User</td>
+<td align="left"><code>get_game_playtime</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Auth</td>
+<td align="left"><code>get_access_token</code></td>
 <td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
-<td align="left">Market</td>
-<td align="left"><code>query_market_assets</code></td>
-<td align="left">Storefront</td>
+<td align="left">Categories</td>
+<td align="left"><code>get_store_categories</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Market</td>
-<td align="left"><code>get_asset_prices</code></td>
-<td align="left">Web</td>
+<td align="left">User</td>
+<td align="left"><code>get_user_group_list</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
-<td align="left">Market</td>
-<td align="left"><code>get_asset_info</code></td>
-<td align="left">Web</td>
+<td align="left">Query</td>
+<td align="left"><code>query_by_recommended_tags</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Bbcode</td>
+<td align="left"><code>html_to_bbcode</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">User</td>
+<td align="left"><code>get_player_bans</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Market</td>
-<td align="left"><code>get_price_history</code></td>
-<td align="left">Storefront</td>
+<td align="left">Auth</td>
+<td align="left"><code>get_steam_qr</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Marketing</td>
+<td align="left"><code>get_marketing_message</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Yearinreview</td>
+<td align="left"><code>user_in_review</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Weights</td>
+<td align="left"><code>weight_app</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Achievements</td>
+<td align="left"><code>get_top_achievements</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
@@ -237,234 +293,52 @@
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Files</td>
-<td align="left"><code>query_files</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Files</td>
-<td align="left"><code>get_published_file</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Friends</td>
-<td align="left"><code>get_friend_list</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Friends</td>
-<td align="left"><code>get_friends_playtimes</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Friends</td>
-<td align="left"><code>get_friends_recommendations</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="even">
-<td align="left">Friends</td>
-<td align="left"><code>get_friends</code></td>
+<td align="left">Events</td>
+<td align="left"><code>get_event_details</code></td>
 <td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Friends</td>
-<td align="left"><code>get_friend_data</code></td>
-<td align="left">Storefront</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="even">
-<td align="left">User</td>
-<td align="left"><code>get_player_summary</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">User</td>
-<td align="left"><code>get_user_group_list</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
-<td align="left">User</td>
-<td align="left"><code>get_player_bans</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">User</td>
-<td align="left"><code>get_owned_games</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">User</td>
-<td align="left"><code>get_recently_played_games</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">User</td>
-<td align="left"><code>get_game_playtime</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="even">
-<td align="left">User</td>
-<td align="left"><code>get_last_playtimes</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Auth user</td>
-<td align="left"><code>get_userdata</code></td>
-<td align="left">Storefront</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="even">
-<td align="left">Auth user</td>
-<td align="left"><code>get_app_user_details</code></td>
-<td align="left">Storefront</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Auth user</td>
-<td align="left"><code>get_library_stats</code></td>
-<td align="left">Storefront</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="even">
-<td align="left">Auth user</td>
-<td align="left"><code>get_owned_apps</code></td>
-<td align="left">Storefront</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Auth user</td>
-<td align="left"><code>get_badge</code></td>
-<td align="left">Storefront</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="even">
-<td align="left">Auth user</td>
-<td align="left"><code>get_badge_info</code></td>
-<td align="left">Storefront</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Auth user</td>
-<td align="left"><code>recommend_apps</code></td>
-<td align="left">Storefront</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="even">
-<td align="left">Profile</td>
-<td align="left"><code>get_profile_items</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Profile</td>
-<td align="left"><code>get_profile_reactions</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Profile</td>
-<td align="left"><code>get_profile_avatar</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Profile</td>
-<td align="left"><code>get_profile_frame</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Profile</td>
-<td align="left"><code>get_profile_background</code></td>
-<td align="left">Web</td>
+<td align="left">Auth</td>
+<td align="left"><code>get_password_rsa_public_key</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
 <td align="left">Profile</td>
 <td align="left"><code>get_profile_mini_background</code></td>
-<td align="left">Web</td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
-<td align="left">Profile</td>
-<td align="left"><code>get_profile_badges</code></td>
-<td align="left">Web</td>
+<td align="left">Economy</td>
+<td align="left"><code>get_asset_info</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Profile</td>
-<td align="left"><code>get_equipped_profile_items</code></td>
-<td align="left">Web</td>
+<td align="left">Authstats</td>
+<td align="left"><code>get_badge</code></td>
+<td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 </tr>
 <tr class="even">
-<td align="left">Profile</td>
-<td align="left"><code>get_profile_themes</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left">Reviews</td>
+<td align="left"><code>get_app_review</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
 <td align="left">Profile</td>
-<td align="left"><code>get_profile_customization</code></td>
-<td align="left">Web</td>
+<td align="left"><code>get_profile_avatar</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Level</td>
-<td align="left"><code>get_steam_level</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Level</td>
-<td align="left"><code>get_level_percentile</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
@@ -475,134 +349,204 @@
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Reviews</td>
-<td align="left"><code>get_app_review</code></td>
-<td align="left">Web</td>
+<td align="left">Browse</td>
+<td align="left"><code>get_items</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Profile</td>
+<td align="left"><code>get_profile_themes</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Yearinreview</td>
+<td align="left"><code>screenshots_in_review</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Categories</td>
+<td align="left"><code>get_categories</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Gamegroups</td>
+<td align="left"><code>get_game_group</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">User</td>
+<td align="left"><code>get_last_playtimes</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Discovery</td>
+<td align="left"><code>get_discovery_settings</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="even">
+<td align="left">Authinfo</td>
+<td align="left"><code>get_logon_info</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Stats</td>
+<td align="left"><code>get_game_schema</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
+<td align="left">Economy</td>
+<td align="left"><code>get_asset_prices</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Tags</td>
+<td align="left"><code>get_most_popular_tags</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Topsellers</td>
+<td align="left"><code>get_weekly_top_sellers</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Authinfo</td>
+<td align="left"><code>get_client_info</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="even">
+<td align="left">Search</td>
+<td align="left"><code>store_search</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
 <td align="left">Reviews</td>
 <td align="left"><code>get_review_histogram</code></td>
 <td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
-<tr class="odd">
-<td align="left">News</td>
-<td align="left"><code>get_news</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
 <tr class="even">
-<td align="left">Stats</td>
-<td align="left"><code>get_game_schema</code></td>
-<td align="left">Web</td>
+<td align="left">Yearinreview</td>
+<td align="left"><code>friends_in_review</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Stats</td>
-<td align="left"><code>get_game_stats</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Stats</td>
-<td align="left"><code>get_user_stats_for_game</code></td>
-<td align="left">Web</td>
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Tags</td>
-<td align="left"><code>get_tags</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Tags</td>
-<td align="left"><code>get_most_popular_tags</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Tags</td>
-<td align="left"><code>get_frequent_tags</code></td>
+<td align="left">Authstats</td>
+<td align="left"><code>get_userdata</code></td>
 <td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 </tr>
 <tr class="even">
-<td align="left">Tags</td>
-<td align="left"><code>get_recommended_tags</code></td>
+<td align="left">Auth</td>
+<td align="left"><code>update_with_mobile_confirmation</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Profile</td>
+<td align="left"><code>get_profile_reactions</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Authstats</td>
+<td align="left"><code>get_badge_info</code></td>
 <td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Categories</td>
-<td align="left"><code>get_categories</code></td>
+<td align="left">Yearinreview</td>
+<td align="left"><code>achievements_in_review</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Api</td>
+<td align="left"><code>steam_stats</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Wishlist</td>
+<td align="left"><code>get_wishlist</code></td>
 <td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
-<td align="left">Categories</td>
-<td align="left"><code>get_genres</code></td>
+<td align="left">Bundles</td>
+<td align="left"><code>resolve_packages</code></td>
 <td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Categories</td>
-<td align="left"><code>get_store_categories</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Achievements</td>
-<td align="left"><code>get_game_achievements</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Achievements</td>
-<td align="left"><code>get_top_achievements</code></td>
-<td align="left">Web</td>
+<td align="left">User</td>
+<td align="left"><code>get_owned_games</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
-<td align="left">Achievements</td>
-<td align="left"><code>get_player_achievements</code></td>
-<td align="left">Web</td>
+<td align="left">User</td>
+<td align="left"><code>get_recently_played_games</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Loyalty</td>
-<td align="left"><code>query_loyalty_rewards</code></td>
-<td align="left">Web</td>
+<td align="left">Countries</td>
+<td align="left"><code>query_locations</code></td>
+<td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="even">
-<td align="left">Loyalty</td>
-<td align="left"><code>get_loyalty_apps</code></td>
-<td align="left">Web</td>
+<td align="left">Authstats</td>
+<td align="left"><code>get_app_user_details</code></td>
+<td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Events</td>
-<td align="left"><code>query_events</code></td>
+<td align="left">Apps</td>
+<td align="left"><code>get_apps_in_category</code></td>
 <td align="left">Storefront</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
@@ -615,81 +559,340 @@
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 </tr>
 <tr class="odd">
+<td align="left">Support</td>
+<td align="left"><code>search_support</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Categories</td>
+<td align="left"><code>get_genres</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Auth</td>
+<td align="left"><code>poll_auth_session_status</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Files</td>
+<td align="left"><code>get_published_file</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Economy</td>
+<td align="left"><code>get_price_history</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="even">
+<td align="left">Loyalty</td>
+<td align="left"><code>get_loyalty_apps</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Friends</td>
+<td align="left"><code>get_friend_list</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Tags</td>
+<td align="left"><code>get_tags</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Api</td>
+<td align="left"><code>get_supported_api_list</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Recommender</td>
+<td align="left"><code>recommender</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Achievements</td>
+<td align="left"><code>get_player_achievements</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Files</td>
+<td align="left"><code>query_files</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Stats</td>
+<td align="left"><code>get_user_stats_for_game</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Query</td>
+<td align="left"><code>query</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Bundles</td>
+<td align="left"><code>package_details</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Browse</td>
+<td align="left"><code>get_hardware_items</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">User</td>
+<td align="left"><code>get_player_summary</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Apps</td>
+<td align="left"><code>get_app_list</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Apps</td>
+<td align="left"><code>get_games_by_ccu</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Apps</td>
+<td align="left"><code>get_apps_in_genre</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Bundles</td>
+<td align="left"><code>resolve_bundles</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Events</td>
+<td align="left"><code>query_events</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Recommender</td>
+<td align="left"><code>get_recommender_input</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Economy</td>
+<td align="left"><code>query_market_assets</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Economy</td>
+<td align="left"><code>get_item_histogram</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Steamid</td>
+<td align="left"><code>resolve_vanity_url</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Authstats</td>
+<td align="left"><code>get_owned_apps</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="even">
+<td align="left">Apps</td>
+<td align="left"><code>get_top_releases</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Friends</td>
+<td align="left"><code>get_friends_recommendations</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="even">
+<td align="left">Profile</td>
+<td align="left"><code>get_equipped_profile_items</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Discovery</td>
+<td align="left"><code>get_discovery_skipped</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
 <td align="left">Marketing</td>
 <td align="left"><code>get_active_marketing_messages</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Year in review</td>
-<td align="left"><code>user_in_review</code></td>
-<td align="left">Web</td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Year in review</td>
-<td align="left"><code>friends_in_review</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
-</tr>
-<tr class="even">
-<td align="left">Year in review</td>
-<td align="left"><code>achievements_in_review</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Year in review</td>
-<td align="left"><code>screenshots_in_review</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Location</td>
-<td align="left"><code>query_locations</code></td>
-<td align="left">Storefront</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Location</td>
-<td align="left"><code>get_country_list</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Meta</td>
-<td align="left"><code>steam_stats</code></td>
-<td align="left">Storefront</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="odd">
-<td align="left">Meta</td>
-<td align="left"><code>get_supported_api_list</code></td>
-<td align="left">Web</td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
-</tr>
-<tr class="even">
-<td align="left">Meta</td>
+<td align="left">Api</td>
 <td align="left"><code>get_servertime</code></td>
-<td align="left">Web</td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Query</td>
+<td align="left"><code>search_suggestions</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
 </tr>
 <tr class="odd">
-<td align="left">Meta</td>
-<td align="left"><code>get_servers</code></td>
-<td align="left">Web</td>
+<td align="left">Achievements</td>
+<td align="left"><code>get_game_achievements</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Auth</td>
+<td align="left"><code>update_with_steam_guard_code</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Authstats</td>
+<td align="left"><code>recommend_apps</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="even">
+<td align="left">Weights</td>
+<td align="left"><code>cluster_apps</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Auth</td>
+<td align="left"><code>begin_auth_session</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Stats</td>
+<td align="left"><code>get_game_stats</code></td>
+<td align="left">Web API</td>
 <td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 <td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Authstats</td>
+<td align="left"><code>get_library_stats</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="even">
+<td align="left">Tags</td>
+<td align="left"><code>get_recommended_tags</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Friends</td>
+<td align="left"><code>get_friend_data</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="even">
+<td align="left">Search</td>
+<td align="left"><code>suggest</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Friends</td>
+<td align="left"><code>get_friends</code></td>
+<td align="left">Storefront</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+</tr>
+<tr class="even">
+<td align="left">Api</td>
+<td align="left"><code>get_servers</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Userlevel</td>
+<td align="left"><code>get_steam_level</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+<td align="left"><span class="emoji" data-emoji="x">❌</span></td>
+</tr>
+<tr class="even">
+<td align="left">Friends</td>
+<td align="left"><code>get_friends_playtimes</code></td>
+<td align="left">Web API</td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
+<td align="left"><span class="emoji" data-emoji="heavy_check_mark">✔️</span></td>
 </tr>
 </tbody>
 </table>
@@ -712,48 +915,48 @@
 <span><span class="co">#&gt; 4 team fortress 860080  lilGunBois</span></span></code></pre></div>
 <p>Many functions need an app ID to work, for example the following function which retrieves user review data from an application:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/get_app_reviews.html">get_app_reviews</a></span><span class="op">(</span><span class="va">appid</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 20 × 22</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/get_app_reviews.html">get_app_reviews</a></span><span class="op">(</span><span class="fl">440</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 20 × 21</span></span>
 <span><span class="co">#&gt;    recommendationid language review      timestamp_created   timestamp_updated  </span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;            &lt;chr&gt;    &lt;chr&gt;       &lt;dttm&gt;              &lt;dttm&gt;             </span></span>
-<span><span class="co">#&gt;  1 166639853        schinese "军团要塞2… 2024-06-04 06:05:33 2024-06-04 06:07:38</span></span>
-<span><span class="co">#&gt;  2 166633634        english  "TF2 is an… 2024-06-04 03:40:34 2024-06-04 03:40:34</span></span>
-<span><span class="co">#&gt;  3 166847493        english  "It was a … 2024-06-07 07:46:14 2024-06-07 07:46:14</span></span>
-<span><span class="co">#&gt;  4 166804792        english  "#fixtf2"   2024-06-06 16:50:29 2024-06-06 16:50:29</span></span>
-<span><span class="co">#&gt;  5 166757946        english  "Valve fix… 2024-06-05 22:41:14 2024-06-05 22:41:14</span></span>
-<span><span class="co">#&gt;  6 166638518        english  "meet your… 2024-06-04 05:31:40 2024-06-04 05:31:40</span></span>
-<span><span class="co">#&gt;  7 166707566        english  "I grew up… 2024-06-05 04:41:12 2024-06-05 04:41:12</span></span>
-<span><span class="co">#&gt;  8 166618701        english  "i wish i … 2024-06-03 22:40:03 2024-06-03 22:42:39</span></span>
-<span><span class="co">#&gt;  9 166632469        russian  "Полтора р… 2024-06-04 03:13:53 2024-06-04 03:13:53</span></span>
-<span><span class="co">#&gt; 10 166627856        english  "I have wa… 2024-06-04 01:36:35 2024-06-04 01:36:35</span></span>
-<span><span class="co">#&gt; 11 166606572        english  "Only revi… 2024-06-03 19:36:33 2024-06-03 19:36:33</span></span>
-<span><span class="co">#&gt; 12 166621632        english  "Valve is … 2024-06-03 23:31:38 2024-06-03 23:31:38</span></span>
-<span><span class="co">#&gt; 13 166607477        english  "dead inte… 2024-06-03 19:50:05 2024-06-03 19:50:05</span></span>
-<span><span class="co">#&gt; 14 167445706        english  "Witnessin… 2024-06-15 22:54:19 2024-06-15 22:54:19</span></span>
-<span><span class="co">#&gt; 15 166685381        english  "I wish Va… 2024-06-04 21:38:37 2024-06-04 21:39:15</span></span>
-<span><span class="co">#&gt; 16 166613918        italian  "This is t… 2024-06-03 21:23:21 2024-06-03 21:23:21</span></span>
-<span><span class="co">#&gt; 17 166654121        english  "It's a sh… 2024-06-04 12:33:08 2024-06-04 12:33:08</span></span>
-<span><span class="co">#&gt; 18 166757936        english  "TF2's com… 2024-06-05 22:41:06 2024-06-05 22:41:06</span></span>
-<span><span class="co">#&gt; 19 166627868        english  "Unplayabl… 2024-06-04 01:37:00 2024-06-04 01:37:00</span></span>
-<span><span class="co">#&gt; 20 166743270        english  "Unplayabl… 2024-06-05 18:33:51 2024-06-05 18:33:51</span></span>
-<span><span class="co">#&gt; # ℹ 17 more variables: voted_up &lt;lgl&gt;, votes_up &lt;int&gt;, votes_funny &lt;int&gt;,</span></span>
+<span><span class="co">#&gt;  1 178996847        english  "I'm an ol… 2024-11-14 13:37:31 2024-11-14 13:37:31</span></span>
+<span><span class="co">#&gt;  2 179339672        english  "4 thousan… 2024-11-19 03:24:53 2024-11-19 03:24:53</span></span>
+<span><span class="co">#&gt;  3 181004269        thai     "เป็นเกมฟรีที่… 2024-11-30 10:39:04 2024-11-30 10:39:04</span></span>
+<span><span class="co">#&gt;  4 179371609        schinese "跟守望先…  2024-11-19 16:34:27 2024-11-19 16:34:27</span></span>
+<span><span class="co">#&gt;  5 180315208        english  "It is a v… 2024-11-28 09:32:11 2024-11-28 09:32:11</span></span>
+<span><span class="co">#&gt;  6 182262294        english  "[h1][i]Re… 2024-12-08 16:46:49 2024-12-08 16:46:49</span></span>
+<span><span class="co">#&gt;  7 181973452        english  "The great… 2024-12-05 19:18:24 2024-12-05 19:18:24</span></span>
+<span><span class="co">#&gt;  8 181897450        polish   "Najlepsza… 2024-12-04 19:23:42 2024-12-04 19:23:42</span></span>
+<span><span class="co">#&gt;  9 181669000        russian  "Достойная… 2024-12-03 14:49:41 2024-12-03 14:49:41</span></span>
+<span><span class="co">#&gt; 10 180697600        russian  "Игра прос… 2024-11-29 08:15:47 2024-11-29 08:15:47</span></span>
+<span><span class="co">#&gt; 11 180678859        russian  "Эта игра … 2024-11-29 06:07:48 2024-11-29 06:07:48</span></span>
+<span><span class="co">#&gt; 12 180427056        russian  "Эта игра … 2024-11-28 14:35:28 2024-11-28 14:35:28</span></span>
+<span><span class="co">#&gt; 13 181045888        english  "It's a ni… 2024-11-30 14:09:09 2024-11-30 14:09:09</span></span>
+<span><span class="co">#&gt; 14 181010775        russian  "Накаченны… 2024-11-30 11:13:51 2024-11-30 11:13:51</span></span>
+<span><span class="co">#&gt; 15 179991171        polish   "Grając od… 2024-11-27 20:08:00 2024-11-27 20:08:00</span></span>
+<span><span class="co">#&gt; 16 178918642        spanish  "me costo,… 2024-11-13 03:01:27 2024-11-13 03:01:27</span></span>
+<span><span class="co">#&gt; 17 182297119        english  "watch sol… 2024-12-09 00:05:17 2024-12-09 00:05:17</span></span>
+<span><span class="co">#&gt; 18 182255791        russian  "The game … 2024-12-08 15:33:03 2024-12-08 15:33:03</span></span>
+<span><span class="co">#&gt; 19 182236676        english  "i acciden… 2024-12-08 11:14:13 2024-12-08 11:14:13</span></span>
+<span><span class="co">#&gt; 20 182124740        english  "One of th… 2024-12-07 10:05:38 2024-12-07 10:05:38</span></span>
+<span><span class="co">#&gt; # ℹ 16 more variables: voted_up &lt;lgl&gt;, votes_up &lt;int&gt;, votes_funny &lt;int&gt;,</span></span>
 <span><span class="co">#&gt; #   weighted_vote_score &lt;dbl&gt;, comment_count &lt;int&gt;, steam_purchase &lt;lgl&gt;,</span></span>
 <span><span class="co">#&gt; #   received_for_free &lt;lgl&gt;, written_during_early_access &lt;lgl&gt;,</span></span>
-<span><span class="co">#&gt; #   hidden_in_steam_china &lt;lgl&gt;, steam_china_location &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   author.steamid &lt;chr&gt;, author.num_games_owned &lt;int&gt;,</span></span>
-<span><span class="co">#&gt; #   author.num_reviews &lt;int&gt;, author.playtime_forever &lt;int&gt;,</span></span>
-<span><span class="co">#&gt; #   author.playtime_last_two_weeks &lt;int&gt;, author.playtime_at_review &lt;int&gt;, …</span></span></code></pre></div>
+<span><span class="co">#&gt; #   primarily_steam_deck &lt;lgl&gt;, author.steamid &lt;chr&gt;,</span></span>
+<span><span class="co">#&gt; #   author.num_games_owned &lt;int&gt;, author.num_reviews &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   author.playtime_forever &lt;int&gt;, author.playtime_last_two_weeks &lt;int&gt;,</span></span>
+<span><span class="co">#&gt; #   author.playtime_at_review &lt;int&gt;, author.last_played &lt;dttm&gt;</span></span></code></pre></div>
 <p>Steam can also use the official Web API given a valid API key. One function offered by the Web API allows us to query details on a Steam application:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/get_items.html">get_items</a></span><span class="op">(</span><span class="va">appid</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 4 × 27</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 24</span></span>
 <span><span class="co">#&gt;   item_type      id success visible name     store_url_path  appid  type is_free</span></span>
 <span><span class="co">#&gt;       &lt;int&gt;   &lt;int&gt;   &lt;int&gt; &lt;lgl&gt;   &lt;chr&gt;    &lt;chr&gt;           &lt;int&gt; &lt;int&gt; &lt;lgl&gt;  </span></span>
 <span><span class="co">#&gt; 1         0     440       1 TRUE    Team Fo… app/440/Team_… 4.4 e2     0 TRUE   </span></span>
 <span><span class="co">#&gt; 2         0      20       1 TRUE    Team Fo… app/20/Team_F… 2   e1     0 FALSE  </span></span>
 <span><span class="co">#&gt; 3         0 1551180       1 TRUE    TF Visu… app/1551180/T… 1.55e6     6 TRUE   </span></span>
 <span><span class="co">#&gt; 4         0  860080       1 TRUE    lilGunB… app/860080/li… 8.60e5     0 FALSE  </span></span>
-<span><span class="co">#&gt; # ℹ 18 more variables: content_descriptorids &lt;list&gt;,</span></span>
+<span><span class="co">#&gt; # ℹ 15 more variables: content_descriptorids &lt;list&gt;,</span></span>
 <span><span class="co">#&gt; #   categories.supported_player_categoryids &lt;list&gt;,</span></span>
 <span><span class="co">#&gt; #   categories.feature_categoryids &lt;list&gt;,</span></span>
 <span><span class="co">#&gt; #   categories.controller_categoryids &lt;list&gt;,</span></span>

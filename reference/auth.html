@@ -83,11 +83,11 @@ the session and the cache.</p>
 <span>  password <span class="op">=</span> <span class="fu">openssl</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/askpass/man/askpass.html" class="external-link">askpass</a></span>,</span>
 <span>  shared_secret <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  persistent <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  friendly_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  details <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  friendly_name <span class="op">=</span> <span class="st">"steamr"</span>,</span>
+<span>  details <span class="op">=</span> <span class="st">"Login using credentials"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">auth_qr</span><span class="op">(</span>friendly_name <span class="op">=</span> <span class="cn">NULL</span>, device_details <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">auth_qr</span><span class="op">(</span>friendly_name <span class="op">=</span> <span class="st">"steamr"</span>, device_details <span class="op">=</span> <span class="st">"Login using QR code"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">logout</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -184,8 +184,7 @@ actions are not suitable for batch processing.</p>
 <span class="r-in"><span><span class="fu">is_authenticated</span><span class="op">(</span><span class="op">)</span> <span class="co"># returns TRUE</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># sign in using a QR code</span></span></span>
-<span class="r-in"><span><span class="fu">auth_qr</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="fu">auth_qr</span><span class="op">(</span><span class="op">)</span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>

@@ -82,33 +82,6 @@ or the top games by concurrent players, all-time players, or top releases.</p>
 <span><span class="fu">get_apps_in_category</span><span class="op">(</span><span class="va">category</span>, language <span class="op">=</span> <span class="st">"english"</span>, country_code <span class="op">=</span> <span class="st">"US"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
-    <div id="arguments">
-    <h2>Arguments</h2>
-
-
-<dl><dt id="arg-language">language<a class="anchor" aria-label="anchor" href="#arg-language"></a></dt>
-<dd><p>ISO 639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a <code>#</code> in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.</p></dd>
-
-
-<dt id="arg-elanguage">elanguage<a class="anchor" aria-label="anchor" href="#arg-elanguage"></a></dt>
-<dd><p>Numeric code representing the store language. A list
-of language codes and their corresponding languages is defined in
-<code>ELanguage</code>.</p></dd>
-
-
-<dt id="arg-country-code">country_code<a class="anchor" aria-label="anchor" href="#arg-country-code"></a></dt>
-<dd><p>ISO 3166 country code representing the country from
-which to view the Steam store.</p></dd>
-
-
-<dt id="arg-steam-realm">steam_realm<a class="anchor" aria-label="anchor" href="#arg-steam-realm"></a></dt>
-<dd><p>Number describing the Steam realm. A value of 1
-indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.</p></dd>
-
-</dl></div>
     <div id="value">
     <h2>Value</h2>
 
@@ -144,36 +117,36 @@ indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.</p></d
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_app_list</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 225,088 × 2</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    appid name                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     5 Dedicated Server     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     5 Dedicated Server     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     7 Steam Client         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     7 Steam Client         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     8 winui2               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     8 winui2               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>    10 Counter-Strike       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>    10 Counter-Strike       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>    20 Team Fortress Classic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    20 Team Fortress Classic</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 225,078 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 225,176 × 2</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    appid name                               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     7 Steam Client                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>   730 Counter-Strike 2                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">1</span>510 Uplink                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">3</span>460 Talismania Deluxe                  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">6</span>300 Dreamfall: The Longest Journey     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">8</span>080 Kane &amp; Lynch: Dead Men             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> <span style="text-decoration: underline;">13</span>600 Prince of Persia: The Sands of Time</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> <span style="text-decoration: underline;">47</span>870 Need for Speed: Hot Pursuit        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> <span style="text-decoration: underline;">49</span>520 Borderlands 2                      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> <span style="text-decoration: underline;">82</span>085 Hell Yeah Gameplay ESRB Trailer    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 225,166 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get most played games</span></span></span>
 <span class="r-in"><span><span class="fu">get_games_by_ccu</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 100 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rank   appid concurrent_in_game peak_in_game</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1     730             <span style="text-decoration: underline;">979</span>102      1<span style="text-decoration: underline;">460</span>550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2     570             <span style="text-decoration: underline;">576</span>248       <span style="text-decoration: underline;">600</span>334</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3 2<span style="text-decoration: underline;">694</span>490             <span style="text-decoration: underline;">441</span>001       <span style="text-decoration: underline;">498</span>966</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4 2<span style="text-decoration: underline;">767</span>030             <span style="text-decoration: underline;">308</span>322       <span style="text-decoration: underline;">460</span>883</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5  <span style="text-decoration: underline;">578</span>080             <span style="text-decoration: underline;">279</span>189       <span style="text-decoration: underline;">747</span>601</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6  <span style="text-decoration: underline;">252</span>490             <span style="text-decoration: underline;">138</span>269       <span style="text-decoration: underline;">144</span>469</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7  <span style="text-decoration: underline;">271</span>590             <span style="text-decoration: underline;">135</span>117       <span style="text-decoration: underline;">178</span>332</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8 2<span style="text-decoration: underline;">923</span>300             <span style="text-decoration: underline;">116</span>247       <span style="text-decoration: underline;">129</span>339</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9 2<span style="text-decoration: underline;">507</span>950              <span style="text-decoration: underline;">92</span>733        <span style="text-decoration: underline;">98</span>930</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10 1<span style="text-decoration: underline;">938</span>090              <span style="text-decoration: underline;">83</span>414       <span style="text-decoration: underline;">122</span>668</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1     730             <span style="text-decoration: underline;">864</span>758      1<span style="text-decoration: underline;">460</span>550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2  <span style="text-decoration: underline;">578</span>080             <span style="text-decoration: underline;">339</span>988       <span style="text-decoration: underline;">747</span>601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3     570             <span style="text-decoration: underline;">321</span>480       <span style="text-decoration: underline;">600</span>334</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4 2<span style="text-decoration: underline;">694</span>490             <span style="text-decoration: underline;">208</span>295       <span style="text-decoration: underline;">480</span>368</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5 2<span style="text-decoration: underline;">767</span>030             <span style="text-decoration: underline;">201</span>992       <span style="text-decoration: underline;">441</span>152</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6 1<span style="text-decoration: underline;">203</span>220             <span style="text-decoration: underline;">135</span>358       <span style="text-decoration: underline;">293</span>356</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7  <span style="text-decoration: underline;">271</span>590              <span style="text-decoration: underline;">97</span>634       <span style="text-decoration: underline;">178</span>332</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8 2<span style="text-decoration: underline;">923</span>300              <span style="text-decoration: underline;">93</span>181       <span style="text-decoration: underline;">129</span>339</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9  <span style="text-decoration: underline;">431</span>960              <span style="text-decoration: underline;">82</span>094       <span style="text-decoration: underline;">121</span>241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10  <span style="text-decoration: underline;">252</span>490              <span style="text-decoration: underline;">67</span>982       <span style="text-decoration: underline;">138</span>269</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 90 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get most popular games of all time</span></span></span>
@@ -181,16 +154,16 @@ indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.</p></d
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 100 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rank   appid last_week_rank peak_in_game</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1     730              1      1<span style="text-decoration: underline;">460</span>230</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2 2<span style="text-decoration: underline;">767</span>030             -<span style="color: #BB0000;">1</span>       <span style="text-decoration: underline;">452</span>007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3     570              2       <span style="text-decoration: underline;">618</span>358</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4  <span style="text-decoration: underline;">578</span>080              3       <span style="text-decoration: underline;">750</span>493</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5  <span style="text-decoration: underline;">431</span>960              4       <span style="text-decoration: underline;">118</span>350</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6 2<span style="text-decoration: underline;">694</span>490             -<span style="color: #BB0000;">1</span>       <span style="text-decoration: underline;">498</span>966</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7 1<span style="text-decoration: underline;">203</span>220              5       <span style="text-decoration: underline;">298</span>926</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8 1<span style="text-decoration: underline;">938</span>090              6       <span style="text-decoration: underline;">137</span>453</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9  <span style="text-decoration: underline;">271</span>590              7       <span style="text-decoration: underline;">161</span>127</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10 1<span style="text-decoration: underline;">172</span>470              8       <span style="text-decoration: underline;">144</span>354</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1     730              1      1<span style="text-decoration: underline;">460</span>550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2 2<span style="text-decoration: underline;">767</span>030             -<span style="color: #BB0000;">1</span>       <span style="text-decoration: underline;">460</span>883</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3     570              2       <span style="text-decoration: underline;">600</span>334</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4  <span style="text-decoration: underline;">578</span>080              3       <span style="text-decoration: underline;">747</span>601</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5  <span style="text-decoration: underline;">431</span>960              4       <span style="text-decoration: underline;">121</span>241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6 2<span style="text-decoration: underline;">694</span>490             -<span style="color: #BB0000;">1</span>       <span style="text-decoration: underline;">480</span>368</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7 1<span style="text-decoration: underline;">203</span>220              5       <span style="text-decoration: underline;">293</span>356</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8  <span style="text-decoration: underline;">271</span>590              7       <span style="text-decoration: underline;">178</span>332</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9 1<span style="text-decoration: underline;">938</span>090              6       <span style="text-decoration: underline;">122</span>668</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10 1<span style="text-decoration: underline;">172</span>470              8       <span style="text-decoration: underline;">144</span>501</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 90 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get the best releases</span></span></span>

@@ -112,7 +112,8 @@ but do not allow for much freedom in filtering.</p>
 <span>  steam_realm <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  include <span class="op">=</span> <span class="st">"basic_info"</span>,</span>
 <span>  apply_user_filters <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  paginate <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  paginate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  max_pages <span class="op">=</span> <span class="cn">Inf</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -215,41 +216,6 @@ used to filter by community hub.</p></dd>
 <dt id="arg-optin-name-optin-tagid-prune-tagid-optin-only">optin_name, optin_tagid, prune_tagid, optin_only<a class="anchor" aria-label="anchor" href="#arg-optin-name-optin-tagid-prune-tagid-optin-only"></a></dt>
 <dd><p>Unknown. Possibly
 related to Beta opt-in.</p></dd>
-
-
-<dt id="arg-language">language<a class="anchor" aria-label="anchor" href="#arg-language"></a></dt>
-<dd><p>ISO639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a <code>#</code> in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.</p></dd>
-
-
-<dt id="arg-elanguage">elanguage<a class="anchor" aria-label="anchor" href="#arg-elanguage"></a></dt>
-<dd><p>Language identifier of the returned information.</p></dd>
-
-
-<dt id="arg-country-code">country_code<a class="anchor" aria-label="anchor" href="#arg-country-code"></a></dt>
-<dd><p>ISO-2 country code as returned by
-<code>get_countries</code>. The Steam store differs depending on the
-country it is accessed from.</p></dd>
-
-
-<dt id="arg-steam-realm">steam_realm<a class="anchor" aria-label="anchor" href="#arg-steam-realm"></a></dt>
-<dd><p>Number describing the Steam realm. A value of 1
-indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.</p></dd>
-
-
-<dt id="arg-include">include<a class="anchor" aria-label="anchor" href="#arg-include"></a></dt>
-<dd><p>List of extra information to include. Can be one or several
-of the following: <code>release</code>, <code>platforms</code>,
-<code>all_purchase_options</code>, <code>screenshots</code>, <code>trailers</code>,
-<code>ratings</code>, <code>tag_count</code>, <code>reviews</code>, <code>basic_info</code>,
-<code>supported_languages</code>, <code>full_description</code>, <code>included_items</code>
-and <code>assets_without_overrides</code>. If <code>all</code>, returns all information.</p></dd>
-
-
-<dt id="arg-apply-user-filters">apply_user_filters<a class="anchor" aria-label="anchor" href="#arg-apply-user-filters"></a></dt>
-<dd><p>Unknown.</p></dd>
 
 
 <dt id="arg-iterate">iterate<a class="anchor" aria-label="anchor" href="#arg-iterate"></a></dt>
