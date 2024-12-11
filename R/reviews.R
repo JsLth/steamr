@@ -153,7 +153,7 @@ stf_app_reviews <- function(appid,
   assert_flag(filter_offtopic_activity)
   assert_flag(paginate)
   assert_integerish(max_pages)
-  assert_integerish(num_per_pate)
+  assert_integerish(num_per_page)
   assert_string(cursor, null = TRUE)
 
   if (!is.null(start_date)) {

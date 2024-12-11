@@ -68,21 +68,20 @@ game is to search for it programmatically:
 ```{r example}
 library(steamr)
 apps <- search_apps("team fortress")
-appid <- apps$appid
 apps
 ```
 
-Many functions need an app ID to work, for example the following function which
-retrieves user review data from an application:
+As we can see, Team Fortress has the appID 440. We can use these IDs as input
+for many other functions, e.g. to retrieve review data for an application:
 
 ```{r}
-get_app_reviews(440)
+stf_app_reviews(440)
 ```
 
 Steam can also use the official Web API given a valid API key. One function
 offered by the Web API allows us to query details on a Steam application:
 
 ```{r}
-get_items(appid)
+get_items(apps$appid)
 ```
 

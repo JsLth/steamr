@@ -190,7 +190,6 @@ to find the appID for a game is to search for it programmatically:
 ``` r
 library(steamr)
 apps <- search_apps("team fortress")
-appid <- apps$appid
 apps
 #> # A tibble: 4 × 3
 #>   term          appid   name                 
@@ -201,34 +200,35 @@ apps
 #> 4 team fortress 860080  lilGunBois
 ```
 
-Many functions need an app ID to work, for example the following
-function which retrieves user review data from an application:
+As we can see, Team Fortress has the appID 440. We can use these IDs as
+input for many other functions, e.g. to retrieve review data for an
+application:
 
 ``` r
-get_app_reviews(440)
+stf_app_reviews(440)
 #> # A tibble: 20 × 21
 #>    recommendationid language review      timestamp_created   timestamp_updated  
 #>    <chr>            <chr>    <chr>       <dttm>              <dttm>             
-#>  1 178996847        english  "I'm an ol… 2024-11-14 13:37:31 2024-11-14 13:37:31
-#>  2 179339672        english  "4 thousan… 2024-11-19 03:24:53 2024-11-19 03:24:53
-#>  3 181004269        thai     "เป็นเกมฟรีที่… 2024-11-30 10:39:04 2024-11-30 10:39:04
-#>  4 179371609        schinese "跟守望先…  2024-11-19 16:34:27 2024-11-19 16:34:27
-#>  5 180315208        english  "It is a v… 2024-11-28 09:32:11 2024-11-28 09:32:11
-#>  6 182262294        english  "[h1][i]Re… 2024-12-08 16:46:49 2024-12-08 16:46:49
-#>  7 181973452        english  "The great… 2024-12-05 19:18:24 2024-12-05 19:18:24
-#>  8 181897450        polish   "Najlepsza… 2024-12-04 19:23:42 2024-12-04 19:23:42
-#>  9 181669000        russian  "Достойная… 2024-12-03 14:49:41 2024-12-03 14:49:41
-#> 10 180697600        russian  "Игра прос… 2024-11-29 08:15:47 2024-11-29 08:15:47
-#> 11 180678859        russian  "Эта игра … 2024-11-29 06:07:48 2024-11-29 06:07:48
-#> 12 180427056        russian  "Эта игра … 2024-11-28 14:35:28 2024-11-28 14:35:28
-#> 13 181045888        english  "It's a ni… 2024-11-30 14:09:09 2024-11-30 14:09:09
-#> 14 181010775        russian  "Накаченны… 2024-11-30 11:13:51 2024-11-30 11:13:51
-#> 15 179991171        polish   "Grając od… 2024-11-27 20:08:00 2024-11-27 20:08:00
-#> 16 178918642        spanish  "me costo,… 2024-11-13 03:01:27 2024-11-13 03:01:27
-#> 17 182297119        english  "watch sol… 2024-12-09 00:05:17 2024-12-09 00:05:17
-#> 18 182255791        russian  "The game … 2024-12-08 15:33:03 2024-12-08 15:33:03
-#> 19 182236676        english  "i acciden… 2024-12-08 11:14:13 2024-12-08 11:14:13
-#> 20 182124740        english  "One of th… 2024-12-07 10:05:38 2024-12-07 10:05:38
+#>  1 182526762        english  "i mean it… 2024-12-11 23:27:30 2024-12-11 23:27:30
+#>  2 182526747        english  "GOOD"      2024-12-11 23:27:07 2024-12-11 23:27:07
+#>  3 182526606        turkish  "sigma"     2024-12-11 23:24:42 2024-12-11 23:24:42
+#>  4 182525795        spanish  "esepyroes… 2024-12-11 23:10:20 2024-12-11 23:10:20
+#>  5 182523556        english  "fried chi… 2024-12-11 22:31:10 2024-12-11 22:31:10
+#>  6 182522589        russian  "Игра отпа… 2024-12-11 22:13:35 2024-12-11 22:13:35
+#>  7 182509550        russian  "Весьма не… 2024-12-11 18:45:43 2024-12-11 18:45:43
+#>  8 182507259        russian  "шапк"      2024-12-11 18:09:39 2024-12-11 18:09:39
+#>  9 182505575        russian  "очень имб… 2024-12-11 17:43:15 2024-12-11 17:43:15
+#> 10 182504123        russian  "стал мге"  2024-12-11 17:21:33 2024-12-11 17:21:33
+#> 11 182501132        english  "It is a g… 2024-12-11 16:35:31 2024-12-11 16:35:31
+#> 12 182496741        russian  "Халяль"    2024-12-11 15:25:08 2024-12-11 15:25:08
+#> 13 182493623        russian  "ррррррррр… 2024-12-11 14:31:55 2024-12-11 14:31:55
+#> 14 182490347        schinese "Classic G… 2024-12-11 13:34:53 2024-12-11 13:34:53
+#> 15 182471756        english  "Spend mon… 2024-12-11 05:52:38 2024-12-11 05:52:38
+#> 16 182451652        russian  "я огнено … 2024-12-10 23:27:20 2024-12-10 23:27:20
+#> 17 182450164        english  "i want he… 2024-12-10 23:02:24 2024-12-10 23:07:28
+#> 18 182443951        english  "THAT PYRO… 2024-12-10 21:27:54 2024-12-10 21:27:54
+#> 19 182436856        russian  "да патаму… 2024-12-10 19:44:36 2024-12-10 19:44:36
+#> 20 182432506        russian  "Вам пизда… 2024-12-10 18:43:29 2024-12-10 18:43:29
 #> # ℹ 16 more variables: voted_up <lgl>, votes_up <int>, votes_funny <int>,
 #> #   weighted_vote_score <dbl>, comment_count <int>, steam_purchase <lgl>,
 #> #   received_for_free <lgl>, written_during_early_access <lgl>,
@@ -243,15 +243,15 @@ function offered by the Web API allows us to query details on a Steam
 application:
 
 ``` r
-get_items(appid)
-#> # A tibble: 4 × 24
+get_items(apps$appid)
+#> # A tibble: 4 × 20
 #>   item_type      id success visible name     store_url_path  appid  type is_free
 #>       <int>   <int>   <int> <lgl>   <chr>    <chr>           <int> <int> <lgl>  
 #> 1         0     440       1 TRUE    Team Fo… app/440/Team_… 4.4 e2     0 TRUE   
 #> 2         0      20       1 TRUE    Team Fo… app/20/Team_F… 2   e1     0 FALSE  
 #> 3         0 1551180       1 TRUE    TF Visu… app/1551180/T… 1.55e6     6 TRUE   
 #> 4         0  860080       1 TRUE    lilGunB… app/860080/li… 8.60e5     0 FALSE  
-#> # ℹ 15 more variables: content_descriptorids <list>,
+#> # ℹ 11 more variables: content_descriptorids <list>,
 #> #   categories.supported_player_categoryids <list>,
 #> #   categories.feature_categoryids <list>,
 #> #   categories.controller_categoryids <list>,
