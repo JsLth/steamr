@@ -35,8 +35,8 @@ data sets for data analysis.
 
 You can install the development version of steamr like so:
 
-``` r
-pak::install("jslth/steamr")
+```{r, eval=FALSE}
+pak::pkg_install("jslth/steamr")
 ```
 
 
@@ -67,7 +67,7 @@ game is to search for it programmatically:
 
 ```{r example}
 library(steamr)
-apps <- search_apps("team fortress")
+apps <- stf_search_apps("team fortress")
 apps
 ```
 

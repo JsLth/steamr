@@ -176,7 +176,7 @@ if (requireNamespace("ggplot2", quietly = TRUE)) {
 }}
 }
 \section{Authentication}{
-The functions of this reference page are subject to the following authentication requirements (Key = API key needed, Login = user login needed):
+The functions of this reference page do not need any kind of authentication to be used (Key = API key needed, Login = user login needed).
 \tabular{llll}{
     \strong{Function} \tab \strong{Key} \tab \strong{Login} \tab \strong{Note}\cr
     \code{stf_app_reviews}      \tab no \tab no  \tab                                                    \cr
@@ -184,7 +184,7 @@ The functions of this reference page are subject to the following authentication
     \code{stf_review_histogram} \tab no \tab no  \tab                                                    
 }
 
-API keys can be set by storing the API key in the \code{STEAM_API_KEY} environment variable.
 
-To learn more about user authentication, see \code{\link{auth_credentials}}.
+
+
 }

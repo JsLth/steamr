@@ -44,20 +44,29 @@ auth_table <- function(...) {
   names(x)[1] <- "function"
   x$key <- ifelse(x$key, "yes", "no")
   x$login <- ifelse(x$login, "yes", "no")
-  x$note <- ifelse(is.na(x$note), "", x$note)
+  if (!is.null(x$note)) x$note <- ifelse(is.na(x$note), "", x$note)
   if (all(!nzchar(x$note))) x$note <- NULL
   x[["function"]] <- paste0("\\code{", x[["function"]], "}")
   names(x) <- cvapply(gsub("_", " ", names(x)), to_title)
   fmt <- sinew::tabular(x)
   fmt <- gsub("#' ?", "", fmt)
 
+  needs_key <- any(x$key)
+  needs_login <- any(x$login)
+  needs_auth <- any(needs_key, needs_login)
+  intro <- if (needs_auth) {
+    "The functions of this reference page are subject to the following authentication requirements (Key = API key needed, Login = user login needed):"
+  } else {
+    "The functions of this reference page do not need any kind of authentication to be used (Key = API key needed, Login = user login needed)."
+  }
+
   paste(
     "\\section{Authentication}{",
-    "The functions of this reference page are subject to the following authentication requirements (Key = API key needed, Login = user login needed):",
+    intro,
     fmt,
-    "API keys can be set by storing the API key in the \\code{STEAM_API_KEY} environment variable.",
+    if (needs_key) "API keys can be set by storing the API key in the \\code{STEAM_API_KEY} environment variable.",
     "",
-    "To learn more about user authentication, see \\code{\\link{auth_credentials}}.",
+    if (needs_login) "To learn more about user authentication, see \\code{\\link{auth_credentials}}.",
     "}",
     sep = "\n"
   )

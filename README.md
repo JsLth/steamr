@@ -26,7 +26,7 @@ sets for data analysis.
 You can install the development version of steamr like so:
 
 ``` r
-pak::install("jslth/steamr")
+pak::pkg_install("jslth/steamr")
 ```
 
 ## Overview
@@ -189,7 +189,7 @@ to find the appID for a game is to search for it programmatically:
 
 ``` r
 library(steamr)
-apps <- search_apps("team fortress")
+apps <- stf_search_apps("team fortress")
 apps
 #> # A tibble: 4 × 3
 #>   term          appid   name                 

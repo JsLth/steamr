@@ -25,7 +25,7 @@ library(dplyr)
 library(ggplot2)
 library(ggtext)
 
-histo <- get_review_histogram("440", language = NULL, review_score_preference = 2)
+histo <- stf_review_histogram("440", language = NULL, review_score_preference = 2)
 
 rollups <- histo$rollups %>%
   mutate(recommendations_down = recommendations_down * -1) %>%
