@@ -9,17 +9,19 @@
 #'
 #' @returns A character string containing BBCode formatted text.
 #'
+#' @evalRd auth_table(list("wba_html_to_bbcode", key = FALSE, login = FALSE))
+#'
 #' @export
 #'
 #' @examples
-#' string1 <- "<b>test</b>"
+#' \donttest{string1 <- "<b>test</b>"
 #' string2 <- "<br>\n"
 #' string3 <- "<a href='google.com'>link</a>"
 #'
 #' html_to_bbcode(string1)
 #' html_to_bbcode(string2)
-#' html_to_bbcode(string3)
-html_to_bbcode <- function(x, preserve_newlines = FALSE) {
+#' html_to_bbcode(string3)}
+wba_html_to_bbcode <- function(x, preserve_newlines = FALSE) {
   params <- .make_params(content = x, preserve_newlines = preserve_newlines)
   res <- request_webapi(
     api = public_api(),
