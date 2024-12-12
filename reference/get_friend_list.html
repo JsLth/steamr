@@ -96,7 +96,10 @@ using <code><a href="steamkit_enum.html">steamkit_enum</a>("FriendRelationship",
 
 
 <dt id="arg-appid">appid<a class="anchor" aria-label="anchor" href="#arg-appid"></a></dt>
-<dd><p>A single appID of an application in the Steam store.</p></dd>
+<dd><p>Application ID referencing a Steam application. There are
+generally two ways of retrieving an appID:</p><ul><li><p>Inspect or parse the store URL of an application, e.g. <code>https://store.steampowered.com/app/10/CounterStrike/</code></p></li>
+<li><p>Query appIDs programmatically, e.g. using <code>search_apps</code></p></li>
+</ul></dd>
 
 </dl></div>
     <div id="value">

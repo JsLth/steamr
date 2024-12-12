@@ -87,7 +87,10 @@ Steam64, Steam2, and Steam3 IDs.</p></dd>
 
 
 <dt id="arg-appids">appids<a class="anchor" aria-label="anchor" href="#arg-appids"></a></dt>
-<dd><p>A vector of multiple appIDs of applications in the Steam store.</p></dd>
+<dd><p>A vector of multiple appIDs of applications in the Steam store.
+There are generally two ways of retrieving an appID:</p><ul><li><p>Inspect or parse the store URL of an application, e.g. <code>https://store.steampowered.com/app/10/CounterStrike/</code></p></li>
+<li><p>Query applications programmatically, e.g. using <code>search_apps</code></p></li>
+</ul></dd>
 
 
 <dt id="arg-max-achievements">max_achievements<a class="anchor" aria-label="anchor" href="#arg-max-achievements"></a></dt>

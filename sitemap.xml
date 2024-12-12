@@ -15,7 +15,6 @@
 <url><loc>/reference/events.html</loc></url>
 <url><loc>/reference/geocode_steam.html</loc></url>
 <url><loc>/reference/get_app_list.html</loc></url>
-<url><loc>/reference/get_app_reviews.html</loc></url>
 <url><loc>/reference/get_auth.html</loc></url>
 <url><loc>/reference/get_categories.html</loc></url>
 <url><loc>/reference/get_discovery_queue.html</loc></url>
@@ -45,12 +44,13 @@
 <url><loc>/reference/request_webapi.html</loc></url>
 <url><loc>/reference/resolve_bundles.html</loc></url>
 <url><loc>/reference/resolve_vanity.html</loc></url>
-<url><loc>/reference/search_apps.html</loc></url>
 <url><loc>/reference/search_support.html</loc></url>
 <url><loc>/reference/steam_stats.html</loc></url>
 <url><loc>/reference/steamkit_enum.html</loc></url>
 <url><loc>/reference/steamr-package.html</loc></url>
 <url><loc>/reference/steamspy.html</loc></url>
+<url><loc>/reference/stf_app_reviews.html</loc></url>
+<url><loc>/reference/stf_search_apps.html</loc></url>
 <url><loc>/reference/store_data_request.html</loc></url>
 <url><loc>/reference/tags.html</loc></url>
 <url><loc>/reference/user_in_review.html</loc></url>

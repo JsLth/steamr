@@ -109,7 +109,7 @@ available data are paginated.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get help articles on purchases</span></span></span>
 <span class="r-in"><span><span class="fu">search_support</span><span class="op">(</span><span class="st">"purchase"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 102 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 103 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    articleid           name                      content clan_accountid url_code</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 8294526361226486046 Purchasing Issues         <span style="color: #949494;">"</span>Gener…              0 731C-13…</span>
@@ -122,11 +122,13 @@ available data are paginated.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 4656875171981542682 Providing Proof of Owner… <span style="color: #949494;">"</span>If th…              0 40A0-8B…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 8201958456624065082 Limited User Accounts     <span style="color: #949494;">"</span>Steam…              0 71D3-35…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 8710933858579164505 Steam Wallet              <span style="color: #949494;">"</span>Steam…              0 78E3-74…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 92 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 93 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get localized articles in french</span></span></span>
 <span class="r-in"><span><span class="fu">search_support</span><span class="op">(</span><span class="st">"purchase"</span>, elanguage <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 104 × 6</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  33% | ETA:  2s</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Iterating <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■ </span> 100% | ETA:  0s</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 105 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    articleid           name      content clan_accountid url_code localized_names</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 8294526361226486046 Problème… <span style="color: #949494;">"</span>Dépan…              0 731C-13… <span style="color: #949494;">&lt;chr [1]&gt;</span>      </span>
@@ -139,7 +141,7 @@ available data are paginated.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 4656875171981542682 Fournir … <span style="color: #949494;">"</span>Si le…              0 40A0-8B… <span style="color: #949494;">&lt;chr [1]&gt;</span>      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 8201958456624065082 Comptes … <span style="color: #949494;">"</span>Steam…              0 71D3-35… <span style="color: #949494;">&lt;chr [1]&gt;</span>      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 8710933858579164505 Portemon… <span style="color: #949494;">"</span>Porte…              0 78E3-74… <span style="color: #949494;">&lt;chr [1]&gt;</span>      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 94 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 95 more rows</span></span>
 </code></pre></div>
     </div>
   </div>

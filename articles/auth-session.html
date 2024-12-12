@@ -136,7 +136,7 @@ either function, the Steam mobile app is required.</p>
 <p><code>auth_credentials</code> performs authentication by asking for
 username and password. The <code>password</code> argument accepts a
 function that safely asks for a password. This can be functions such as
-<code><a href="https://rdrr.io/pkg/askpass/man/askpass.html" class="external-link">askpass::askpass</a></code> or <code>rstudioapi::askForPassword</code>
+<code><a href="https://rdrr.io/pkg/askpass/man/askpass.html" class="external-link">askpass::askpass</a></code> or <code><a href="https://rstudio.github.io/rstudioapi/reference/askForPassword.html" class="external-link">rstudioapi::askForPassword</a></code>
 or any other prompt function that obfuscates the password string. The
 password is then RSA-encrypted using a Steam public key to ensure a
 secure transfer.</p>

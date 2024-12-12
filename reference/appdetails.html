@@ -98,7 +98,10 @@ app list from SteamSpy, see <code><a href="steamspy.html">steamspy</a></code>.</
 
 
 <dl><dt id="arg-appid">appid<a class="anchor" aria-label="anchor" href="#arg-appid"></a></dt>
-<dd><p>A single appID of an application in the Steam store.</p></dd>
+<dd><p>Application ID referencing a Steam application. There are
+generally two ways of retrieving an appID:</p><ul><li><p>Inspect or parse the store URL of an application, e.g. <code>https://store.steampowered.com/app/10/CounterStrike/</code></p></li>
+<li><p>Query appIDs programmatically, e.g. using <code>search_apps</code></p></li>
+</ul></dd>
 
 
 <dt id="arg-client">client<a class="anchor" aria-label="anchor" href="#arg-client"></a></dt>
