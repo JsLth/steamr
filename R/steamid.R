@@ -41,7 +41,7 @@
 #' # get game hub ID
 #' resolve_vanity("TF2", type = "game_group")
 #' }
-resolve_vanity <- function(name, type = "profile") {
+wba_resolve_vanity <- function(name, type = "profile") {
   check_steam_key()
   check_string(name)
   check_string(type)
