@@ -127,12 +127,10 @@ Universe values correspond to the following meanings:
 }
 
 \examples{
-\dontrun{
-convert_steamid("vgenkin", "steam64") |>
+\donttest{convert_steamid("vgenkin", "steam64") |>
   convert_steamid("steam2") |>
   convert_steamid("steam3") |>
   convert_steamid("vanity")
 
-lookup_steamid("vgenkin")
-}
+lookup_steamid("vgenkin")}
 }

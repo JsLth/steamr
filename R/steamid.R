@@ -28,85 +28,26 @@
 #' original title, e.g. \code{dota2} for DOTA 2, \code{TF2} for Team Fortress 2
 #' or simply \code{70} for Half-Life
 #'
+#' @evalRd auth_table(list("wba_resolve_vanity", key = TRUE, login = FALSE))
+#'
 #' @export
+#'
+#' @seealso \code{\link{convert_steamid}} for converting from and to vanity.
+#'
+#' \code{\link{is_vanity}} to check if a string could be a vanity ID.
 #'
 #' @examples
 #' \dontrun{
 #' # get user ID
-#' resolve_vanity("gabelogannewell")
+#' wba_resolve_vanity("gabelogannewell")
 #'
 #' # get group ID
-#' resolve_vanity("SteamDB", type = "group")
+#' wba_resolve_vanity("SteamDB", type = "group")
 #'
 #' # get game hub ID
-#' resolve_vanity("TF2", type = "game_group")
+#' wba_resolve_vanity("TF2", type = "game_group")
 #' }
 wba_resolve_vanity <- function(name, type = "profile") {
-  check_steam_key()
-  check_string(name)
-  check_string(type)
-
-  type <- switch(type, profile = 1, group = 2, game_group = 3)
-  params <- .make_params(vanityurl = name, url_type = type, access_token = FALSE)
-  res <- request_webapi(
-    api = public_api(),
-    interface = "ISteamUser",
-    method = "ResolveVanityURL",
-    version = "v1",
-    params = params
-  )
-
-  code <- res$response$success
-  if (!identical(code, 1L)) {
-    msg <- res$response$message
-    stop(sprintf("Could not resolve vanity URL. Error code %s: %s", code, msg))
-  }
-
-  res$response$steamid
-}#' Get User ID
-#' @description
-#' Retrieves the Steam ID64 of a user profile, group or game hub based on
-#' vanity IDs.
-#'
-#' @param name Name / Vanity ID of a user account, group or game hub.
-#' See details and examples.
-#' @param type Type of Steam name. \code{profile} returns the Steam ID of
-#' a user profile, \code{group} returns the ID of a public group and
-#' \code{game_group} returns the ID of a game's official game hub.
-#'
-#' @returns A length-1 character vector containing the Steam ID corresponding
-#' to the input name.
-#'
-#' @details
-#' There are various way of retrieving vanity IDs depending on the type of
-#' vanity URL type. The vanity URL of a Steam user is the account name
-#' (not the display name). It can be retrieved by inspecting the profile URL:
-#' \preformatted{https://steamcommunity.com/id/{vanity_id}/}
-#'
-#' Vanity IDs of groups can be retrieved in a similar way:
-#' \preformatted{https://steamcommunity.com/groups/{vanity_id}/}
-#'
-#' Vanity IDs of game hubs are not easily locatable as game hubs are
-#' closely linked to store pages. They can be found by inspecting the
-#' source code of a game page and searching for \code{VANITY_ID}. Vanity IDs
-#' of game hubs are usually the application ID or an abbreviation of the
-#' original title, e.g. \code{dota2} for DOTA 2, \code{TF2} for Team Fortress 2
-#' or simply \code{70} for Half-Life
-#'
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' # get user ID
-#' resolve_vanity("gabelogannewell")
-#'
-#' # get group ID
-#' resolve_vanity("SteamDB", type = "group")
-#'
-#' # get game hub ID
-#' resolve_vanity("TF2", type = "game_group")
-#' }
-resolve_vanity <- function(name, type = "profile") {
   check_steam_key()
   check_string(name)
   check_string(type)
@@ -250,14 +191,12 @@ lookup_steamid <- function(ids, include_vanity = TRUE, vanity_type = "profile") 
 #' @md
 #'
 #' @examples
-#' \dontrun{
-#' convert_steamid("vgenkin", "steam64") |>
+#' \donttest{convert_steamid("vgenkin", "steam64") |>
 #'   convert_steamid("steam2") |>
 #'   convert_steamid("steam3") |>
 #'   convert_steamid("vanity")
 #'
-#' lookup_steamid("vgenkin")
-#' }
+#' lookup_steamid("vgenkin")}
 convert_steamid <- function(ids, to, vanity_type = "profile") {
   vapply(unname(ids), FUN.VALUE = character(1), function(x) {
     if (is_steam64(x)) {
@@ -287,7 +226,7 @@ convert_steamid <- function(ids, to, vanity_type = "profile") {
         x
       )
     } else {
-      steam64 <- resolve_vanity(x, type = vanity_type)
+      steam64 <- wba_resolve_vanity(x, type = vanity_type)
       switch(
         to,
         steam64 = steam64,
@@ -305,7 +244,7 @@ convert_steamid <- function(ids, to, vanity_type = "profile") {
 #' Checks if a given string can be parsed as a Steam ID. Functions are defined
 #' for ID64, Steam2, Steam3, and vanity IDs.
 #'
-#' @param x A character string that is to be checked.
+#' @param x A character string that should be checked.
 #'
 #' @details
 #' \code{is_steam64} tests if a character string is a 64-bit representation
@@ -316,23 +255,23 @@ convert_steamid <- function(ids, to, vanity_type = "profile") {
 #' \code{is_vanity} returns \code{TRUE}, if all other functions return
 #' \code{FALSE}.
 #'
+#' @returns A logical vector.
+#'
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' is_steam64("76561197984981409", "12345") # TRUE, FALSE
-#' is_steam2("STEAM_1:1:12357840", "STEAM_5:6:123") # TRUE, FALSE
-#' is_steam3("[U:1:24715681]", "U:4:1234") # TRUE, FALSE
-#' is_vanity("12345", "76561197984981409") # TRUE, FALSE
-#' }
+#' is_steam64(c("76561197984981409", "12345")) # TRUE, FALSE
+#' is_steam2(c("STEAM_1:1:12357840", "STEAM_5:6:123")) # TRUE, FALSE
+#' is_steam3(c("[U:1:24715681]", "U:4:1234")) # TRUE, FALSE
+#' is_vanity(c("12345", "76561197984981409")) # TRUE, FALSE
 is_steam64 <- function(x) {
-  if (!isTRUE(grepl("^[0-9]+$", x))) return(FALSE)
+  if (!all(grepl("^[0-9]+$", x))) return(FALSE)
   binlen <- vapply(x, FUN.VALUE = numeric(1), function(s) {
     length(bigBits::buildBinaries(s, inBase = 10)$xbin)
   }, USE.NAMES = FALSE)
   is_64 <- binlen >= 60 & binlen <= 64
 
-  if (is_64 && is.numeric(x)) {
+  if (all(is_64) && is.numeric(x)) {
     stop(paste(
       "Steam ID identified as Steam64 but value is numeric.\n",
       "To preserve numeric precision, pass Steam ID as a character string."

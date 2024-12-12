@@ -41,12 +41,28 @@ or simply \code{70} for Half-Life
 \examples{
 \dontrun{
 # get user ID
-resolve_vanity("gabelogannewell")
+wba_resolve_vanity("gabelogannewell")
 
 # get group ID
-resolve_vanity("SteamDB", type = "group")
+wba_resolve_vanity("SteamDB", type = "group")
 
 # get game hub ID
-resolve_vanity("TF2", type = "game_group")
+wba_resolve_vanity("TF2", type = "game_group")
 }
+}
+\seealso{
+\code{\link{convert_steamid}} for converting from and to vanity.
+
+\code{\link{is_vanity}} to check if a string could be a vanity ID.
+}
+\section{Authentication}{
+The functions of this reference page are subject to the following authentication requirements (Key = API key needed, Login = user login needed):
+\tabular{lll}{
+    \strong{Function} \tab \strong{Key} \tab \strong{Login}\cr
+    \code{wba_resolve_vanity} \tab yes \tab no
+}
+
+API keys can be set by storing the API key in the \code{STEAM_API_KEY} environment variable.
+
+
 }

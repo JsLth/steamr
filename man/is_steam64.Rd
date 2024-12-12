@@ -16,7 +16,10 @@ is_steam3(x)
 is_vanity(x)
 }
 \arguments{
-\item{x}{A character string that is to be checked.}
+\item{x}{A character string that should be checked.}
+}
+\value{
+A logical vector.
 }
 \description{
 Checks if a given string can be parsed as a Steam ID. Functions are defined
@@ -32,10 +35,8 @@ string format of textual Steam ID representations as described
 \code{FALSE}.
 }
 \examples{
-\dontrun{
-is_steam64("76561197984981409", "12345") # TRUE, FALSE
-is_steam2("STEAM_1:1:12357840", "STEAM_5:6:123") # TRUE, FALSE
-is_steam3("[U:1:24715681]", "U:4:1234") # TRUE, FALSE
-is_vanity("12345", "76561197984981409") # TRUE, FALSE
-}
+is_steam64(c("76561197984981409", "12345")) # TRUE, FALSE
+is_steam2(c("STEAM_1:1:12357840", "STEAM_5:6:123")) # TRUE, FALSE
+is_steam3(c("[U:1:24715681]", "U:4:1234")) # TRUE, FALSE
+is_vanity(c("12345", "76561197984981409")) # TRUE, FALSE
 }

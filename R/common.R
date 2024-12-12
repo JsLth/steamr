@@ -42,6 +42,11 @@ auth_table <- function(...) {
   x <- rbind_list(args)
   x[["function"]] <- NULL
   names(x)[1] <- "function"
+
+  needs_key <- any(x$key)
+  needs_login <- any(x$login)
+  needs_auth <- any(needs_key, needs_login)
+
   x$key <- ifelse(x$key, "yes", "no")
   x$login <- ifelse(x$login, "yes", "no")
   if (!is.null(x$note)) x$note <- ifelse(is.na(x$note), "", x$note)
@@ -51,9 +56,6 @@ auth_table <- function(...) {
   fmt <- sinew::tabular(x)
   fmt <- gsub("#' ?", "", fmt)
 
-  needs_key <- any(x$key)
-  needs_login <- any(x$login)
-  needs_auth <- any(needs_key, needs_login)
   intro <- if (needs_auth) {
     "The functions of this reference page are subject to the following authentication requirements (Key = API key needed, Login = user login needed):"
   } else {
