@@ -4,3 +4,6 @@
 ^LICENSE\.md$
 ^overview.csv$
 ^\.github$
+^docs$
+^overview.md$
+^.*\.png$

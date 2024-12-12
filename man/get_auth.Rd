@@ -6,6 +6,10 @@
 \usage{
 get_auth(field = NULL)
 }
+\arguments{
+\item{auth}{Field to extract. Can be one of \code{vanity}, \code{steamid},
+\code{client_id}, \code{request_id} and \code{token}.}
+}
 \value{
 An auth object as returned by \code{auth_credentials} and
 \code{auth_qr}.

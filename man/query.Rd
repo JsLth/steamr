@@ -36,7 +36,8 @@ query(
   steam_realm = 1,
   include = "basic_info",
   apply_user_filters = FALSE,
-  paginate = FALSE
+  paginate = FALSE,
+  max_pages = Inf
 )
 }
 \arguments{
@@ -102,29 +103,6 @@ used to filter by community hub.}
 
 \item{optin_name, optin_tagid, prune_tagid, optin_only}{Unknown. Possibly
 related to Beta opt-in.}
-
-\item{language}{ISO639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a \code{#} in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.}
-
-\item{elanguage}{Language identifier of the returned information.}
-
-\item{country_code}{ISO-2 country code as returned by
-\code{\link{get_countries}}. The Steam store differs depending on the
-country it is accessed from.}
-
-\item{steam_realm}{Number describing the Steam realm. A value of 1
-indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.}
-
-\item{include}{List of extra information to include. Can be one or several
-of the following: \code{release}, \code{platforms},
-\code{all_purchase_options}, \code{screenshots}, \code{trailers},
-\code{ratings}, \code{tag_count}, \code{reviews}, \code{basic_info},
-\code{supported_languages}, \code{full_description}, \code{included_items}
-and \code{assets_without_overrides}. If \code{all}, returns all information.}
-
-\item{apply_user_filters}{Unknown.}
 
 \item{iterate}{Whether to automatically iterate through pages. Depending
 on the query, this can take a long time. The maximum number of requests

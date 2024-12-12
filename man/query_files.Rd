@@ -29,7 +29,8 @@ query_files(
   playtime_days = NULL,
   strip_bbcode = FALSE,
   desired_revision = NULL,
-  paginate = TRUE
+  paginate = FALSE,
+  max_pages = Inf
 )
 
 get_published_file(

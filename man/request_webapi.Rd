@@ -21,9 +21,8 @@ request_webapi(
   http_method = "GET",
   simplify = TRUE,
   paginate = NULL,
-  limit = Inf,
   format = c("json", "xml", "vdf"),
-  cache = TRUE,
+  cache = FALSE,
   serror = TRUE,
   dry = FALSE
 )
@@ -37,9 +36,8 @@ request_storefront(
   http_method = "GET",
   simplify = TRUE,
   paginate = NULL,
-  limit = Inf,
   rate = NULL,
-  cache = TRUE,
+  cache = FALSE,
   dry = FALSE
 )
 
@@ -91,14 +89,40 @@ API only take \code{GET} and \code{POST}.}
 list.}
 
 \item{paginate}{If specified, tries to paginate through response pages.
-Can be one of \code{cursor}, \code{offset}, and \code{input_json}.
-\code{cursor} takes the \code{next_cursor} value of the response and
-re-inserts it in the \code{cursor} parameter of the next request
-(see \code{\link[httr2]{iterate_with_cursor}}). \code{offset} takes
-increments the \code{page} parameter by 1 with
-each request (see \code{\link[httr2]{iterate_with_offset}}).
-\code{input_json} re-creates the \code{input_json} blob
-with an incremented \code{page} parameter with each request.}
+Must be a named list containing parameters for the pagination process.
+Can contain the following keys:
+
+\describe{
+ \item{method}{Can be one of \code{cursor}, \code{offset}, and \code{input_json}.
+ \code{cursor} takes the \code{next_cursor} value of the response and
+ re-inserts it in the \code{cursor} parameter of the next request
+ (see \code{\link[httr2]{iterate_with_cursor}}). \code{offset} takes
+ increments the \code{page} parameter by 1 with
+ each request (see \code{\link[httr2]{iterate_with_offset}}).
+ \code{input_json} re-creates the \code{input_json} blob
+ with an incremented \code{page} parameter with each request.}
+
+ \item{limit}{Integer specifying the maximum number of requests or pages
+ sent. If \code{limit = 3}, returns the first three pages.}
+
+ \item{cursor}{If \code{method} is cursor, specifies the name of the
+ cursor parameter in the request. Defaults to \code{"cursor"}}.
+
+ \item{next_cursor}{If \code{method} is cursor, specifies the name of the
+ response key giving the next cursor. Defaults to \code{"next_cursor"}}.
+
+ \item{content_field}{If \code{method} is cursor, specifies the field name
+ that must be populated with contents in order to continue paginating.
+ If not specified, defaults to the first field. This can be useful if
+ the only indicator of pagination ending is if a certain field is not
+ present in the response.}
+
+ \item{total_count}{If \code{method} is start, specifies the name of the
+ response field giving the total number of results.}
+
+ \item{page_size}{If \code{method} is start, specifies the total number
+ of results per page.}
+}}
 
 \item{format}{Format of the response. One of \code{json}, \code{xml}, or
 \code{vdf}. \code{vdf} is Steam's

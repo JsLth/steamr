@@ -16,11 +16,6 @@ get_frequent_tags()
 get_recommended_tags()
 }
 \arguments{
-\item{language}{ISO639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a \code{#} in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.}
-
 \item{hash}{Hash included in the \code{hash} attribute of a previous
 function call. If \code{hash} matches with the hash of the requested tags,
 then a \code{DuplicateRequest} error is thrown.}

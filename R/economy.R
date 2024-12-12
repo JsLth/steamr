@@ -15,7 +15,7 @@
 #'
 #' @returns
 #' \describe{
-#'  \item{\code{query_market_assets}A dataframe with each row representing
+#'  \item{\code{query_market_assets}}{A dataframe with each row representing
 #'  one asset. The dataframe provides data on name, hash names, prices,
 #'  the corresponding app, asset classIDs, and the output of
 #'  \code{get_asset_info}.}
@@ -70,7 +70,8 @@ query_market_assets <- function(appid,
                                 sort_column = NULL,
                                 sort_dir = NULL,
                                 search_description = NULL,
-                                paginate = TRUE) {
+                                paginate = FALSE,
+                                max_pages = Inf) {
   check_number(appid)
   check_string(search_term, null = TRUE)
   check_string(sort_column, null = TRUE)
@@ -93,7 +94,7 @@ query_market_assets <- function(appid,
     interface = "market",
     method = "search/render",
     params = params,
-    paginate = if (paginate) "start"
+    paginate = if (paginate) list(method = "start", limit = max_pages)
   )
 
   if (paginate) {

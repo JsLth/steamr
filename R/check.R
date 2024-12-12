@@ -1,3 +1,12 @@
+check_class <- function(x, class, null = FALSE) {
+  if (null && is.null(x)) return()
+  check <- inherits(x, class)
+  if (!check) {
+    stop(sprintf("%s must be of class %s, not %s", obj_name(x), class, class(x)))
+  }
+}
+
+
 check_length <- function(x, ge = -Inf, le = Inf) {
   len <- length(x)
   check <- len >= ge && len <= le
@@ -24,6 +33,16 @@ check_scalar <- function(x) {
       obj_name(x),
       length(x)
     ))
+  }
+}
+
+
+check_numeric <- function(x, null = FALSE) {
+  if (null && is.null(x)) return()
+  x <- as.double(x)
+  check <- is.double(x)
+  if (!check) {
+    stop(sprintf("%s must be a numeric.", obj_name(x)))
   }
 }
 

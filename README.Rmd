@@ -35,8 +35,8 @@ data sets for data analysis.
 
 You can install the development version of steamr like so:
 
-``` r
-pak::install("jslth/steamr")
+```{r, eval=FALSE}
+pak::pkg_install("jslth/steamr")
 ```
 
 
@@ -53,7 +53,7 @@ In terms of authentication, Steam's APIs are also very much inconsistent. Many A
 The following table gives an overview of the package functions, the API they use, whether they need an API key, and whether they need authentication.
 
 ```{r echo=FALSE}
-knitr::kable(read.csv("overview.csv"))
+knitr::kable(readRDS("dev/funtable.rds"))
 ```
 
 
@@ -67,22 +67,21 @@ game is to search for it programmatically:
 
 ```{r example}
 library(steamr)
-apps <- search_apps("team fortress")
-appid <- apps$appid
+apps <- stf_search_apps("team fortress")
 apps
 ```
 
-Many functions need an app ID to work, for example the following function which
-retrieves user review data from an application:
+As we can see, Team Fortress has the appID 440. We can use these IDs as input
+for many other functions, e.g. to retrieve review data for an application:
 
 ```{r}
-get_app_reviews(appid[1])
+stf_app_reviews(440)
 ```
 
 Steam can also use the official Web API given a valid API key. One function
 offered by the Web API allows us to query details on a Steam application:
 
 ```{r}
-get_items(appid)
+get_items(apps$appid)
 ```
 

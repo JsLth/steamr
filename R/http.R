@@ -22,14 +22,40 @@
 #' @param simplify Whether to simplify the output or leave it as a nested
 #' list.
 #' @param paginate If specified, tries to paginate through response pages.
-#' Can be one of \code{cursor}, \code{offset}, and \code{input_json}.
-#' \code{cursor} takes the \code{next_cursor} value of the response and
-#' re-inserts it in the \code{cursor} parameter of the next request
-#' (see \code{\link[httr2]{iterate_with_cursor}}). \code{offset} takes
-#' increments the \code{page} parameter by 1 with
-#' each request (see \code{\link[httr2]{iterate_with_offset}}).
-#' \code{input_json} re-creates the \code{input_json} blob
-#' with an incremented \code{page} parameter with each request.
+#' Must be a named list containing parameters for the pagination process.
+#' Can contain the following keys:
+#'
+#' \describe{
+#'  \item{method}{Can be one of \code{cursor}, \code{offset}, and \code{input_json}.
+#'  \code{cursor} takes the \code{next_cursor} value of the response and
+#'  re-inserts it in the \code{cursor} parameter of the next request
+#'  (see \code{\link[httr2]{iterate_with_cursor}}). \code{offset} takes
+#'  increments the \code{page} parameter by 1 with
+#'  each request (see \code{\link[httr2]{iterate_with_offset}}).
+#'  \code{input_json} re-creates the \code{input_json} blob
+#'  with an incremented \code{page} parameter with each request.}
+#'
+#'  \item{limit}{Integer specifying the maximum number of requests or pages
+#'  sent. If \code{limit = 3}, returns the first three pages.}
+#'
+#'  \item{cursor}{If \code{method} is cursor, specifies the name of the
+#'  cursor parameter in the request. Defaults to \code{"cursor"}}.
+#'
+#'  \item{next_cursor}{If \code{method} is cursor, specifies the name of the
+#'  response key giving the next cursor. Defaults to \code{"next_cursor"}}.
+#'
+#'  \item{content_field}{If \code{method} is cursor, specifies the field name
+#'  that must be populated with contents in order to continue paginating.
+#'  If not specified, defaults to the first field. This can be useful if
+#'  the only indicator of pagination ending is if a certain field is not
+#'  present in the response.}
+#'
+#'  \item{total_count}{If \code{method} is start, specifies the name of the
+#'  response field giving the total number of results.}
+#'
+#'  \item{page_size}{If \code{method} is start, specifies the total number
+#'  of results per page.}
+#' }
 #' @param format Format of the response. One of \code{json}, \code{xml}, or
 #' \code{vdf}. \code{vdf} is Steam's
 #' \href{https://developer.valvesoftware.com/wiki/KeyValues}{KeyValues} format,
@@ -101,9 +127,8 @@ request_webapi <- function(api,
                            http_method = "GET",
                            simplify = TRUE,
                            paginate = NULL,
-                           limit = Inf,
                            format = c("json", "xml", "vdf"),
-                           cache = TRUE,
+                           cache = FALSE,
                            serror = TRUE,
                            dry = FALSE) {
   format <- match.arg(format)
@@ -161,38 +186,7 @@ request_webapi <- function(api,
   }
 
   if (!is.null(paginate)) {
-    limit <- getOption("steamr_max_reqs", Inf)
-
-    paginator <- switch(
-      paginate,
-      cursor = httr2::iterate_with_cursor(
-        param_name = "cursor",
-        resp_param_value = extract_cursor
-      ),
-      offset = httr2::iterate_with_offset(
-        param_name = "page",
-        start = 0,
-        offset = 1,
-        resp_complete = function(resp, code = 500) resp$status_code %in% code
-      ),
-      input_json = iterate_with_input_json(resp, params$input_json)
-    )
-    reses <- httr2::req_perform_iterative(
-      req,
-      next_req = paginator,
-      max_reqs = limit
-    )
-
-    reses <- lapply(
-      reses,
-      function(resp, ...) {
-        resp <- httr2::resp_body_json(resp, ...)
-        if (!identical(resp$response$count, 0L)) resp
-      },
-      simplifyVector = simplify,
-      flatten = TRUE
-    )
-    reses[!lvapply(reses, is.null)]
+    paginate_steam(req, paginate, simplify = simplify)
   } else {
     res <- httr2::req_perform(req)
     ecode <- res$headers[["X-eresult"]]
@@ -231,12 +225,11 @@ request_storefront <- function(api,
                                http_method = "GET",
                                simplify = TRUE,
                                paginate = NULL,
-                               limit = Inf,
                                rate = NULL,
-                               cache = TRUE,
+                               cache = FALSE,
                                dry = FALSE) {
   is_store_api <- identical(api, store_api())
-  params <- prepare_params(params)
+  params <- prepare_params(params, api = "storefront")
 
   req <- httr2::request(api)
   template <- sprintf("%s /{interface}/{method}", http_method)
@@ -286,7 +279,7 @@ request_storefront <- function(api,
   }
 
   if (!is.null(paginate)) {
-    paginate_steam(req, paginate, simplify = simplify, limit = limit)
+    paginate_steam(req, paginate, simplify = simplify)
   } else {
     res <- httr2::req_perform(req)
 
@@ -515,8 +508,8 @@ storefront_params <- function(params) {
     x <- params[[k]]
     if (is.logical(x)) {
       params[[k]] <- as.numeric(x)
-    } else if (is.list(x)) {
-      paste(x, collapse = ",")
+    } else if (length(x) > 1) {
+      params[[k]] <- paste(x, collapse = ",")
     }
   }
 
@@ -525,12 +518,32 @@ storefront_params <- function(params) {
 
 
 
-paginate_steam <- function(req, paginate, simplify, limit) {
+paginate_steam <- function(req, paginate, simplify) {
+  limit <- getOption("steamr_max_reqs", paginate$limit %||% Inf)
   paginator <- switch(
-    paginate,
+    paginate$method,
     cursor = httr2::iterate_with_cursor(
-      param_name = "cursor",
-      resp_param_value = extract_cursor
+      param_name = paginate$cursor %||% "cursor",
+      resp_param_value = function(resp) {
+        ncursor <- paginate$next_cursor %||% "next_cursor"
+        cfield <- paginate$content_field %||% 1L
+        content <- unbox(httr2::resp_body_json(resp))
+        cursor <- httr2::url_parse(resp$url)$query$cursor
+
+        if (identical(content$count, 0L)) {
+          return(NULL)
+        }
+
+        if (identical(content$cursor, cursor)) {
+          return(NULL)
+        }
+
+        if (is.null(content[[cfield]])) {
+          return(NULL)
+        }
+
+        content[[ncursor]]
+      }
     ),
     page = stop("Page paginator is currently not implemented."),
     start = httr2::iterate_with_offset(
@@ -540,7 +553,9 @@ paginate_steam <- function(req, paginate, simplify, limit) {
       resp_pages = function(resp) {
         if (identical(resp$status_code, 200L)) {
           body <- httr2::resp_body_json(resp)
-          n <- ceiling(body$total_count / body$pagesize)
+          total <- paginate$total_count %||% "total_count"
+          size <- paginate$page_size %||% "pagesize"
+          n <- ceiling(body[[total]] / body[[size]])
           if (n > 0) n
         }
       },
@@ -549,33 +564,33 @@ paginate_steam <- function(req, paginate, simplify, limit) {
         length(body$results) == 0
       }
     ),
-    input_json = iterate_with_input_json(resp, params$input_json)
+    input_json = iterate_with_input_json(req)
   )
-  reses <- httr2::req_perform_iterative(
+  resps <- httr2::req_perform_iterative(
     req,
     next_req = paginator,
     max_reqs = limit
   )
 
-  reses <- lapply(
-    reses,
+  resps <- lapply(
+    httr2::resps_successes(resps),
     function(resp, ...) {
-      resp <- httr2::resp_body_json(resp, ...)
+      resp <- httr2::resp_body_json(resp, simplifyVector = TRUE, flatten = TRUE)
       check <- switch(
-        paginate,
+        paginate$method,
         start = !length(resp$results) == 0,
         !identical(resp$response$count, 0L)
       )
       if (check) resp
-    },
-    simplifyVector = simplify,
-    flatten = TRUE
+    }
   )
-  reses[!lvapply(reses, is.null)]
+
+  resps[!lvapply(resps, is.null)]
 }
 
 
-iterate_with_input_json <- function(resp, input_json) {
+iterate_with_input_json <- function(req) {
+  input_json <- httr2::url_parse(req$url)$query$input_json
   resp_complete <- function(resp) {
     content <- httr2::resp_body_json(resp)$response
     !content$metadata$count > 0
@@ -587,14 +602,6 @@ iterate_with_input_json <- function(resp, input_json) {
       i <<- i + 1
       httr2::req_url_query(req, input_json = sprintf(input_json, i))
     }
-  }
-}
-
-
-extract_cursor <- function(resp) {
-  content <- httr2::resp_body_json(resp)$response
-  if (!identical(content$count, 0L)) {
-    content$next_cursor
   }
 }
 

@@ -45,7 +45,8 @@ get_app_list <- function() {
     api = public_api(),
     interface = "ISteamApps",
     method = "GetAppList",
-    version = "v2"
+    version = "v2",
+    cache = TRUE
   )$applist$apps
 
   res <- res[order(res$appid), ]

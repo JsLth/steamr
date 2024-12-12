@@ -20,16 +20,16 @@ get_player_achievements(steamid, appid, language = "english")
 \arguments{
 \item{appid}{appID of an application in the Steam store.}
 
-\item{language}{ISO 639-1 language code all tokenized strings should be
-returned in. Formally, a tokenized string is a string that is prefixed
-with a \code{#} in the VDF file. Not all tokenized strings have a translation
-for all languages. If no translation is available, defaults to English.}
-
 \item{steamid}{SteamID of a user. The SteamID must be in a format that can
 be converted by \code{\link{convert_steamid}}. This includes vanity,
 Steam64, Steam2, and Steam3 IDs.}
 
-\item{appids}{A vector of multiple appIDs of applications in the Steam store.}
+\item{appids}{A vector of multiple appIDs of applications in the Steam store.
+There are generally two ways of retrieving an appID:
+\itemize{
+ \item{Inspect or parse the store URL of an application, e.g. \code{https://store.steampowered.com/app/10/CounterStrike/}}
+ \item{Query applications programmatically, e.g. using \code{\link{search_apps}}}
+}}
 
 \item{max_achievements}{Maximum number of achievements to return for each
 game. Defaults to the top 5 achievements.}

@@ -163,7 +163,7 @@ account_types <- function() {
 
 account_instances <- function() {
   as_data_frame(data.frame(
-    code = c(0, 1, 2, 4, 8, 16, 32, 64, 128, ),
+    code = c(0, 1, 2, 4, 8, 16, 32, 64, 128),
     desc = factor(c(
       "AllInstances", "DesktopInstance", "ConsoleInstance", "WebInstance",
 
@@ -176,7 +176,7 @@ account_instances <- function() {
 #' @export
 EFriendRelationship <- function() {
   as_data_frame(data.frame(
-    code = c(0:7),
+    code = 0:7,
     desc = factor(c(
       "None", "Blocked", "RequestRecipient", "Friend", "RequestInitiator",
       "Ignored", "IgnoredFriend", "SuggestedFriend"

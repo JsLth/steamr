@@ -11,11 +11,11 @@ auth_credentials(
   password = openssl::askpass,
   shared_secret = NULL,
   persistent = FALSE,
-  friendly_name = NULL,
-  details = NULL
+  friendly_name = "steamr",
+  details = "Login using credentials"
 )
 
-auth_qr(friendly_name = NULL, device_details = NULL)
+auth_qr(friendly_name = "steamr", device_details = "Login using QR code")
 
 logout()
 }
@@ -106,6 +106,5 @@ auth_credentials(user, persistent = TRUE)
 is_authenticated() # returns TRUE
 
 # sign in using a QR code
-auth_qr()
-}
+auth_qr()}
 }

@@ -22,7 +22,9 @@ query_loyalty_rewards(
   contains_definitionids = NULL,
   include_direct_purchase_disabled = FALSE,
   excluded_content_descriptors = NULL,
-  excluded_appids = NULL
+  excluded_appids = NULL,
+  paginate = FALSE,
+  max_pages = Inf
 )
 }
 \arguments{

@@ -1,4 +1,4 @@
-#' Get reviews
+#' Reviews
 #' @description
 #' Retrieve user reviews for a given Steam application.
 #'
@@ -8,16 +8,8 @@
 #' depending on input parameters.}
 #' }
 #'
-#' @param appid Application ID referencing a Steam application. There are
-#' generally two ways of retrieving an application ID. The first one is to
-#' inspect the URL of a Steam game. For example the application ID of
-#' Counter-Strike is 10:
-#' \code{https://store.steampowered.com/app/10/CounterStrike/}.
-#'
-#' It is also possible to retrieve application IDs programmatically by
-#' exploiting Steam's search API. For details see \code{\link{search_apps}}.
 #' @param day_range Number of days from now to \code{n} days ago to look for
-#' reviews.
+#' reviews, e.g. \code{day_range = 5} looks for reviews in the last 5 days.
 #' @param start_date Date-time object describing the earliest time to look for
 #' reviews. Ignored if \code{date_range_type = "all"}.
 #' @param end_date Date-time object describing the latest time to look for
@@ -29,9 +21,10 @@
 #' @param filter Specifies the sort order. Can be one of \code{summary},
 #' \code{recent}, \code{updated}, and \code{all}. \code{summary} returns
 #' a summary of 10 most helpful comments. \code{all} sorts by helpfulness
-#' and applies moving windows in order to always return reviews. \code{recent}
-#' sorts by creation time and \code{updated} sorts by update time. For
-#' \code{get_all_app_reviews}, \code{filter} must be either \code{updated} or
+#' and applies moving windows in order to always return reviews (see the Steam
+#' \href{https://steamcommunity.com/games/593110/announcements/detail/2666556941788470579}{blog article}).
+#' \code{recent} sorts by creation time and \code{updated} sorts by update time.
+#' For \code{get_all_app_reviews}, \code{filter} must be either \code{updated} or
 #' \code{recent}.
 #' @param language Which review language to include in the output. A full
 #' list of platform supported languages can be found in the
@@ -57,37 +50,120 @@
 #' cursor ID. This ID can be used to paginate and iterate through many review pages
 #' at once. This argument is probably useless for most use cases and is
 #' extensively used for iteration purposes by \code{get_all_app_reviews}.
+#' @inheritParams common
 #'
-#' @returns A dataframe containing IDs, texts, and metadata of application
-#' reviews on Steam.
+#' @returns \code{stf_app_reviews} and \code{wba_app_review} return a dataframe
+#' containing IDs, texts, and metadata of application reviews on Steam. See the
+#' \href{https://github.com/Revadike/InternalSteamWebAPI/wiki/Get-App-Reviews#response}{community docs}
+#' for more info on the output of \code{stf_app_reviews}.
+#'
+#' \code{stf_review_histogram} returns a named list containing rollups aggregated
+#' by month (\code{rollups}), and rollups of the last 30 days aggregated by
+#' day (\code{recent}). Each list element is a dataframe containing the
+#' corresponding date and the aggregated thumps up/down.
+#'
+#' @evalRd auth_table(
+#'   list("stf_app_reviews", key = FALSE, login = FALSE, note = NULL),
+#'   list("wba_app_review", key = FALSE, login = TRUE, note = "Can only retrieve reviews of the authenticated user"),
+#'   list("stf_review_histogram", key = FALSE, login = FALSE)
+#' )
 #'
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # reviews of counter-strike
-#' get_app_reviews(10)
+#' \donttest{# reviews of counter-strike
+#' stf_app_reviews(10)
 #'
-#' # get all negative bulgarian reviews
-#' get_app_reviews(10, language = "bulgarian", review_type = "negative")
+#' # get all negative german reviews
+#' stf_app_reviews(
+#'   10,
+#'   language = "german",
+#'   review_type = "negative",
+#'   paginate = TRUE,
+#'   max_pages = Inf
+#' )
 #'
 #' # get all recent reviews up to page 10
-#' get_all_app_reviews(10, filter = "recent", max_tries = 10)
-#' }
-get_app_reviews <- function(appid,
+#' stf_app_reviews(10, filter = "recent", max_pages = 10)
+#'
+#' (hist <- stf_review_histogram(10)$rollups)
+#'
+#' if (requireNamespace("ggplot2", quietly = TRUE)) {
+#'   library(ggplot2)
+#'
+#'   ggplot(hist) +
+#'     geom_bar(
+#'       aes(x = date, y = recommendations_up),
+#'       stat = "identity",
+#'       fill = "#66c0f4",
+#'       color = NA,
+#'       width = resolution(as.double(hist$date) * 0.5)
+#'     ) +
+#'     geom_bar(
+#'       aes(x = date, y = recommendations_down * - 1),
+#'       stat = "identity",
+#'       fill = "#a34c25",
+#'       color = NA,
+#'       width = resolution(as.double(hist$date) * 0.5)
+#'     ) +
+#'     geom_hline(yintercept = 0, color = "#66c0f4") +
+#'     labs(title = "Overall reviews: Counter-Strike", x = NULL, y = NULL) +
+#'     theme_minimal() +
+#'     theme(
+#'       plot.background = element_rect(fill = "#2a475e"),
+#'       text = element_text(color = "white"),
+#'       panel.grid = element_blank(),
+#'       axis.line = element_blank(),
+#'       axis.text.y = element_text(color = "white"),
+#'       axis.text.x = element_text(color = "#66c0f4")
+#'     )
+#' }}
+stf_app_reviews <- function(appid,
                             day_range = NULL,
                             start_date = NULL,
                             end_date = NULL,
-                            date_range_type = NULL,
-                            filter = "all",
+                            date_range_type = "all",
+                            filter = "recent",
                             language = "all",
                             review_type = "all",
                             purchase_type = "steam",
                             playtime = c(0, 0),
                             filter_offtopic_activity = TRUE,
+                            paginate = FALSE,
+                            max_pages = 10,
                             num_per_page = 20,
                             cursor = NULL) {
-  check_length(playtime, ge = 2, le = 2)
+  if (paginate) {
+    args <- as.list(environment())
+    res <- do.call(stf_all_app_reviews, args)
+    return(res)
+  }
+
+  assert_number(appid)
+  assert_number(day_range, null.ok = TRUE)
+  assert_posixct(start_date, null.ok = TRUE)
+  assert_posixct(end_date, null.ok = TRUE)
+  assert_string(date_range_type)
+  assert_string(filter)
+  assert_string(language)
+  assert_string(review_type)
+  assert_string(purchase_type)
+  assert_numeric(playtime)
+  assert_vector(playtime, len = 2)
+  assert_flag(filter_offtopic_activity)
+  assert_flag(paginate)
+  assert_integerish(max_pages)
+  assert_integerish(num_per_page)
+  assert_string(cursor, null = TRUE)
+
+  if (!is.null(start_date)) {
+    start_date <- as.numeric(start_date)
+  }
+
+  if (!is.null(end_date)) {
+    end_date <- as.numeric(end_date)
+  }
+
   params <- list(
     day_range = day_range,
     start_date = start_date,
@@ -101,8 +177,6 @@ get_app_reviews <- function(appid,
     playtime_filter_max = playtime[2],
     filter_offtopic_activity = filter_offtopic_activity,
     num_per_page = num_per_page,
-    summary_num_positive_reviews = summary_num_positive_reviews,
-    summary_num_reviews = summary_num_reviews,
     json = TRUE,
     cursor = cursor
   )
@@ -114,23 +188,19 @@ get_app_reviews <- function(appid,
   )
   summary <- res$query_summary
   cursor <- res$cursor
-  res <- as_data_frame(res$reviews)
+  res <- res$reviews
   res$timestamp_created <- as.POSIXct(res$timestamp_created)
   res$timestamp_updated <- as.POSIXct(res$timestamp_updated)
   res$author.last_played <- as.POSIXct(res$author.last_played)
   res$weighted_vote_score <- as.numeric(res$weighted_vote_score)
+  res <- as_data_frame(res)
   attr(res, "summary") <- summary
   attr(res, "cursor") <- cursor
   res
 }
 
 
-#' @rdname get_app_reviews
-#' @export
-#' @param max_pages Maximum number of pages until breaking the iteration
-#' and returning the result up to this point. You may set this to \code{Inf}
-#' to retrieve all reviews for a given query.
-get_all_app_reviews <- function(appid,
+stf_all_app_reviews <- function(appid,
                                 day_range = NULL,
                                 start_date = NULL,
                                 end_date = NULL,
@@ -141,7 +211,9 @@ get_all_app_reviews <- function(appid,
                                 purchase_type = "steam",
                                 playtime = c(0, 0),
                                 filter_offtopic_activity = TRUE,
-                                max_tries = 10) {
+                                max_pages = 10,
+                                num_per_page = 20,
+                                ...) {
   if (any(c("all", "summary") %in% filter)) {
     stop("When batch querying reviews, filter cannot be \"all\" or \"summary\".")
   }
@@ -149,8 +221,8 @@ get_all_app_reviews <- function(appid,
   res <- list()
   cursor <- "*"
   i <- 1
-  while (!any(duplicated(cursor)) && i < max_tries) {
-    res[[i]] <- get_app_reviews(
+  while (!any(duplicated(cursor)) && i < max_pages) {
+    res[[i]] <- stf_app_reviews(
       appid,
       day_range = day_range,
       start_date = start_date,
@@ -162,7 +234,7 @@ get_all_app_reviews <- function(appid,
       purchase_type = purchase_type,
       playtime = playtime,
       filter_offtopic_activity = filter_offtopic_activity,
-      num_per_page = 100,
+      num_per_page = num_per_page,
       cursor = cursor[length(cursor)]
     )
     cursor[i] <- attr(res[[i]], "cursor")
@@ -173,9 +245,11 @@ get_all_app_reviews <- function(appid,
 }
 
 
-get_app_review <- function(steamid, appid) {
-  check_string(steamid)
-  check_number(appid)
+#' @rdname stf_app_reviews
+#' @export
+wba_app_review <- function(steamid, appid) {
+  assert_string(steamid)
+  assert_integerish(appid)
   steamid <- convert_steamid(steamid, to = "steam64")
 
   requests <- list(steamid = steamid, appid = appid)
@@ -192,9 +266,11 @@ get_app_review <- function(steamid, appid) {
 }
 
 
-#' @rdname get_app_reviews
+#' @rdname stf_app_reviews
+#' @param review_score_preference Unknown. In my tests, changing this argument
+#' did not yield a measurable difference in the results.
 #' @export
-get_review_histogram <- function(appid,
+stf_review_histogram <- function(appid,
                                  language = "english",
                                  review_score_preference = 2) {
   check_string(language, null = TRUE)
@@ -218,5 +294,5 @@ get_review_histogram <- function(appid,
   res <- list(rollups = res$results$rollups, recent = res$results$recent)
   res$rollups$date <- as.POSIXct(res$rollups$date)
   res$recent$date <- as.POSIXct(res$recent$date)
-  res
+  lapply(res, as_data_frame)
 }

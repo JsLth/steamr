@@ -63,6 +63,71 @@ wba_resolve_vanity <- function(name, type = "profile") {
   }
 
   res$response$steamid
+}#' Get User ID
+#' @description
+#' Retrieves the Steam ID64 of a user profile, group or game hub based on
+#' vanity IDs.
+#'
+#' @param name Name / Vanity ID of a user account, group or game hub.
+#' See details and examples.
+#' @param type Type of Steam name. \code{profile} returns the Steam ID of
+#' a user profile, \code{group} returns the ID of a public group and
+#' \code{game_group} returns the ID of a game's official game hub.
+#'
+#' @returns A length-1 character vector containing the Steam ID corresponding
+#' to the input name.
+#'
+#' @details
+#' There are various way of retrieving vanity IDs depending on the type of
+#' vanity URL type. The vanity URL of a Steam user is the account name
+#' (not the display name). It can be retrieved by inspecting the profile URL:
+#' \preformatted{https://steamcommunity.com/id/{vanity_id}/}
+#'
+#' Vanity IDs of groups can be retrieved in a similar way:
+#' \preformatted{https://steamcommunity.com/groups/{vanity_id}/}
+#'
+#' Vanity IDs of game hubs are not easily locatable as game hubs are
+#' closely linked to store pages. They can be found by inspecting the
+#' source code of a game page and searching for \code{VANITY_ID}. Vanity IDs
+#' of game hubs are usually the application ID or an abbreviation of the
+#' original title, e.g. \code{dota2} for DOTA 2, \code{TF2} for Team Fortress 2
+#' or simply \code{70} for Half-Life
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # get user ID
+#' resolve_vanity("gabelogannewell")
+#'
+#' # get group ID
+#' resolve_vanity("SteamDB", type = "group")
+#'
+#' # get game hub ID
+#' resolve_vanity("TF2", type = "game_group")
+#' }
+resolve_vanity <- function(name, type = "profile") {
+  check_steam_key()
+  check_string(name)
+  check_string(type)
+
+  type <- switch(type, profile = 1, group = 2, game_group = 3)
+  params <- .make_params(vanityurl = name, url_type = type, access_token = FALSE)
+  res <- request_webapi(
+    api = public_api(),
+    interface = "ISteamUser",
+    method = "ResolveVanityURL",
+    version = "v1",
+    params = params
+  )
+
+  code <- res$response$success
+  if (!identical(code, 1L)) {
+    msg <- res$response$message
+    stop(sprintf("Could not resolve vanity URL. Error code %s: %s", code, msg))
+  }
+
+  res$response$steamid
 }
 
 
@@ -353,7 +418,7 @@ parse_steam2 <- function(ids, resolve = FALSE) {
       stop(sprintf("Value %s is not a valid Steam2 ID.", id))
     }
 
-    match <- strcapture(
+    match <- utils::strcapture(
       "^STEAM_([0-4]):([0-1]):(0|[1-9][0-9]{0,9})$",
       id,
       proto = list(
@@ -390,7 +455,7 @@ parse_steam3 <- function(ids, resolve = FALSE) {
 
     types <- strtoi(names(type_chars))
     names(types) <- type_chars
-    match <- strcapture(
+    match <- utils::strcapture(
       "^\\[([AGMPCgcLTIUai]):([0-4]):(0|[1-9][0-9]{0,9})([0-9]+)?\\]$",
       id,
       proto = list(

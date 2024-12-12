@@ -27,7 +27,12 @@ Steam64, Steam2, and Steam3 IDs.}
 does not filter. A list of available relationships can be retrieved
 using \code{\link{steamkit_enum}("FriendRelationship", type = "SteamLanguage")}.}
 
-\item{appid}{A single appID of an application in the Steam store.}
+\item{appid}{Application ID referencing a Steam application. There are
+generally two ways of retrieving an appID:
+\itemize{
+ \item{Inspect or parse the store URL of an application, e.g. \code{https://store.steampowered.com/app/10/CounterStrike/}}
+ \item{Query appIDs programmatically, e.g. using \code{\link{search_apps}}}
+}}
 }
 \value{
 \describe{

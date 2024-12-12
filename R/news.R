@@ -1,3 +1,10 @@
+#' News
+#' @description
+#' Get news data for a given application.
+#'
+#' @inheritParams common
+#'
+#' @export
 get_news <- function(appid,
                      maxlength = NULL,
                      enddate = NULL,

@@ -1,26 +1,25 @@
 #' Get store items
 #' @description
-#' Get information about items in the store
+#' Get information about items in the store. \code{get_hardware_items} more
+#' specifically requests special information about items that require physical
+#' shipping.
 #'
-#' @param items Store item or list of store items as returned by
-#' \code{\link{store_item}}.
-#' @param language ISO639-1 language code all tokenized strings should be
-#' returned in. Formally, a tokenized string is a string that is prefixed
-#' with a \code{#} in the VDF file. Not all tokenized strings have a translation
-#' for all languages. If no translation is available, defaults to English.
-#' @param elanguage Language identifier of the returned information.
-#' @param country_code ISO-2 country code as returned by
-#' \code{\link{get_countries}}. The Steam store differs depending on the
-#' country it is accessed from.
-#' @param steam_realm Number describing the Steam realm. A value of 1
-#' indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.
-#' @param include List of extra information to include. Can be one or several
-#' of the following: \code{release}, \code{platforms},
-#' \code{all_purchase_options}, \code{screenshots}, \code{trailers},
-#' \code{ratings}, \code{tag_count}, \code{reviews}, \code{basic_info},
-#' \code{supported_languages}, \code{full_description}, \code{included_items}
-#' and \code{assets_without_overrides}. If \code{all}, returns all information.
-#' @param apply_user_filters Unknown.
+#' @param items A dataframe, list, or vector containing item IDs. If a vector,
+#' interprets it as appIDs. If a list or character vector is passed, each
+#' column can refer to a different type of item ID. Available types are
+#' \code{appid}, \code{packageid}, \code{bundleid}, \code{tagid},
+#' \code{creatorid}, and \code{hubcategoryid}. In this way, multiple items
+#' with multiple ID types can be specified. For \code{get_hardware_items},
+#' only vectors are allowed and they are always interpreted as packageIDs.
+#' @param context Object of class
+#' \code{\link[=store_context]{StoreBrowseContext}} that specifies the
+#' geographic context from which to access the store. Defaults to a global
+#' Steam realm (\code{steam_realm = 1}), English as the store language
+#' (\code{language = "english"}) and the USA as the access country
+#' (\code{country_code = "US"}).
+#' @param data_request Object of class
+#' \code{\link[=store_data_request]{StoreBrowseDataRequest}} that specifies
+#' the additional information to be included. Defaults to basic information.
 #'
 #' @returns A dataframe containing the requested information on the input
 #' IDs.
@@ -29,62 +28,45 @@
 #' @family store
 #'
 #' @examples
-#' \dontrun{
-#' ids <- list(
-#'   store_item(268770),
-#'   store_item(1182620),
-#'   store_item(creatorid = 10)
+#' # if just an ID is passed, it is assumed to be an appID
+#' get_items(10)
+#'
+#' # by passing a dataframe, you can pass multiple types of ID at a time
+#' ids <- data.frame(
+#'   appid = c(10, NA, NA),
+#'   creatorid = c(NA, 10, NA),
+#'   packageid = c(NA, NA, 354231)
 #' )
 #'
 #' # request basic item info
 #' get_items(ids)
 #'
 #' # request info in german language
-#' get_items(ids, language = "german")
+#' get_items(ids, context = store_context(language = "german"))
 #'
 #' # request info for the swedish store
-#' get_items(ids, country_code = "SE")
+#' get_items(ids, context = store_context(country_code = "SE"))
 #'
 #' # request info on operating systems
-#' get_items(ids, include = "platforms")
+#' get_items(ids, data_request = store_data_request(include = "platforms"))
 #'
-#' # request all info
-#' get_items(ids, include = "all")
-#' }
-get_items <- function(items,
-                      language = "english",
-                      elanguage = NULL,
-                      country_code = "US",
-                      steam_realm = 1L,
-                      include = NULL,
-                      apply_user_filters = FALSE) {
-  check_number(items)
-  check_string(language)
-  check_number(elanguage, null = TRUE)
-  check_string(country_code)
-  check_number(steam_realm, null = TRUE)
-  check_string(include, null = TRUE)
-  check_bool(apply_user_filters)
+#' # request special info on hardware
+#' get_items(ids, data_request = store_data_request(include = "all"))
+get_items <- function(items, context = NULL, data_request = NULL) {
+  check_class(context, "StoreBrowseContext", null = TRUE)
+  check_class(data_request, "StoreBrowseDataRequest", null = TRUE)
 
-  items <- lapply(items, store_item)
-  context <- store_browse_context(
-    language = language,
-    elanguage = elanguage,
-    country_code = country_code,
-    steam_realm = steam_realm
-  )
-  data_request <- store_browse_item_data_request(
-    include = include,
-    apply_user_filters = apply_user_filters
-  )
-  input_json <- jsonlite::toJSON(
-    list(
-      ids = items,
-      context = context,
-      data_request = data_request
-    ),
-    auto_unbox = TRUE,
-    force = TRUE
+  if (!is.list(items)) {
+    items <- data.frame(appid = items)
+  }
+
+  items <- .mapply(store_item, items, NULL)
+  context <- context %||% store_context()
+  data_request <- data_request %||% store_data_request()
+  input_json <- .make_input_json(
+    ids = items,
+    context = context,
+    data_request = data_request
   )
 
   params <- .make_params(input_json = input_json)
@@ -99,37 +81,14 @@ get_items <- function(items,
 }
 
 
-#' Get hardware items
-#' @description
-#' Get information about items that require physical shipping.
-#'
-#' @param items Numeric vector of package IDs or a list of store item objects
-#' as returned by \code{\link{store_items}(..., type = "packageid")}.
-#' @inheritParams get_items
-#'
-#' @returns A dataframe containing information on hardware items.
-#'
+#' @rdname get_items
 #' @export
-#' @family store
 #'
 #' @examples
-#' \dontrun{
-#'   get_hardware_items(c(354231, 1628580))
-#'   get_hardware_items(store_items(c(354231, 1628580), type = "packageid"))
-#' }
-#'
-get_hardware_items <- function(items,
-                               language = "english",
-                               elanguage = NULL,
-                               country_code = "US",
-                               steam_realm = 1L) {
+#' get_hardware_items(c(354231, 1628580))
+get_hardware_items <- function(items, context = NULL) {
   if (is.list(items)) items <- unlist(items, use.names = FALSE)
-  context <- store_browse_context(
-    language = language,
-    elanguage = elanguage,
-    country_code = country_code,
-    steam_realm = steam_realm
-  )
+  context <- context %||% store_context()
 
   params <- .make_params(packageid = as.list(items), context = context)
   res <- request_webapi(
@@ -143,49 +102,15 @@ get_hardware_items <- function(items,
 }
 
 
-#' Define a store item
-#' @description
-#' Create an object describing a store item by ID. Can be an application,
-#' package, bundle, tag, creator or hub category.
-#'
-#' \code{store_item} returns a single ID object, but allows the passing
-#' of varying ID types. \code{store_items} returns a list of ID objects, but
-#' is restricted to a single ID type.
-#'
-#' @param appid Application ID
-#' @param packageid Package ID
-#' @param bundleid Bundle ID
-#' @param tagid Tag ID
-#' @param creatorid Creator ID
-#' @param hubcategoryid Hub category ID
-#'
-#' @returns An object of class \code{StoreItemID}.
-#'
-#' @export
-#' @family store
-#'
-#' @examples
-#' store_item(10)
-#'
-#' \dontrun{
-#' ids <- list(
-#'   store_item(268770),
-#'   store_item(1182620),
-#'   store_item(creatorid = 10)
-#' )
-#'
-#' get_items(ids)
-#' }
 store_item <- function(appid = NULL,
                        packageid = NULL,
                        bundleid = NULL,
                        tagid = NULL,
                        creatorid = NULL,
                        hubcategoryid = NULL) {
-  check_specified(exact = TRUE)
-  item <- drop_null(as.list(environment()))
+  item <- drop_na(drop_null(as.list(environment())))
 
-  if (is_store_item(item[[1]])) {
+  if (inherits(item[[1]], "StoreItemID")) {
     return(item[[1]])
   }
 
@@ -195,44 +120,30 @@ store_item <- function(appid = NULL,
 }
 
 
-#' @param items Numeric vector of Steam IDs. Will be converted to
-#' \code{store_item}s. If a list is passed, will return \code{items} as-is.
-#' @param type ID type of all items to be returned. Must be one of the
-#' argument names of \code{store_item}.
-#' @rdname store_item
-#' @export
-store_items <- function(items, type = NULL) {
-  if (is_store_item(items)) {
-    return(list(items))
-  } else if (is.list(items)) {
-    return(items)
-  }
-
-  type <- type %||% "appid"
-  type <- match.arg(type, names(formals(store_item)))
-  lapply(items, function(x) {
-    arg <- list(x)
-    names(arg) <- type
-    box(do.call(store_item, arg))
-  })
-}
-
-
-is_store_item <- function(x) {
-  inherits(x, "StoreItemID")
-}
-
-
-#' @export
-print.StoreItemID <- function(x, ...) {
-  cat(sprintf("<StoreItem>\n  %s: %s", names(x), x))
-  invisible(x)
-}
-
-
-store_browse_item_data_request <- function(include,
-                                           apply_user_filters = FALSE,
-                                           ...) {
+#' Steam utility objects
+#' @description
+#' Create utility objects commonly used in the Steam web API.
+#'
+#' \itemize{
+#'  \item{\code{store_data_request} specifies which extra information should
+#'  be included in the API response. It is usually supplied over an argument
+#'  \code{data_request}.}
+#'  \item{\code{store_context} specifies the geographic and language context
+#'  from which to access the Steam store. It is usually supplied over an
+#'  argument \code{context}.}
+#' }
+#'
+#' @param include List of extra information to include. Can be one or several
+#' of the following: \code{release}, \code{platforms},
+#' \code{all_purchase_options}, \code{screenshots}, \code{trailers},
+#' \code{ratings}, \code{tag_count}, \code{reviews}, \code{basic_info},
+#' \code{supported_languages}, \code{full_description}, \code{included_items}
+#' and \code{assets_without_overrides}. If \code{all}, returns all information.
+#' @param apply_user_filters Unknown.
+#' @returns \code{store_data_request()} returns a list of class
+#' \code{StoreBrowseItemDataRequest}. \code{store_context()} returns a list of
+#' class \code{StoreBrowseContext}.
+store_data_request <- function(include = NULL, apply_user_filters = FALSE) {
   info <- c(
     "assets", "release", "platforms", "all_purchase_options",
     "screenshots", "trailers", "ratings", "tag_count", "reviews",
@@ -253,11 +164,22 @@ store_browse_item_data_request <- function(include,
 }
 
 
-store_browse_context <- function(language = NULL,
-                                 elanguage = NULL,
-                                 country_code = NULL,
-                                 steam_realm = NULL,
-                                 ...) {
+#' @rdname store_data_request
+#' @param language ISO 639-1 language code all tokenized strings should be
+#' returned in. Not all tokenized strings have a translation
+#' for all languages. If no translation is available, defaults to English.
+#' @param elanguage Numeric code representing the store language. A list
+#' of language codes and their corresponding languages is defined in
+#' \code{\link{ELanguage}}.
+#' @param country_code ISO 3166 country code representing the country from
+#' which to view the Steam store.
+#' @param steam_realm Number describing the Steam realm. A value of 1
+#' indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.
+#' @export
+store_context <- function(language = "english",
+                          elanguage = NULL,
+                          country_code = "US",
+                          steam_realm = 1L) {
   check_string(language)
   check_integerish(elanguage, null = TRUE)
   check_string(country_code)
