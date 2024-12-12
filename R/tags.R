@@ -6,7 +6,7 @@
 #' \code{get_recommended_tags} are specifically based on the authenticated
 #' user.
 #'
-#' @inheritParams get_items
+#' @inheritParams store_context
 #' @param hash Hash included in the \code{hash} attribute of a previous
 #' function call. If \code{hash} matches with the hash of the requested tags,
 #' then a \code{DuplicateRequest} error is thrown.

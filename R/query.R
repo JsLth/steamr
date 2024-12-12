@@ -65,7 +65,7 @@
 #' @param iterate Whether to automatically iterate through pages. Depending
 #' on the query, this can take a long time. The maximum number of requests
 #' can be controlled using \code{options(steamr_max_reqs = ...)}.
-#' @inheritParams get_items
+#' @inheritParams wba_store_items
 #'
 #' @returns A dataframe containing information about the queried games.
 #' The output contains three attributes \code{matches}, \code{start}, and

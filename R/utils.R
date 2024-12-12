@@ -172,3 +172,9 @@ trim_html_error <- function(html, desc) {
   html <- gsub(desc, "", html)
   trimws(html)
 }
+
+
+one_per_row <- function(x) {
+  missings <- .mapply(\(...) !is.na(c(...)), x, NULL)
+  lvapply(missings, \(x) sum(x) == 1)
+}

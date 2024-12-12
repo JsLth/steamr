@@ -4,10 +4,10 @@
 #' specifically requests special information about items that require physical
 #' shipping.
 #'
-#' @param items A dataframe, list, or vector containing item IDs. If a vector,
-#' interprets it as appIDs. If a list or character vector is passed, each
-#' column can refer to a different type of item ID. Available types are
-#' \code{appid}, \code{packageid}, \code{bundleid}, \code{tagid},
+#' @param items A dataframe, list, or character vector containing item IDs. If
+#' a vector, interprets it as appIDs. If a list or dataframe is passed, each
+#' column or list element can refer to a different type of item ID. Available
+#' types are \code{appid}, \code{packageid}, \code{bundleid}, \code{tagid},
 #' \code{creatorid}, and \code{hubcategoryid}. In this way, multiple items
 #' with multiple ID types can be specified. For \code{get_hardware_items},
 #' only vectors are allowed and they are always interpreted as packageIDs.
@@ -25,11 +25,15 @@
 #' IDs.
 #'
 #' @export
-#' @family store
+#'
+#' @evalRd auth_table(
+#'   list("wba_store_items", key = FALSE, login = FALSE),
+#'   list("wba_hardware_items", key = FALSE, login = FALSE)
+#' )
 #'
 #' @examples
-#' # if just an ID is passed, it is assumed to be an appID
-#' get_items(10)
+#' \donttest{# if just an ID is passed, it is assumed to be an appID
+#' wba_store_items(10)
 #'
 #' # by passing a dataframe, you can pass multiple types of ID at a time
 #' ids <- data.frame(
@@ -39,25 +43,25 @@
 #' )
 #'
 #' # request basic item info
-#' get_items(ids)
+#' wba_store_items(ids)
 #'
 #' # request info in german language
-#' get_items(ids, context = store_context(language = "german"))
+#' wba_store_items(ids, context = store_context(language = "german"))
 #'
 #' # request info for the swedish store
-#' get_items(ids, context = store_context(country_code = "SE"))
+#' wba_store_items(ids, context = store_context(country_code = "SE"))
 #'
 #' # request info on operating systems
-#' get_items(ids, data_request = store_data_request(include = "platforms"))
+#' wba_store_items(ids, data_request = store_data_request("platforms"))
 #'
 #' # request special info on hardware
-#' get_items(ids, data_request = store_data_request(include = "all"))
-get_items <- function(items, context = NULL, data_request = NULL) {
-  check_class(context, "StoreBrowseContext", null = TRUE)
-  check_class(data_request, "StoreBrowseDataRequest", null = TRUE)
+#' wba_hardware_items(c(354231, 1628580))}
+wba_store_items <- function(items, context = NULL, data_request = NULL) {
+  assert_class(context, "StoreBrowseContext", null = TRUE)
+  assert_class(data_request, "StoreBrowseItemDataRequest", null.ok = TRUE)
 
   if (!is.list(items)) {
-    items <- data.frame(appid = items)
+    items <- list(appid = items)
   }
 
   items <- .mapply(store_item, items, NULL)
@@ -81,12 +85,10 @@ get_items <- function(items, context = NULL, data_request = NULL) {
 }
 
 
-#' @rdname get_items
+#' @rdname wba_store_items
 #' @export
-#'
-#' @examples
-#' get_hardware_items(c(354231, 1628580))
-get_hardware_items <- function(items, context = NULL) {
+wba_hardware_items <- function(items, context = NULL) {
+  assert_class(context, "StoreBrowseContext", null = TRUE)
   if (is.list(items)) items <- unlist(items, use.names = FALSE)
   context <- context %||% store_context()
 
@@ -107,14 +109,31 @@ store_item <- function(appid = NULL,
                        bundleid = NULL,
                        tagid = NULL,
                        creatorid = NULL,
-                       hubcategoryid = NULL) {
+                       hubcategoryid = NULL,
+                       ...) {
+  if (...length()) {
+    stop(sprintf("Unknown store item type: %s", ...names()), call. = FALSE)
+  }
+
   item <- drop_na(drop_null(as.list(environment())))
+  item <- as.data.frame(item)
+
+  if (!length(item)) {
+    stop(paste(
+      "Missing or empty store items provided. Please make sure that",
+      "each store item contains exactly one ID."
+    ), call. = FALSE)
+  }
+
+  if (!all(one_per_row(item))) {
+    stop("Argument `items` must contain exactly one ID per row.", call. = FALSE)
+  }
 
   if (inherits(item[[1]], "StoreItemID")) {
     return(item[[1]])
   }
 
-  check_integerish(unlist(item), null = TRUE)
+  assert_integerish(unlist(item), null = TRUE)
   class(item) <- "StoreItemID"
   item
 }
@@ -143,6 +162,15 @@ store_item <- function(appid = NULL,
 #' @returns \code{store_data_request()} returns a list of class
 #' \code{StoreBrowseItemDataRequest}. \code{store_context()} returns a list of
 #' class \code{StoreBrowseContext}.
+#'
+#' @export
+#'
+#' @examples
+#' \donttest{# Specify the geographic context
+#' wba_store_items(440, context = store_context(language = "german", country_code = "DE"))
+#'
+#' # Specify the data to be returned
+#' wba_store_items(440, data_request = store_data_request(c("screenshots", "trailers")))}
 store_data_request <- function(include = NULL, apply_user_filters = FALSE) {
   info <- c(
     "assets", "release", "platforms", "all_purchase_options",
@@ -159,8 +187,10 @@ store_data_request <- function(include = NULL, apply_user_filters = FALSE) {
   names(obj) <- paste0("include_", info)
 
   obj <- c(obj, apply_user_filters = apply_user_filters)
-  class(obj) <- "StoreBrowseItemDataRequest"
-  drop_false(drop_null(obj)) %empty% NULL
+
+  obj <- drop_false(drop_null(obj))
+  class(obj) <- c("StoreBrowseItemDataRequest", "steam_object")
+  obj
 }
 
 
@@ -186,6 +216,16 @@ store_context <- function(language = "english",
   check_integerish(steam_realm)
 
   obj <- as.list(environment())
-  class(obj) <- "StoreBrowseContext"
-  drop_null(obj) %empty% NULL
+  obj <- drop_null(obj)
+  class(obj) <- c("StoreBrowseContext", "steam_object")
+  obj
+}
+
+
+#' @export
+print.steam_object <- function(x, ...) {
+  header <- sprintf("<%s>", class(x)[[1]])
+  body <- paste0("  ", names(x), ": ", x)
+  cat(header, body, sep = "\n")
+  invisible(x)
 }

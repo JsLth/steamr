@@ -55,3 +55,10 @@ Create utility objects commonly used in the Steam web API.
  argument \code{context}.}
 }
 }
+\examples{
+\donttest{# Specify the geographic context
+wba_store_items(440, context = store_context(language = "german", country_code = "DE"))
+
+# Specify the data to be returned
+wba_store_items(440, data_request = store_data_request(c("screenshots", "trailers")))}
+}

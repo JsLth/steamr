@@ -74,7 +74,7 @@ steamkit_enum <- function(enum = NULL,
     enum <- substr(enum, 2, nchar(enum))
 
     if (!is.null(filter)) {
-      enum <- enum[utils::agrepl(filter, enum, ignore.case = TRUE)]
+      enum <- enum[agrepl(filter, enum, ignore.case = TRUE)]
     }
   } else {
     enum <- lines[[paste0("E", enum)]]
@@ -163,10 +163,9 @@ account_types <- function() {
 
 account_instances <- function() {
   as_data_frame(data.frame(
-    code = c(0, 1, 2, 4, 8, 16, 32, 64, 128),
+    code = c(0, 1, 2, 4),
     desc = factor(c(
-      "AllInstances", "DesktopInstance", "ConsoleInstance", "WebInstance",
-
+      "AllInstances", "DesktopInstance", "ConsoleInstance", "WebInstance"
     ))
   ))
 }

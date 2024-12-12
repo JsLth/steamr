@@ -154,7 +154,7 @@ stf_app_reviews <- function(appid,
   assert_flag(paginate)
   assert_integerish(max_pages)
   assert_integerish(num_per_page)
-  assert_string(cursor, null = TRUE)
+  assert_string(cursor, null.ok = TRUE)
 
   if (!is.null(start_date)) {
     start_date <- as.numeric(start_date)

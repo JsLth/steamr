@@ -57,5 +57,5 @@ get_genres()
 
 \code{\link{get_apps_in_genre}}
 
-\code{\link{get_items}}
+\code{\link{wba_store_items}}
 }

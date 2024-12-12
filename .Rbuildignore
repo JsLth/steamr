@@ -7,3 +7,4 @@
 ^docs$
 ^overview.md$
 ^.*\.png$
+^dev$
