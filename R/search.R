@@ -93,14 +93,14 @@ stf_suggest <- function(term,
                         language = "english",
                         steam_realm = 1L,
                         require_type = NULL,
-                        exclude_content_descriptors = NULL,
+                        excluded_content_descriptors = NULL,
                         links = FALSE) {
   assert_character(term, min.len = 1)
   assert_string(country_code)
   assert_string(language)
   assert_integerish(steam_realm)
   assert_character(require_type, null.ok = TRUE)
-  assert_integerish(exclude_content_descriptors, lower = 1, upper = 5)
+  assert_integerish(excluded_content_descriptors, lower = 1, upper = 5, null.ok = TRUE)
   assert_flag(links)
 
   excluded_content_descriptors <- webapi_params(list(
@@ -115,7 +115,7 @@ stf_suggest <- function(term,
     require_type = require_type,
     f = "jsonfull"
   )
-  params <- c(params, exclude_content_descriptors)
+  params <- c(params, excluded_content_descriptors)
   res <- request_storefront(
     api = store_api(),
     interface = "search",
