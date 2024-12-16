@@ -23,41 +23,51 @@ api_key <- function() {
 #' @description
 #' Fetch metadata about the Steam server.
 #'
-#' \code{get_supported_api_list()} returns information about all supported
+#' \itemize{
+#'  \item{\code{wba_methods}: returns information about all supported
 #' API endpoints of the web API. A complete list including undocumented
-#' endpoints can be found on \url{https://steamapi.xpaw.me/}.
+#' endpoints can be found on \url{https://steamapi.xpaw.me/}}
+#'  \item{\code{wba_servertime}: returns the current Steam server time}
+#'  \item{\code{steam_stats} returns the current users online and ingame}
+#'  \item{\code{wba_servers} returns details about running game servers}
+#' }
 #'
-#' \code{get_servertime()} returns the current Steam server time.
-#'
-#' \code{steam_stats()} returns the current users online and ingame.
-#'
-#' @returns \describe{
-#'  \item{\code{get_supported_api_list()}}{An unnamed list where each
+#' @returns \itemize{
+#'  \item{\code{wba_methods}: An named list where each
 #'  index contains a named list with information on the respective API
 #'  endpoint.}
 #'
-#'  \item{\code{get_servertime()}}{A \code{POSIXct} value.}
+#'  \item{\code{wba_servertime}: A \code{POSIXct} value.}
 #'
-#'  \item{\code{steam_stats()}}{A named list of length 2}
+#'  \item{\code{steam_stats}: A named list of length 2}
 #'
-#'  \item{\code{get_servers()}}{A dataframe containing information about
-#'  available game servers.}
+#'  \item{\code{wba_servers}: A dataframe.}
 #'
 #' }
 #'
-#' @rdname steam_stats
+#' @evalRd auth_table(
+#'   list("wba_methods", key = FALSE, login = FALSE, note = "Providing a publisher key returns additional publisher-only methods"),
+#'   list("wba_servertime", key = FALSE, login = FALSE),
+#'   list("steam_stats", key = FALSE, login = FALSE),
+#'   list("wba_servers", key = FALSE, login = FALSE)
+#' )
+#'
+#' @name meta
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' get_supported_api_list()
+#' \donttest{# details on low-level method for `wba_news`
+#' methods <- wba_methods()
+#' methods$ISteamNews$GetNewsForApp
 #'
-#' get_servertime()
+#' # get the current server time
+#' wba_servertime()
 #'
+#' # get the current user number
 #' steam_stats()
 #'
-#' get_servers()
-#' }
+#' # get details about game servers
+#' get_servers()}
 steam_stats <- function() {
   res <- request_storefront(
     api = valve_api(),
@@ -69,11 +79,11 @@ steam_stats <- function() {
 }
 
 
-#' @rdname steam_stats
+#' @rdname meta
 #' @export
-get_supported_api_list <- function() {
+wba_methods <- function() {
   params <- .make_params()
-  request_webapi(
+  res <- request_webapi(
     api = public_api(),
     interface = "ISteamWebAPIUtil",
     method = "GetSupportedAPIList",
@@ -81,12 +91,26 @@ get_supported_api_list <- function() {
     params = params,
     simplify = FALSE
   )$apilist$interfaces
+  nms <- cvapply(res, "[[", "name")
+  methods <- lapply(res, function(x) {
+    x <- x$methods
+    nms1 <- cvapply(x, "[[", "name")
+    x <- lapply(x, function(y) {
+      y$name <- NULL
+      y$parameters <- as_data_frame(rbind_list(y$parameters))
+      y
+    })
+    names(x) <- nms1
+    x
+  })
+  names(methods) <- nms
+  methods
 }
 
 
-#' @rdname steam_stats
+#' @rdname meta
 #' @export
-get_servertime <- function() {
+wba_servertime <- function() {
   params <- .make_params()
   res <- request_webapi(
     api = public_api(),
@@ -101,9 +125,9 @@ get_servertime <- function() {
 }
 
 
-#' @rdname steam_stats
+#' @rdname meta
 #' @export
-get_servers <- function(filter = NULL, limit = NULL) {
+wba_servers <- function(filter = NULL, limit = NULL) {
   check_steam_key()
   params <- .make_params()
   res <- request_webapi(
