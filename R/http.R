@@ -150,7 +150,7 @@ request_webapi <- function(api,
 
   req <- use_session(req)
 
-  verbose <- getOption("steamr_verbose", FALSE)
+  verbose <- getOption("steamr_debug", FALSE)
 
   if (cache) {
     req <- httr2::req_cache(req, path = tempdir(), debug = verbose)
@@ -245,7 +245,7 @@ request_storefront <- function(api,
 
   req <- use_session(req)
 
-  verbose <- getOption("steamr_verbose", FALSE)
+  verbose <- getOption("steamr_debug", FALSE)
 
   if (cache) {
     req <- httr2::req_cache(req, path = tempdir(), debug = verbose)
@@ -318,7 +318,7 @@ request_steamspy <- function(params) {
   req <- httr2::request("https://steamspy.com/api.php")
   req <- do.call(httr2::req_url_query, c(list(req), params))
 
-  if (getOption("steamr_verbose", FALSE)) {
+  if (getOption("steamr_debug", FALSE)) {
     cat("GET", utils::URLdecode(req$url), "\n")
   }
 
