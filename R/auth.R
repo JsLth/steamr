@@ -19,13 +19,19 @@
 #' If the session is ephemeral (default), then it is reset when the R session
 #' ends. If it is persistent, then the necessary cookies are stored in a
 #' persistent cache in the file system and recovered when the package is loaded.
+#' \code{auth_credentials} additionally requests a persistent session from the
+#' Steam API indicating that the requested access token is persistent.
+#' \code{auth_credentials} is thus potentially more persistent than
+#' \code{auth_qr}.
 #' @param friendly_name Name of the session. Used to track authorized devices
 #' in Steam Guard.
 #' @param details Arbitrary details about the device attempting to
 #' authenticate. Will be shown in Steam Guard.
 #' @returns An object of class \code{steam_auth_session} holding information
 #' about vanity ID, Steam64 ID, client ID, request ID, and access token. The
-#' object is also attached to the session.
+#' object is also attached to the session. \code{auth_logout} returns
+#' \code{NULL}, invisibly. \code{auth_history} returns a dataframe where each
+#' row is a login attempt.
 #'
 #' @details
 #' Internally, \code{auth_credentials} requests a public RSA key using the
@@ -44,13 +50,20 @@
 #' QR code with the Steam Guard mobile app automatically authenticates the
 #' session.
 #'
+#' @evalRd auth_table(
+#'   list("auth_credentials", key = FALSE, login = FALSE),
+#'   list("auth_qr", key = FALSE, login = FALSE),
+#'   list("auth_logout", key = FALSE, login = TRUE, note = "Ends login status"),
+#'   list("auth_history", key = FALSE, login = TRUE)
+#' )
+#'
 #' @note
 #' Session authentication is only possible in interactive mode because it
 #' requires the manual insertion of Steam guard codes, confirmation of
 #' login requests in the mobile app, or the scanning of QR codes. All of these
 #' actions are not suitable for batch processing.
 #'
-#' @rdname auth
+#' @name auth
 #' @export
 #'
 #' @examples
@@ -103,7 +116,8 @@ auth_credentials <- function(username,
     account_name = username,
     encrypted_password = epass,
     encryption_timestamp = params$timestamp,
-    device_details = details
+    device_details = details,
+    persistence = as.logical(persistent)
   )
 
   # abort if captcha is needed
@@ -148,7 +162,8 @@ auth_credentials <- function(username,
 #'
 #' @export
 auth_qr <- function(friendly_name = "steamr",
-                    device_details = "Login using QR code") {
+                    device_details = "Login using QR code",
+                    persistent = FALSE) {
   check_interactive()
 
   if (!loadable("qrcode")) {
@@ -156,7 +171,7 @@ auth_qr <- function(friendly_name = "steamr",
   }
 
   refresh <- TRUE
-  cat(paste(
+  message(paste(
     "In the next seconds, a QR code will be plotted.",
     "Scan the QR code using the Steam mobile app to authenticate.",
     "The QR code will refresh every 5 seconds.",
@@ -199,6 +214,10 @@ auth_qr <- function(friendly_name = "steamr",
     stop("Authentication was unsuccessful. Session is not authenticated.")
   }
 
+  if (persistent) {
+    memorize_session(auth)
+  }
+
   auth
 }
 
@@ -206,11 +225,11 @@ auth_qr <- function(friendly_name = "steamr",
 #' @rdname auth
 #' @export
 #' @description
-#' \code{logout} ends the active authenticated session by formally logging
+#' \code{auth_logout} ends the active authenticated session by formally logging
 #' out of Steam and removing all cookies and authentication information from
 #' the session and the cache.
 #'
-logout <- function() {
+auth_logout <- function() {
   session <- globst$session
 
   if (is.null(session)) {
@@ -224,16 +243,41 @@ logout <- function() {
     params = params,
     http_method = "POST",
     format = "html",
-    headers = list(`Content-Length` = nchar(params$sessionid) + 10)
+    headers = list(
+      `Content-Length` = nchar(params$sessionid) + 10,
+      Connection = "keep-alive",
+      Origin = store_api()
+    )
   )
 
   if (is_authenticated()) {
     stop("Logout was unsuccessful. Session is still authenticated.")
   }
 
+  clear_auth()
+}
+
+
+#' @rdname auth
+#' @export
+auth_history <- function() {
+  check_authenticated()
+  res <- request_webapi(
+    api = public_api(),
+    interface = "IAuthenticationService",
+    method = "EnumerateTokens",
+    http_method = "POST",
+    version = "v1"
+  )
+  res <- as_data_frame(res$response$refresh_tokens)
+  res$time_updated <- as.POSIXct(res$time_updated)
+  res
+}
+
+
+clear_auth <- function() {
   unlink(cache_path(), recursive = TRUE)
-  unlink(session)
-  rm("session", "auth", envir = globst)
+  rm(session, auth, envir = globst)
 }
 
 

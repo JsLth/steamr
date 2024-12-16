@@ -149,7 +149,6 @@ request_webapi <- function(api,
   }
 
   req <- use_session(req)
-  req <- use_auth(req, api)
 
   verbose <- getOption("steamr_verbose", FALSE)
 
@@ -244,7 +243,6 @@ request_storefront <- function(api,
   }
 
   req <- use_session(req)
-  req <- use_auth(req, api)
 
   verbose <- getOption("steamr_verbose", FALSE)
 
@@ -366,6 +364,7 @@ request_generic <- function(url,
                             format = "json",
                             ...,
                             headers = NULL,
+                            options = NULL,
                             dry = FALSE) {
   req <- httr2::request(url)
 
@@ -378,15 +377,18 @@ request_generic <- function(url,
   }
 
   req <- use_session(req)
-  req <- use_auth(req, url)
   req <- httr2::req_method(req, http_method)
 
   if (!is.null(headers)) {
     req <- do.call(httr2::req_headers, c(list(req), headers))
   }
 
+  if (!is.null(options)) {
+    req <- do.call(httr2::req_options, c(list(req), options))
+  }
+
   if (getOption("steamr_verbose", FALSE)) {
-    cat(http_method, utils::URLdecode(req$url), "\n")
+    message(http_method, "", utils::URLdecode(req$url), "\n")
   }
 
   if (dry) {
@@ -397,32 +399,6 @@ request_generic <- function(url,
 
   fun <- get(paste0("resp_body_", format), envir = asNamespace("httr2"))
   do.call(fun, c(list(res), ...))
-}
-
-
-use_auth <- function(req, api = NULL) {
-  api_host <- get_hostname(api)
-  def_hosts <- list(
-    store = get_hostname(store_api()),
-    community = get_hostname(comm_api())
-  )
-
-  if (is.null(api)) {
-    api <- if (identical(api_host, def_hosts$store)) {
-      "store"
-    } else if (identical(api_host, def_hosts$community)) {
-      "community"
-    }
-  }
-
-  auth <- get0("auth", envir = globst)
-  if (!is.null(auth) && !is.null(api)) {
-    cookies <- auth$cookies[[api]]
-    cookies <- paste(paste0(names(cookies), "=", cookies), collapse = "; ")
-    req <- httr2::req_headers(req, Cookie = cookies)
-  }
-
-  req
 }
 
 
