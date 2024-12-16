@@ -90,7 +90,7 @@
 auth_credentials <- function(username,
                              password = openssl::askpass,
                              shared_secret = NULL,
-                             persistent = FALSE,
+                             persistent = getOption("steamr_persistent", FALSE),
                              friendly_name = "steamr",
                              details = "Login using credentials") {
   stopifnot(is.character(username))
@@ -163,7 +163,7 @@ auth_credentials <- function(username,
 #' @export
 auth_qr <- function(friendly_name = "steamr",
                     device_details = "Login using QR code",
-                    persistent = FALSE) {
+                    persistent = getOption("steamr_persistent", FALSE)) {
   check_interactive()
 
   if (!loadable("qrcode")) {
