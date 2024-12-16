@@ -5,9 +5,13 @@
 \alias{wba_hardware_items}
 \title{Get store items}
 \usage{
-wba_store_items(items, context = NULL, data_request = NULL)
+wba_store_items(
+  items,
+  context = store_context(),
+  data_request = store_data_request()
+)
 
-wba_hardware_items(items, context = NULL)
+wba_hardware_items(items, context = store_context())
 }
 \arguments{
 \item{items}{A dataframe, list, or character vector containing item IDs. If
@@ -27,7 +31,7 @@ Steam realm (\code{steam_realm = 1}), English as the store language
 
 \item{data_request}{Object of class
 \code{\link[=store_data_request]{StoreBrowseDataRequest}} that specifies
-the additional information to be included. Defaults to basic information.}
+the additional information to be included. Defaults to no extra info.}
 }
 \value{
 A dataframe containing the requested information on the input

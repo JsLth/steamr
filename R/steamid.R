@@ -520,7 +520,11 @@ steam64_to_steam3 <- function(id) {
 
 
 steam64_to_vanity <- function(id) {
-  basename(get_player_summary(id)$profileurl)
+  player <- get_player_summary(id)
+  if (!nrow(player)) {
+    stop("User with Steam64 \"id\" does not exist.", id)
+  }
+  basename(player$profileurl)
 }
 
 

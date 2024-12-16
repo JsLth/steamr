@@ -21,17 +21,7 @@
 #' @seealso \code{\link{get_country_list}}
 #'
 #' @examples
-#' # worldwide weekly top sellers
-#' get_weekly_top_sellers()
-#'
-#' # weeky top sellers of South Korea
-#' get_weekly_top_sellers("KR")
-#'
-#' # top sellers of last month
-#' get_weekly_top_sellers(start_date = Sys.time() - 2629800)
-#'
-#' # return additional info
-#' get_weekly_top_sellers(include = "screenshots")
+
 get_weekly_top_sellers <- function(country = NULL,
                                    language = "english",
                                    elanguage = NULL,

@@ -19,7 +19,7 @@
 #' (\code{country_code = "US"}).
 #' @param data_request Object of class
 #' \code{\link[=store_data_request]{StoreBrowseDataRequest}} that specifies
-#' the additional information to be included. Defaults to basic information.
+#' the additional information to be included. Defaults to no extra info.
 #'
 #' @returns A dataframe containing the requested information on the input
 #' IDs.
@@ -56,17 +56,17 @@
 #'
 #' # request special info on hardware
 #' wba_hardware_items(c(354231, 1628580))}
-wba_store_items <- function(items, context = NULL, data_request = NULL) {
-  assert_class(context, "StoreBrowseContext", null = TRUE)
-  assert_class(data_request, "StoreBrowseItemDataRequest", null.ok = TRUE)
+wba_store_items <- function(items,
+                            context = store_context(),
+                            data_request = store_data_request()) {
+  assert_class(context, "StoreBrowseContext")
+  assert_class(data_request, "StoreBrowseItemDataRequest")
 
   if (!is.list(items)) {
     items <- list(appid = items)
   }
 
   items <- .mapply(store_item, items, NULL)
-  context <- context %||% store_context()
-  data_request <- data_request %||% store_data_request()
   input_json <- .make_input_json(
     ids = items,
     context = context,
@@ -87,7 +87,7 @@ wba_store_items <- function(items, context = NULL, data_request = NULL) {
 
 #' @rdname wba_store_items
 #' @export
-wba_hardware_items <- function(items, context = NULL) {
+wba_hardware_items <- function(items, context = store_context()) {
   assert_class(context, "StoreBrowseContext", null = TRUE)
   if (is.list(items)) items <- unlist(items, use.names = FALSE)
   context <- context %||% store_context()
@@ -163,6 +163,10 @@ store_item <- function(appid = NULL,
 #' \code{StoreBrowseItemDataRequest}. \code{store_context()} returns a list of
 #' class \code{StoreBrowseContext}.
 #'
+#' @seealso \code{\link{wba_store_items}}, \code{\link{wba_hardware_items}},
+#' \code{\link{wba_charts_weekly}}, \code{\link{wba_query}},
+#' \code{\link{wba_marketing_message}}
+#'
 #' @export
 #'
 #' @examples
@@ -202,7 +206,8 @@ store_data_request <- function(include = NULL, apply_user_filters = FALSE) {
 #' of language codes and their corresponding languages is defined in
 #' \code{\link{ELanguage}}.
 #' @param country_code ISO 3166 country code representing the country from
-#' which to view the Steam store.
+#' which to view the Steam store. A list of Steam countries can be retrieved
+#' with \code{\link{get_country_list}}.
 #' @param steam_realm Number describing the Steam realm. A value of 1
 #' indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.
 #' @export
@@ -225,7 +230,11 @@ store_context <- function(language = "english",
 #' @export
 print.steam_object <- function(x, ...) {
   header <- sprintf("<%s>", class(x)[[1]])
-  body <- paste0("  ", names(x), ": ", x)
-  cat(header, body, sep = "\n")
+  if (length(x)) {
+    body <- paste0("  ", names(x), ": ", x)
+    cat(header, body, sep = "\n")
+  } else {
+    cat(header, sep = "\n")
+  }
   invisible(x)
 }

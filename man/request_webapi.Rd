@@ -50,6 +50,7 @@ request_generic(
   format = "json",
   ...,
   headers = NULL,
+  options = NULL,
   dry = FALSE
 )
 

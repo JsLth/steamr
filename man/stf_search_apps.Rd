@@ -14,7 +14,7 @@ stf_suggest(
   language = "english",
   steam_realm = 1L,
   require_type = NULL,
-  exclude_content_descriptors = NULL,
+  excluded_content_descriptors = NULL,
   links = FALSE
 )
 
@@ -32,7 +32,8 @@ stf_search_store(
 Defaults to \code{FALSE} to avoid littering the output.}
 
 \item{country_code}{ISO 3166 country code representing the country from
-which to view the Steam store.}
+which to view the Steam store. A list of Steam countries can be retrieved
+with \code{\link{get_country_list}}.}
 
 \item{language}{ISO 639-1 language code all tokenized strings should be
 returned in. Not all tokenized strings have a translation

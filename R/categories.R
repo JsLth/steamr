@@ -9,15 +9,15 @@
 #' @param extra  Unknown.
 #' @param trailer Unknown.
 #'
-#' @returns \describe{
-#'  \item{\code{get_categories}}{A named vector where the names are the
+#' @returns \itemize{
+#'  \item{\code{get_categories}: A named vector where the names are the
 #'  categories and the values are their human-readable descriptions.}
 #'
-#'  \item{\code{get_store_categories}}{A dataframe containing the internal
+#'  \item{\code{get_store_categories}: A dataframe containing the internal
 #'  and display names, category type, categoryID, image URL, and whether
 #'  the categories are shown in the search.}
 #'
-#'  \item{\code{get_genres}}{An unnamed vector of genre names.}
+#'  \item{\code{get_genres}: An unnamed vector of genre names.}
 #' }
 #'
 #' @export

@@ -521,9 +521,8 @@ paginate_steam <- function(req, paginate, simplify) {
         content[[ncursor]]
       }
     ),
-    page = stop("Page paginator is currently not implemented."),
     start = httr2::iterate_with_offset(
-      param_name = "start",
+      param_name = paginate$param %||% "start",
       start = 0,
       offset = 100,
       resp_pages = function(resp) {
@@ -536,8 +535,9 @@ paginate_steam <- function(req, paginate, simplify) {
         }
       },
       resp_complete = function(resp) {
+        unboxer <- paginate$unboxer
         body <- httr2::resp_body_json(resp)
-        length(body$results) == 0
+        length(body[[unboxer]]) == 0
       }
     ),
     input_json = iterate_with_input_json(req)

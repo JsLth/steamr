@@ -1,7 +1,19 @@
-get_active_marketing_messages <- function(country = NULL,
+#' Marketing
+#' @description
+#' Marketing messages are sometimes shown to the user as a popup window. This
+#' function can retrieve details about the marketing messages currently active
+#' in a given country.
+#'
+#' @inheritParams wba_charts
+#' @param anonymous_user If \code{TRUE}, will not return any marketing messages
+#' that require ownership, playtime or wishlisting.
+#'
+#' @returns A dataframe containing the groupID
+#'
+wba_active_marketing_messages <- function(country = NULL,
                                           anonymous_user = FALSE) {
-  check_string(country, null = TRUE)
-  check_bool(anonymous_user)
+  assert_string(country, null = TRUE)
+  assert_flag(anonymous_user)
   params <- .make_params()
   res <- request_webapi(
     api = public_api(),
@@ -11,36 +23,4 @@ get_active_marketing_messages <- function(country = NULL,
     params = params
   )$response$message
   as_data_frame(res)
-}
-
-
-get_marketing_message <- function(gid,
-                                  language = "english",
-                                  elanguage = NULL,
-                                  country_code = "US",
-                                  steam_realm = 1L,
-                                  include = NULL,
-                                  apply_user_filters = FALSE) {
-  check_string(gid)
-  check_length(gid, ge = 1, le = 1)
-  context <- store_browse_context(
-    language = language,
-    elanguage = elanguage,
-    country_code = country_code,
-    steam_realm = steam_realm
-  )
-  data_request <- store_browse_item_data_request(
-    include = include,
-    apply_user_filters = apply_user_filters
-  )
-  input_json <- .make_input_json(context = context, data_request = data_request)
-
-  params <- .make_params(gid = gid, input_json = input_json)
-  request_webapi(
-    api = public_api(),
-    interface = "IMarketingMessagesService",
-    method = "GetDisplayMarketingMessage",
-    version = "v1",
-    params = params
-  )$response
 }

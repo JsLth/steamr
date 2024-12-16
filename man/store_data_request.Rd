@@ -33,7 +33,8 @@ of language codes and their corresponding languages is defined in
 \code{\link{ELanguage}}.}
 
 \item{country_code}{ISO 3166 country code representing the country from
-which to view the Steam store.}
+which to view the Steam store. A list of Steam countries can be retrieved
+with \code{\link{get_country_list}}.}
 
 \item{steam_realm}{Number describing the Steam realm. A value of 1
 indicates Steam Global, 2 indicates Steam China, and 0 indicates Unknown.}
@@ -61,4 +62,9 @@ wba_store_items(440, context = store_context(language = "german", country_code =
 
 # Specify the data to be returned
 wba_store_items(440, data_request = store_data_request(c("screenshots", "trailers")))}
+}
+\seealso{
+\code{\link{wba_store_items}}, \code{\link{wba_hardware_items}},
+\code{\link{wba_charts_weekly}}, \code{\link{wba_query}},
+\code{\link{wba_marketing_message}}
 }
