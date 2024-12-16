@@ -165,7 +165,7 @@ get_asset_info <- function(appid,
   )$result
 
   if ("error" %in% names(res)) {
-    stop(sprintf("GetAssetClassInfo error: %s", res$error))
+    abort("GetAssetClassInfo error", "x" = res$error)
   }
 
   res$success <- NULL

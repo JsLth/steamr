@@ -32,7 +32,7 @@ wba_html_to_bbcode <- function(x, preserve_newlines = FALSE) {
   )$response
 
   if (isFALSE(res$found_html)) {
-    warning("No HTML found in input.")
+    cli::cli_warn("No HTML found in input.")
   }
 
   res$converted_content

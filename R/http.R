@@ -164,13 +164,13 @@ request_webapi <- function(api,
       code <- resp$status_code
       desc <- httr2::resp_status_desc(resp)
       msg <- trim_html_error(httr2::resp_body_html(resp), desc)
-      stop(sprintf("HTTP error %s %s: %s", code, desc, msg), call. = FALSE)
+      abort("HTTP error {code} {desc}", "x" = msg, call = NULL)
     } else if (startsWith(content_type, "application/json")) {
       resp <- httr2::resp_body_json(resp)$response
       code <- resp$result
       msg <- resp$error
       if (!is.null(resp$error)) {
-        stop(sprintf("Error code %s: %s", code, msg), call. = FALSE)
+        abort("Error code {code}", "x" = msg, call = NULL)
       }
     }
     FALSE
@@ -193,9 +193,10 @@ request_webapi <- function(api,
 
       if (!is.null(ecode) && !identical(ecode, "1")) {
         msg <- eresult[eresult$code %in% ecode, ]$msg
-        stop(
-          sprintf("Steam Web API returned error code %s: %s", ecode, msg),
-          call. = FALSE
+        abort(
+          "Steam Web API returned error code {ecode}",
+          "x" = msg,
+          call = NULL
         )
       }
     }
@@ -284,16 +285,21 @@ request_storefront <- function(api,
     res <- httr2::resp_body_json(res, simplifyVector = TRUE, flatten = TRUE)
 
     if (!length(res)) {
-      stop("Steam storefront API returned an empty response. Check your input!")
+      abort(
+        "Steam storefront API returned an empty response",
+        "i" = "Check your input!",
+        call = NULL
+      )
     }
 
     code <- res$success %||% res$eresult %||% res$status %||% 0L
     if (!identical(code, 1L) && isFALSE(code)) {
       msg <- res$err_msg %||% res$msg %||% "Something has gone wrong."
 
-      stop(
-        sprintf("Steam storefront API returned error code %s:\n%s", code, msg),
-        call. = FALSE
+      abort(
+        "Steam storefront API returned error code {code}",
+        "x" = msg,
+        call = NULL
       )
     }
 
@@ -387,8 +393,8 @@ request_generic <- function(url,
     req <- do.call(httr2::req_options, c(list(req), options))
   }
 
-  if (getOption("steamr_verbose", FALSE)) {
-    message(http_method, "", utils::URLdecode(req$url), "\n")
+  if (getOption("steamr_debug", FALSE)) {
+    cli::cli_inform(paste(http_method, utils::URLdecode(req$url)))
   }
 
   if (dry) {

@@ -249,18 +249,18 @@ publishedfile_pseudo_data_request <- function(return,
                                               method = "query",
                                               ...) {
   if (identical(method, "details") && "details" %in% return) {
-    warning(paste(
-      "Further details cannot be provided in single file request.\n",
-      "\"details\" will be dropped from return parameter."
-    ))
+    cli::cli_warn(
+      "Further details cannot be provided in a single file request.",
+      "i" = "Field {.val details} will be dropped from the return parameter."
+    )
     return <- setdiff(return, "details")
   }
 
   if ("playtime_stats" %in% return && is.null(playtime_days)) {
-    warning(paste(
-      "\"playtime_stats\" included in return argument, but no playtime_days set.",
-      "\nplaytime_stats will be omitted."
-    ))
+    cli::cli_warn(
+      "Field {.val playtime_stats} included in return argument but no {.var playtime_days} set.",
+      "i" = "{.val playtime_stats} will be omitted."
+    )
   }
 
   info <- data.frame(

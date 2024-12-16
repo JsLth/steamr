@@ -65,7 +65,10 @@ wba_resolve_vanity <- function(name, type = "profile") {
   code <- res$response$success
   if (!identical(code, 1L)) {
     msg <- res$response$message
-    stop(sprintf("Could not resolve vanity URL. Error code %s: %s", code, msg))
+    abort(
+      "Could not resolve vanity URL",
+      "x" = "Error code {code}: {msg}"
+    )
   }
 
   res$response$steamid
@@ -272,10 +275,10 @@ is_steam64 <- function(x) {
   is_64 <- binlen >= 60 & binlen <= 64
 
   if (all(is_64) && is.numeric(x)) {
-    stop(paste(
-      "Steam ID identified as Steam64 but value is numeric.\n",
-      "To preserve numeric precision, pass Steam ID as a character string."
-    ))
+    abort(
+      "Steam ID identified as Steam64 but value is numeric.",
+      "i" = "To preserve numeric precision, pass Steam ID as a character string."
+    )
   }
 
   is_64
@@ -317,7 +320,7 @@ is_vanity <- function(x) {
 parse_steam64 <- function(ids, resolve = FALSE) {
   parsed <- rbind_list(lapply(ids, function(id) {
     if (!is_steam64(id)) {
-      stop(sprintf("Value %s is not a valid Steam64 ID.", id))
+      abort("Value {.val {id}} is not a valid Steam64 ID.")
     }
 
     bin <- bigBits::buildBinaries(id, inBase = 10)$xbin
@@ -354,7 +357,7 @@ parse_steam64 <- function(ids, resolve = FALSE) {
 parse_steam2 <- function(ids, resolve = FALSE) {
   parsed <- rbind_list(lapply(ids, function(id) {
     if (!is_steam2(id)) {
-      stop(sprintf("Value %s is not a valid Steam2 ID.", id))
+      abort("Value {.val {id}} is not a valid Steam2 ID.")
     }
 
     match <- utils::strcapture(
@@ -389,7 +392,7 @@ parse_steam2 <- function(ids, resolve = FALSE) {
 parse_steam3 <- function(ids, resolve = FALSE) {
   parsed <- rbind_list(lapply(ids, function(id) {
     if (!is_steam3(id)) {
-      stop(sprintf("Value %s is not a valid Steam3 ID.", id))
+      abort("Value {.val {id}} is not a valid Steam3 ID.")
     }
 
     types <- strtoi(names(type_chars))
@@ -406,7 +409,7 @@ parse_steam3 <- function(ids, resolve = FALSE) {
     )
 
     if (all(is.na(match))) {
-      stop("Failed to parse: invalid Steam3 ID.")
+      abort("Failed to parse", "i" = "Invalid Steam3 ID.")
     }
 
     type <- match$type
@@ -522,7 +525,7 @@ steam64_to_steam3 <- function(id) {
 steam64_to_vanity <- function(id) {
   player <- get_player_summary(id)
   if (!nrow(player)) {
-    stop("User with Steam64 \"id\" does not exist.", id)
+    abort("User with Steam64 {.val {id}} does not exist.")
   }
   basename(player$profileurl)
 }
@@ -562,7 +565,7 @@ steam3_to_steam64 <- function(id) {
 set_account_id <- function(id, value) {
   value <- strtoi(value)
   if (value < 0 || value > 0xFFFFFFFF) {
-    stop("Account ID cannot be higher than 0xFFFFFFFF.")
+    abort("Account ID cannot be higher than 0xFFFFFFFF.")
   }
 
   .steamid_set(id, 0, "4294967295", value)
@@ -572,7 +575,7 @@ set_account_id <- function(id, value) {
 set_account_instance <- function(id, value) {
   value <- strtoi(value)
   if (value < 0 || value > 0xFFFFF) {
-    stop("Account instance cannot be higher than 0xFFFFF.")
+    abort("Account instance cannot be higher than 0xFFFFF.")
   }
 
   .steamid_set(id, 32, "1048575", value)
@@ -582,7 +585,7 @@ set_account_instance <- function(id, value) {
 set_account_type <- function(id, value) {
   value <- strtoi(value)
   if (value < 0 || value > 0xF) {
-    stop("Account type cannot be higher than 0xF.")
+    abort("Account type cannot be higher than 0xF.")
   }
 
   .steamid_set(id, 52, "15", value)
@@ -592,7 +595,7 @@ set_account_type <- function(id, value) {
 set_account_universe <- function(id, value) {
   value <- strtoi(value)
   if (value < 0 || value > 0xFF) {
-    stop("Account universe cannot be higher than 0xFF")
+    abort("Account universe cannot be higher than 0xFF")
   }
 
   .steamid_set(id, 56, "255", value)

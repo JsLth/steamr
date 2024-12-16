@@ -62,9 +62,6 @@ Retrieve Steam (weekly) charts in terms of concurrent players (CCU), total
 most played games, and top new releases of the last three months.
 }
 \details{
-TODO: \code{wba_charts_weekly} is based on a pagination system that returns the
-top 100
-
 Although a store context can be passed to \code{wba_charts_ccu}, it does not
 seem to be taken into account. To return a regionalized version of the
 Steam charts, you may use \code{wba_charts_weekly}.

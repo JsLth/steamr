@@ -159,7 +159,7 @@ appdetails_steamcmd <- function(appid) {
 
   if ("detail" %in% names(res)) {
     msg <- res$detail[[1]]$msg
-    stop(paste("steamcmd.net returned an error:", msg))
+    abort("steamcmd.net returned an error", "x" = msg)
   }
 
   res$data[[1]]

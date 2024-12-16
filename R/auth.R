@@ -86,7 +86,13 @@
 #' is_authenticated() # returns TRUE
 #'
 #' # sign in using a QR code
-#' auth_qr()}
+#' auth_qr()
+#'
+#' # the new login attempts can be retrieved using `auth_history()`
+#' auth_history()
+#'
+#' # end the authenticated session by revoking the refresh token
+#' auth_logout()}
 auth_credentials <- function(username,
                              password = openssl::askpass,
                              shared_secret = NULL,
@@ -96,7 +102,7 @@ auth_credentials <- function(username,
   stopifnot(is.character(username))
   stopifnot(is.function(password))
   if (!interactive()) {
-    stop("Session authentication is only possible in interactive mode.")
+    abort("Session authentication is only possible in interactive mode.")
   }
 
   password <- password()
@@ -143,7 +149,7 @@ auth_credentials <- function(username,
   assign("auth", auth, envir = globst)
 
   if (!is_authenticated()) {
-    stop("Authentication was unsuccessful. Session is not authenticated.")
+    abort("Authentication was unsuccessful. Session is not authenticated.")
   }
 
   if (persistent) {
@@ -167,16 +173,15 @@ auth_qr <- function(friendly_name = "steamr",
   check_interactive()
 
   if (!loadable("qrcode")) {
-    stop("The qrcode package must be installed to generate QR codes.")
+    abort("The {.pkg qrcode} package must be installed to generate QR codes.")
   }
 
   refresh <- TRUE
-  message(paste(
+  cli::cli_inform(c(
     "In the next seconds, a QR code will be plotted.",
     "Scan the QR code using the Steam mobile app to authenticate.",
     "The QR code will refresh every 5 seconds.",
-    "You can press <Esc> to exit.\n",
-    sep = "\n"
+    "You can press <Esc> to exit."
   ))
 
   status <- FALSE
@@ -211,7 +216,7 @@ auth_qr <- function(friendly_name = "steamr",
   assign("auth", auth, envir = globst)
 
   if (!is_authenticated()) {
-    stop("Authentication was unsuccessful. Session is not authenticated.")
+    abort("Authentication was unsuccessful. Session is not authenticated.")
   }
 
   if (persistent) {
@@ -228,12 +233,11 @@ auth_qr <- function(friendly_name = "steamr",
 #' \code{auth_logout} ends the active authenticated session by formally logging
 #' out of Steam and removing all cookies and authentication information from
 #' the session and the cache.
-#'
 auth_logout <- function() {
   session <- globst$session
 
   if (is.null(session)) {
-    stop("Cannot log out. Session is not authenticated.")
+    abort("Cannot log out. Session is not authenticated.")
   }
 
   url <- file.path(store_api(), "logout")
@@ -244,14 +248,14 @@ auth_logout <- function() {
     http_method = "POST",
     format = "html",
     headers = list(
-      `Content-Length` = nchar(params$sessionid) + 10,
+      `Content-Length` = nchar(params$sessionid) + 10, # necessary to prevent HTTP411
       Connection = "keep-alive",
-      Origin = store_api()
+      Origin = store_api() # necessary for TLS communication
     )
   )
 
   if (is_authenticated()) {
-    stop("Logout was unsuccessful. Session is still authenticated.")
+    abort("Logout was unsuccessful. Session is still authenticated.")
   }
 
   clear_auth()
@@ -417,7 +421,7 @@ set_tokens <- function(transfer) {
   params <- transfer$transfer_info
 
   if (is.null(params)) {
-    stop("Redirects after authentication failed, no parameters fetched.")
+    abort("Redirects after authentication failed, no parameters fetched.")
   }
 
   for (redir in params) {
@@ -447,7 +451,7 @@ get_sessionid <- function() {
 
 check_captcha <- function(login) {
   if (isTRUE(login$captcha_needed)) {
-    stop("Captcha test needed to authenticate.")
+    abort("Captcha test needed to authenticate.")
   }
 }
 

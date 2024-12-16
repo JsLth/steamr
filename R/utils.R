@@ -2,6 +2,10 @@
 "%empty%" <- function(x, y) if (!length(x)) y else x
 "%NA%" <- function(x, y) if (is.null(x) || all(is.na(x))) y else x
 
+abort <- function(x, .envir = parent.frame(), call = .envir) {
+  cli::cli_abort(x, class = "steamr", .envir = .envir, call = call)
+}
+
 nlapply <- function(x, FUN, ...) {
   res <- lapply(x, FUN, ...)
   names(res) <- names(x)

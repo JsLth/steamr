@@ -215,7 +215,7 @@ stf_all_app_reviews <- function(appid,
                                 num_per_page = 20,
                                 ...) {
   if (any(c("all", "summary") %in% filter)) {
-    stop("When batch querying reviews, filter cannot be \"all\" or \"summary\".")
+    abort("When batch querying reviews, filter cannot be {.val all} or {.val summary}.")
   }
 
   res <- list()

@@ -112,21 +112,25 @@ store_item <- function(appid = NULL,
                        hubcategoryid = NULL,
                        ...) {
   if (...length()) {
-    stop(sprintf("Unknown store item type: %s", ...names()), call. = FALSE)
+    abort("Unknown store item type: {.val {...names()}}", call = NULL)
   }
 
   item <- drop_na(drop_null(as.list(environment())))
   item <- as.data.frame(item)
 
   if (!length(item)) {
-    stop(paste(
-      "Missing or empty store items provided. Please make sure that",
-      "each store item contains exactly one ID."
-    ), call. = FALSE)
+    abort(c(
+      "Missing or empty store items provided.",
+      "i" = "Please make sure that each store item contains exactly one ID."
+    ), call = NULL)
   }
 
-  if (!all(one_per_row(item))) {
-    stop("Argument `items` must contain exactly one ID per row.", call. = FALSE)
+  mpr <- !one_per_row(item)
+  if (all(mpr)) {
+    abort(c(
+      "Argument `items` must contain exactly one ID per row.",
+      "i" = "The problem occured in the following {cli::qty(sum(mpr))} row{?s}: {which(mpr)}"
+    ), call = NULL)
   }
 
   if (inherits(item[[1]], "StoreItemID")) {

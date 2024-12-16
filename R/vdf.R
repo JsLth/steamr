@@ -103,10 +103,10 @@ recurse_vdf <- function(tokens, i = 0, level = 0, check_types = TRUE) {
     } else if (identical(ctok, "{")) {
       # ctok is next level
       if (isFALSE(key)) {
-        stop(sprintf("Orphaned \"{\" token found at line %s.", i + 1))
+        abort("Orphaned \"{\" token found at line {.val {i + 1}}.")
       }
       if (is.na(ntok)) {
-        stop(sprintf("Trailing \"{\" token found at line %s.", i + 1))
+        abort("Trailing \"{\" token found at line {.val {i + 1}}.")
       }
       tmp <- recurse_vdf(
         tokens,
@@ -119,7 +119,7 @@ recurse_vdf <- function(tokens, i = 0, level = 0, check_types = TRUE) {
     } else if (identical(ctok, "}")) {
       # ctok is previous level
       if (level <= 0) {
-        stop(sprintf("Excess \"}\" token found at line %s", i))
+        abort("Excess \"}\" token found at line {.val {i + 1}}.")
       }
       return(list(map = out, i = i + 1))
     } else if (identical(ntok, "{") && !grepl(valrex, ctok)) {
@@ -129,10 +129,7 @@ recurse_vdf <- function(tokens, i = 0, level = 0, check_types = TRUE) {
       i <- i + 1
       next
     } else if (is.na(ntok)) {
-      stop(sprintf(
-        "Unexpected end reached at line %s. Expected \"}\", got \"%s\".",
-        i + 1, ctok
-      ))
+      abort("Unexpected end reached at line {.val {i + 1}}. Expected \"}\", got {.val {ctok}}.")
     } else {
       # ctok is key-value
       proto <- list(key = character(), value = character())

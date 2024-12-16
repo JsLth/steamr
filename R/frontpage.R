@@ -94,11 +94,14 @@ stf_frontpage_category <- function(category,
   )
 
   if (!identical(res$status, 1L)) {
-    stop(sprintf("Request failed with status code %s", res$status %||% "Unknown error"))
+    abort("Request failed with status code {res$status %||% 'Unknown error'}")
   }
 
   if (is.null(res$tabs)) {
-    stop(sprintf("Response is empty. Category \"%s\" does not seem to exist", category))
+    abort(
+      "Response is empty",
+      "i" = "Category {.val {category}} does not seem to exist."
+    )
   }
 
   res <- bind_rows(lapply(res$tabs, "[[", "items"), .id = "tab")

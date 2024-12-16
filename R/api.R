@@ -9,7 +9,10 @@ is_steam_key <- function(x) {
 check_steam_key <- function() {
   key <- api_key()
   if (!is_steam_key(key)) {
-    stop("No valid Steam key stored in STEAM_API_KEY environment variable.")
+    abort(c(
+      "No valid Steam key stored in the {.envvar STEAM_API_KEY} environment variable.",
+      "i" = "You can request an API key from here: {.url https://steamcommunity.com/dev/apikey}"
+    ))
   }
 }
 

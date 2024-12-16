@@ -12,7 +12,7 @@ auth_credentials(
   username,
   password = openssl::askpass,
   shared_secret = NULL,
-  persistent = FALSE,
+  persistent = getOption("steamr_persistent", FALSE),
   friendly_name = "steamr",
   details = "Login using credentials"
 )
@@ -20,7 +20,7 @@ auth_credentials(
 auth_qr(
   friendly_name = "steamr",
   device_details = "Login using QR code",
-  persistent = FALSE
+  persistent = getOption("steamr_persistent", FALSE)
 )
 
 auth_logout()
@@ -120,7 +120,13 @@ auth_credentials(user, persistent = TRUE)
 is_authenticated() # returns TRUE
 
 # sign in using a QR code
-auth_qr()}
+auth_qr()
+
+# the new login attempts can be retrieved using `auth_history()`
+auth_history()
+
+# end the authenticated session by revoking the refresh token
+auth_logout()}
 }
 \section{Authentication}{
 The functions of this reference page are subject to the following authentication requirements (Key = API key needed, Login = user login needed):

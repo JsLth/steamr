@@ -25,7 +25,8 @@ Imports:
     openssl,
     PKI,
     utils,
-    rappdirs
+    rappdirs,
+    cli
 Suggests: 
     knitr,
     rmarkdown,
