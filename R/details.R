@@ -1,19 +1,16 @@
-#' Get app details
+#' App details
 #' @description
 #' Retrieve detailed information on an application in the steam store.
 #'
-#' \code{appdetails} uses Steam's unofficial API.
-#'
-#' \code{appdetails_steamcmd}
-#' uses the unofficial \href{https://www.steamcmd.net/}{steamcmd API}, which
-#' provides data from the Steam client network (powered by the
-#' \href{https://steam.readthedocs.io/en/stable/api/steam.client.html}{\code{steam}}
-#' Python library).
-#'
-#' \code{appdetails_steamspy} uses the unofficial
-#' \href{https://steamspy.com/}{SteamSpy API}, which provides
-#' custom estimates on owners, tags, genres and price dynamics. To get a full
-#' app list from SteamSpy, see \code{\link{steamspy}}.
+#' \itemize{
+#'  \item{\code{stf_appdetails} uses Steam's storefront API and returns
+#'  detailed store-related information}
+#'  \item{\code{steamspy_appdetails} uses the SteamSpy unofficial API and
+#'  includes third-party estimates on playtime, genres, CCU and ownership}
+#'  \item{\code{cmd_appdetails} retrieves app details from
+#'  \href{https://developer.valvesoftware.com/wiki/SteamCMD}{SteamCMD}, which
+#'  is largely technical}
+#' }
 #'
 #' @param client Unknown.
 #' @param filters Keys to include in the output. Can be any key that
@@ -27,7 +24,7 @@
 #' @inheritParams common
 #'
 #' @returns \describe{
-#'  \item{\code{appdetails}}{A nested list containing the following keys:
+#'  \item{\code{stf_appdetails}}{A nested list containing the following keys:
 #'  \itemize{
 #'    \item{\code{type}: Type of application (game, dlc, demo, advertising,
 #'    mod, or video)}
@@ -89,38 +86,43 @@
 #'    \item{\code{ratings}: A list containing maturity ratings.}
 #'  }
 #'  }
-#'  \item{\code{appdetails_steamspy}}{A dataframe containing information
+#'  \item{\code{steamspy_appdetails}}{A dataframe containing information
 #'  about name, developer, publisher, reviews, concurrent players, genres,
 #'  tags and estimated owners.}
 #'
-#'  \item{\code{appdetails_steamcmd}}{A nested list containing information
+#'  \item{\code{cmd_appdetails}}{A nested list containing information
 #'  listed \href{https://www.steamcmd.net/}{here}.}
 #' }
 #'
+#' @evalRd auth_table(
+#'   list("stf_appdetails", key = FALSE, login = FALSE),
+#'   list("steamspy_appdetails", key = FALSE, login = FALSE),
+#'   list("cmd_appdetails", key = FALSE, login = FALSE)
+#' )
+#'
 #' @export
+#' @name appdetails
 #'
 #' @note
-#' \code{appdetails} is rate-limited at 200 requests per 5 minutes.
+#' \code{stf_appdetails} is rate-limited at 200 requests per 5 minutes.
 #'
-#' \code{appdetails_steamcmd} is not rate-limited.
+#' \code{cmd_appdetails} is not rate-limited.
 #'
-#' \code{appdetails_steamspy} is rate-limited at 1 request per second.
+#' \code{steamspy_appdetails} is rate-limited at 1 request per second.
 #'
 #' @examples
-#' \dontrun{
-#' # returns the detailed description about team fortress
-#' appdetails(440, filters = "detailed_description")
+#' \donttest{# returns the detailed description about team fortress
+#' stf_appdetails(440, filters = "detailed_description")
 #'
 #' # returns the metacritic score and total number of reviews of Counter-Strike
-#' appdetails(10, filters = c("recommendations", "metacritic"))
+#' stf_appdetails(10, filters = c("recommendations", "metacritic"))
 #'
 #' # returns steamspy data
-#' appdetails_steamspy(440)
+#' steamspy_appdetails(440)
 #'
 #' # returns steamcmd data
-#' appdetails_steamcmd(440)
-#' }
-appdetails <- function(appid,
+#' cmd_appdetails(440)}
+stf_appdetails <- function(appid,
                        client = NULL,
                        filters = NULL,
                        country_code = "US",
@@ -151,9 +153,8 @@ appdetails <- function(appid,
 
 #' @rdname appdetails
 #' @export
-appdetails_steamcmd <- function(appid) {
-  check_number(appid)
-  check_length(appid, le = 1, ge = 1)
+cmd_appdetails <- function(appid) {
+  assert_number(appid)
   url <- sprintf("https://api.steamcmd.net/v1/info/%s", appid)
   res <- jsonlite::read_json(url, simplifyVector = TRUE, flatten = TRUE)
 
@@ -168,17 +169,20 @@ appdetails_steamcmd <- function(appid) {
 
 #' @rdname appdetails
 #' @export
-appdetails_steamspy <- function(appid) {
-  check_number(appid)
-  params <- list(request = "appdetails", appid = appid)
-  res <- request_steamspy(params)
-  res$tag_names <- paste(names(res$tags), collapse = ", ")
-  res$tags <- paste(res$tags, collapse = ", ")
-  owners <- steamspy_estimate_to_range(res$owners)
-  res$owners_low <- owners[1]
-  res$owners_high <- owners[2]
-  res$owners <- NULL
-  as_data_frame(rbind_list(list(res)))
+steamspy_appdetails <- function(appid) {
+  assert_integerish(appid)
+  res <- lapply(appid, function(x) {
+    params <- list(request = "appdetails", appid = x)
+    res <- request_steamspy(params)
+    res$tag_names <- paste(names(res$tags), collapse = ", ")
+    res$tags <- paste(res$tags, collapse = ", ")
+    owners <- steamspy_estimate_to_range(res$owners)
+    res$owners_low <- owners[1]
+    res$owners_high <- owners[2]
+    res$owners <- NULL
+    res
+  })
+  as_data_frame(rbind_list(res))
 }
 
 
