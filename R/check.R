@@ -1,6 +1,6 @@
 check_interactive <- function() {
   if (!interactive()) {
-    abort("Session authentication is only possible in interactive mode.")
+    abort("Session authentication is only possible in interactive mode.", call = NULL)
   }
 }
 
@@ -10,6 +10,6 @@ check_authenticated <- function() {
     abort(c(
       "Session is not authenticated.",
       "i" = "See {.code ?auth} to learn more about Steam authentication."
-    ))
+    ), call = NULL)
   }
 }

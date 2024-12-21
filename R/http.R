@@ -4,6 +4,10 @@
 #' \code{steamr} supports the Web API, storefront API, SteamSpy and
 #' steamcmd.net. Generic requests to any other URL can also be made.
 #'
+#' These functions are particularly useful to serve use cases not covered by
+#' the high-level functions of \code{steamr}, e.g. API methods that require
+#' a publisher key.
+#'
 #' @param api URL to a supported Steam API. Can be \code{public_api()}
 #' (public Web API), \code{partner_api()} (private Web API),
 #' \code{store_api()} (store.steampowered), \code{comm_api()} (steamcommunity),
@@ -164,7 +168,7 @@ request_webapi <- function(api,
       code <- resp$status_code
       desc <- httr2::resp_status_desc(resp)
       msg <- trim_html_error(httr2::resp_body_html(resp), desc)
-      abort("HTTP error {code} {desc}", "x" = msg, call = NULL)
+      abort(c("HTTP error {code} {desc}", "x" = msg), call = NULL)
     } else if (startsWith(content_type, "application/json")) {
       resp <- httr2::resp_body_json(resp)$response
       code <- resp$result
@@ -194,8 +198,7 @@ request_webapi <- function(api,
       if (!is.null(ecode) && !identical(ecode, "1")) {
         msg <- eresult[eresult$code %in% ecode, ]$msg
         abort(
-          "Steam Web API returned error code {ecode}",
-          "x" = msg,
+          "Steam Web API returned error code {ecode}: {msg}",
           call = NULL
         )
       }

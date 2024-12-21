@@ -62,7 +62,8 @@
 steamkit_enum <- function(enum = NULL,
                           type = c("SteamLanguage", "Enums", "EnumsProductInfo"),
                           filter = NULL) {
-  check_string(enum, null = TRUE)
+  assert_string(enum, null.ok = TRUE)
+  assert_string(filter, null.ok = TRUE)
   type <- match.arg(type)
   url <- "https://raw.githubusercontent.com/SteamRE/SteamKit/master/SteamKit2/SteamKit2/Base/Generated/%s.cs"
   url <- sprintf(url, type)
@@ -87,8 +88,8 @@ steamkit_enum <- function(enum = NULL,
 #' @rdname steamkit_enum
 #' @export
 node_enum <- function(enum = NULL, filter = NULL) {
-  check_string(enum, null = TRUE)
-  check_length(enum, ge = 0, le = 1)
+  assert_string(enum, null.ok = TRUE)
+  assert_string(filter, null.ok = TRUE)
   all_enums <- get_all_enums()
 
   if (is.null(enum)) {
