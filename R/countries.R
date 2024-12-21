@@ -2,8 +2,8 @@
 #' @description
 #' Retrieves information on Steam's country, region, and city codes.
 #'
-#' \code{query_locations} queries the storefront API and can drill down all
-#' Steam location levels, while \code{get_country_list} can only provide
+#' \code{stf_locations} queries the storefront API and can drill down all
+#' Steam location levels, while \code{wba_countries} can only provide
 #' information on the country level.
 #'
 #' @param country ISO-2 country code. If specified, returns information
@@ -22,23 +22,26 @@
 #'
 #' @export
 #'
+#' @evalRd auth_table(
+#'   list("stf_locations", key = FALSE, login = FALSE),
+#'   list("wba_countries", key = FALSE, login = FALSE)
+#' )
+#'
 #' @examples
-#' \dontrun{
-#' # get country codes
-#' query_locations()
+#' \donttest{# get country codes
+#' stf_locations()
 #'
 #' # get region codes of Germany
-#' query_locations(country = "DE")
+#' stf_locations(country = "DE")
 #'
 #' # get city codes of Baden-Wurttemberg, Germany
-#' query_locations(country = "DE", region = "01")
+#' stf__locations(country = "DE", region = "01")
 #'
 #' # get localized country names
-#' get_country_list(language = "german")
-#' }
-query_locations <- function(country = NULL, region = NULL) {
-  check_string(country, null = TRUE)
-  check_string(region, null = TRUE)
+#' wba_countries(language = "german")}
+stf_locations <- function(country = NULL, region = NULL) {
+  assert_string(country, null.ok = TRUE)
+  assert_string(region, null.ok = TRUE)
   params <- .make_params(key = FALSE)
   request_storefront(
     comm_api(),
@@ -50,9 +53,11 @@ query_locations <- function(country = NULL, region = NULL) {
 
 
 
-#' @rdname query_locations
+#' @rdname stf_locations
 #' @export
-get_country_list <- function(language = "english") {
+#' @inheritParams store_context
+wba_countries <- function(language = "english") {
+  assert_string(language, null.ok = TRUE)
   params <- .make_params()
   res <- request_webapi(
     api = public_api(),
