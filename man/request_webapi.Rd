@@ -162,6 +162,10 @@ returns the unformatted string of a VDF document that can be parsed with
 Send HTTP requests to any of the available Steam APIs. As of yet,
 \code{steamr} supports the Web API, storefront API, SteamSpy and
 steamcmd.net. Generic requests to any other URL can also be made.
+
+These functions are particularly useful to serve use cases not covered by
+the high-level functions of \code{steamr}, e.g. API methods that require
+a publisher key.
 }
 \examples{
 # simple Web API request

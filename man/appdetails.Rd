@@ -2,11 +2,12 @@
 % Please edit documentation in R/details.R
 \name{appdetails}
 \alias{appdetails}
-\alias{appdetails_steamcmd}
-\alias{appdetails_steamspy}
+\alias{stf_appdetails}
+\alias{cmd_appdetails}
+\alias{steamspy_appdetails}
 \title{Get app details}
 \usage{
-appdetails(
+stf_appdetails(
   appid,
   client = NULL,
   filters = NULL,
@@ -14,9 +15,9 @@ appdetails(
   language = "english"
 )
 
-appdetails_steamcmd(appid)
+cmd_appdetails(appid)
 
-appdetails_steamspy(appid)
+steamspy_appdetails(appid)
 }
 \arguments{
 \item{appid}{Application ID referencing a Steam application. There are
@@ -39,7 +40,7 @@ not accept any of these keys as input.}
 }
 \value{
 \describe{
- \item{\code{appdetails}}{A nested list containing the following keys:
+ \item{\code{stf_appdetails}}{A nested list containing the following keys:
  \itemize{
    \item{\code{type}: Type of application (game, dlc, demo, advertising,
    mod, or video)}
@@ -101,49 +102,57 @@ not accept any of these keys as input.}
    \item{\code{ratings}: A list containing maturity ratings.}
  }
  }
- \item{\code{appdetails_steamspy}}{A dataframe containing information
+ \item{\code{steamspy_appdetails}}{A dataframe containing information
  about name, developer, publisher, reviews, concurrent players, genres,
  tags and estimated owners.}
 
- \item{\code{appdetails_steamcmd}}{A nested list containing information
+ \item{\code{cmd_appdetails}}{A nested list containing information
  listed \href{https://www.steamcmd.net/}{here}.}
 }
 }
 \description{
 Retrieve detailed information on an application in the steam store.
 
-\code{appdetails} uses Steam's unofficial API.
-
-\code{appdetails_steamcmd}
-uses the unofficial \href{https://www.steamcmd.net/}{steamcmd API}, which
-provides data from the Steam client network (powered by the
-\href{https://steam.readthedocs.io/en/stable/api/steam.client.html}{\code{steam}}
-Python library).
-
-\code{appdetails_steamspy} uses the unofficial
-\href{https://steamspy.com/}{SteamSpy API}, which provides
-custom estimates on owners, tags, genres and price dynamics. To get a full
-app list from SteamSpy, see \code{\link{steamspy}}.
+\itemize{
+ \item{\code{stf_appdetails} uses Steam's storefront API and returns
+ detailed store-related information}
+ \item{\code{steamspy_appdetails} uses the SteamSpy unofficial API and
+ includes third-party estimates on playtime, genres, CCU and ownership}
+ \item{\code{cmd_appdetails} retrieves app details from
+ \href{https://developer.valvesoftware.com/wiki/SteamCMD}{SteamCMD}, which
+ is largely technical}
+}
 }
 \note{
-\code{appdetails} is rate-limited at 200 requests per 5 minutes.
+\code{stf_appdetails} is rate-limited at 200 requests per 5 minutes.
 
-\code{appdetails_steamcmd} is not rate-limited.
+\code{cmd_appdetails} is not rate-limited.
 
-\code{appdetails_steamspy} is rate-limited at 1 request per second.
+\code{steamspy_appdetails} is rate-limited at 1 request per second.
 }
 \examples{
-\dontrun{
-# returns the detailed description about team fortress
-appdetails(440, filters = "detailed_description")
+\donttest{# returns the detailed description about team fortress
+stf_appdetails(440, filters = "detailed_description")
 
 # returns the metacritic score and total number of reviews of Counter-Strike
-appdetails(10, filters = c("recommendations", "metacritic"))
+stf_appdetails(10, filters = c("recommendations", "metacritic"))
 
 # returns steamspy data
-appdetails_steamspy(440)
+steamspy_appdetails(440)
 
 # returns steamcmd data
-appdetails_steamcmd(440)
+cmd_appdetails(440)}
 }
+\section{Authentication}{
+The functions of this reference page do not need any kind of authentication to be used (Key = API key needed, Login = user login needed).
+\tabular{lll}{
+    \strong{Function} \tab \strong{Key} \tab \strong{Login}\cr
+    \code{stf_appdetails}      \tab no \tab no\cr
+    \code{steamspy_appdetails} \tab no \tab no\cr
+    \code{cmd_appdetails}      \tab no \tab no
+}
+
+
+
+
 }
